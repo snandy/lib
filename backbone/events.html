@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    	<meta charset='utf-8' />
+    	<title>Backbone.Events</title>
+	    <style type="text/css">
+	    	body {
+	    		padding: 0 20px;
+	    	}
+	    	h1 {
+	    		border-bottom: 1px gray solid;
+	    		margin: 40px 0;
+	    	}
+	    	.headline {
+	    		margin: 30px 0 0 30px;
+	    	}
+	    	.headline h3{
+	    		margin: 0 10px 0 0;
+	    		float: left;
+	    	}
+	    	.headline button {
+	    		float: left;
+	    	}
+	    	pre {
+    		  	background-color: #F8F8F8;
+			    border: 1px solid #CCCCCC;
+			    border-radius: 3px 3px 3px 3px;
+			    font-size: 13px;
+			    line-height: 19px;
+			    overflow: auto;
+			    padding: 6px 10px;
+			    margin: 10px 0 0 30px;
+			    width: 500px;
+	    	}
+	 	</style>
+    	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+    	<script src="http://documentcloud.github.com/underscore/underscore.js"></script>
+    	<script src="http://documentcloud.github.com/backbone/backbone.js"></script>
+  	</head>
+
+	<body>
+
+<h1>添加事件</h1>
+<div class="headline">
+	<h3>添加一个自定义事件</h3>
+	<button id="btn1">trigger</button>
+	<div style="clear:both;"></div>
+</div>
+<pre>
+var person1 = {name: 'jack', age: 30}
+_.extend(person1, Backbone.Events)
+person1.on('myEvent', function() {
+	alert('my custom event')
+})
+//person.trigger('myEvent')
+</pre>
+
+<div class="headline">
+	<h3>指定事件处理程序的上下文</h3>
+	<button id="btn2">trigger</button>
+	<div style="clear:both"></div>
+</div>
+<pre>
+var person2 = {name: 'jack', age: 30}
+_.extend(person2, Backbone.Events)
+person2.on('myEvent', function() {
+	alert(this)
+}, window)
+//person.trigger('myEvent')
+</pre>
+
+<h1>删除事件</h1>
+<div class="headline">
+	<h3>删除特定事件的特定handler</h3>
+	<button id="btn3">trigger</button>
+	<div style="clear:both"></div>
+</div>
+<pre>
+var person3 = {name: 'jack', age: 30}
+_.extend(person3, Backbone.Events)
+
+function handler1() {
+	alert(1)
+}
+function hanlder2() {
+	alert(2)
+}
+person3.on('myEvent', handler1)
+person3.on('myEvent', handler2)
+person3.off('myEvent', handler1)
+//person.trigger('myEvent')
+</pre>
+
+<div class="headline">
+	<h3>删除相同事件上下文的handler</h3>
+	<button id="btn4">trigger</button>
+	<div style="clear:both"></div>
+</div>
+<pre>
+var person4 = {name: 'jack', age: 30}
+_.extend(person4, Backbone.Events)
+
+function handler1() {
+	alert(1)
+}
+function hanlder2() {
+	alert(2)
+}
+function hanlder3() {
+	alert(3)
+}
+person4.on('myEvent', handler1, window)
+person4.on('myEvent', handler2, window)
+person4.on('myEvent', handler3)
+person4.off(null, null, window)
+</pre>
+
+<div class="headline">
+	<h3>删除相同handler的所有事件</h3>
+	<button id="btn5">trigger</button>
+	<div style="clear:both"></div>
+</div>
+<pre>
+var person5 = {name: 'jack', age: 30}
+_.extend(person5, Backbone.Events)
+
+function handler1() {
+	alert(1)
+}
+function handler2() {
+	alert(2)
+}
+person5.on('myEvent1', handler1, window)
+person5.on('myEvent2', handler1)
+person5.on('myEvent2', handler2)
+person5.off(null, handler1)
+person5.trigger('myEvent1 myEvent2')
+</pre>
+
+<script>
+	// 添加一个自定义事件
+	var person1 = {name: 'jack', age: 30}
+	_.extend(person1, Backbone.Events)
+	person1.on('myEvent', function() {
+		alert('my custom event')
+	})
+	$('#btn1').click(function() {
+		person1.trigger('myEvent')
+	})
+	
+	// 指定事件处理程序的上下文
+	var person2 = {name: 'jack', age: 30}
+	_.extend(person2, Backbone.Events)
+	person2.on('myEvent', function() {
+		alert(this)
+	}, window)
+	$('#btn2').click(function() {
+		person2.trigger('myEvent')
+	})
+	
+	// 删除特定事件的特定handler
+	var person3 = {name: 'jack', age: 30}
+	_.extend(person3, Backbone.Events)
+	function handler1() {
+		alert(1)
+	}
+	function handler2() {
+		alert(2)
+	}
+	person3.on('myEvent', handler1)
+	person3.on('myEvent', handler2)
+	person3.off('myEvent', handler1)
+	$('#btn3').click(function() {
+		person3.trigger('myEvent')
+	})
+	
+	// 删除相同事件上下文的handler
+	var person4 = {name: 'jack', age: 30}
+	_.extend(person4, Backbone.Events)
+	
+	function handler1() {
+		alert(1)
+	}
+	function hanlder2() {
+		alert(2)
+	}
+	function handler3() {
+		alert(3)
+	}
+	person4.on('myEvent', handler1, window)
+	person4.on('myEvent', handler2, window)
+	person4.on('myEvent', handler3)
+	person4.off(null, null, window)
+	$('#btn4').click(function() {
+		person4.trigger('myEvent')
+	})
+	
+	// 删除相同handler的事件
+	var person5 = {name: 'jack', age: 30}
+	_.extend(person5, Backbone.Events)
+	
+	function handler1() {
+		alert(1)
+	}
+	function handler2() {
+		alert(2)
+	}
+	person5.on('myEvent1', handler1, window)
+	person5.on('myEvent2', handler1)
+	person5.on('myEvent2', handler2)
+	person5.off(null, handler1)
+	$('#btn5').click(function() {
+		person5.trigger('myEvent1 myEvent2')
+	})
+</script>
+
+	</body>
+</html>
