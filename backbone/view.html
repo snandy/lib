@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+    	<meta charset='utf-8' />
+    	<title>Backbone Dialog</title>
+	    <style type="text/css">
+	    	.p1 {
+	    		border: 1px solid gray;
+	    	}
+	 	</style>
+    	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+    	<script src="http://documentcloud.github.com/underscore/underscore.js"></script>
+    	<script src="http://documentcloud.github.com/backbone/backbone.js"></script>
+  	</head>
+
+	<body>
+		<p id="p1">
+			<span>test</span>
+			<a href="javascript://">go</a>
+		</p>
+		
+		<script>
+    		var View1 = Backbone.View.extend({
+    			el: $('#p1'),
+    			className: 'p1',
+    			events: {
+    				//'click': 'click',
+    				'click span': 'spanClick'
+    			},
+    			click: function(e) {
+    				alert(this.el)
+    				//alert(e.target.tagName)
+    			},
+    			spanClick: function() {
+    				console.log(this)
+    			}
+    		})
+    		var view1 = new View1
+    	</script>
+	</body>
+</html>
