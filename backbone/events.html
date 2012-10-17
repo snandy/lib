@@ -40,7 +40,7 @@
 
 	<body>
 
-<h1>添加事件</h1>
+<h1>添加</h1>
 <div class="headline">
 	<h3>添加一个自定义事件</h3>
 	<button id="btn1">trigger</button>
@@ -52,7 +52,6 @@ _.extend(person1, Backbone.Events)
 person1.on('myEvent', function() {
 	alert('my custom event')
 })
-//person.trigger('myEvent')
 </pre>
 
 <div class="headline">
@@ -66,33 +65,24 @@ _.extend(person2, Backbone.Events)
 person2.on('myEvent', function() {
 	alert(this)
 }, window)
-//person.trigger('myEvent')
 </pre>
 
-<h1>删除事件</h1>
 <div class="headline">
-	<h3>删除特定事件的特定handler</h3>
+	<h3>空格间隔添加多个事件</h3>
 	<button id="btn3">trigger</button>
 	<div style="clear:both"></div>
 </div>
 <pre>
 var person3 = {name: 'jack', age: 30}
 _.extend(person3, Backbone.Events)
-
-function handler1() {
-	alert(1)
-}
-function hanlder2() {
-	alert(2)
-}
-person3.on('myEvent', handler1)
-person3.on('myEvent', handler2)
-person3.off('myEvent', handler1)
-//person.trigger('myEvent')
+person3.on('myEvent1 myEvent2', function() {
+	alert(this)
+})
 </pre>
 
+<h1>删除</h1>
 <div class="headline">
-	<h3>删除相同事件上下文的handler</h3>
+	<h3>删除特定事件的特定handler</h3>
 	<button id="btn4">trigger</button>
 	<div style="clear:both"></div>
 </div>
@@ -106,17 +96,13 @@ function handler1() {
 function hanlder2() {
 	alert(2)
 }
-function hanlder3() {
-	alert(3)
-}
-person4.on('myEvent', handler1, window)
-person4.on('myEvent', handler2, window)
-person4.on('myEvent', handler3)
-person4.off(null, null, window)
+person4.on('myEvent', handler1)
+person4.on('myEvent', handler2)
+person4.off('myEvent', handler1)
 </pre>
 
 <div class="headline">
-	<h3>删除相同handler的所有事件</h3>
+	<h3>删除相同事件上下文的handler</h3>
 	<button id="btn5">trigger</button>
 	<div style="clear:both"></div>
 </div>
@@ -127,14 +113,157 @@ _.extend(person5, Backbone.Events)
 function handler1() {
 	alert(1)
 }
+function hanlder2() {
+	alert(2)
+}
+function hanlder3() {
+	alert(3)
+}
+person5.on('myEvent', handler1, window)
+person5.on('myEvent', handler2, window)
+person5.on('myEvent', handler3)
+person5.off(null, null, window)
+</pre>
+
+<div class="headline">
+	<h3>删除相同handler的所有事件</h3>
+	<button id="btn6">trigger</button>
+	<div style="clear:both"></div>
+</div>
+<pre>
+var person6 = {name: 'jack', age: 30}
+_.extend(person6, Backbone.Events)
+
+function handler1() {
+	alert(1)
+}
 function handler2() {
 	alert(2)
 }
-person5.on('myEvent1', handler1, window)
-person5.on('myEvent2', handler1)
-person5.on('myEvent2', handler2)
-person5.off(null, handler1)
-person5.trigger('myEvent1 myEvent2')
+person6.on('myEvent1', handler1, window)
+person6.on('myEvent2', handler1)
+person6.on('myEvent2', handler2)
+person6.off(null, handler1)
+person6.trigger('myEvent1 myEvent2')
+</pre>
+
+<div class="headline">
+	<h3>删除单类型所有事件</h3>
+	<button id="btn7">trigger</button>
+	<div style="clear:both"></div>
+</div>
+<pre>
+var person7 = {name: 'jack', age: 30}
+_.extend(person7, Backbone.Events)
+
+function handler1() {
+	alert(1)
+}
+function handler2() {
+	alert(2)
+}
+person7.on('myEvent1', handler1, window)
+person7.on('myEvent1', handler2)
+person7.on('myEvent2', handler2)
+person7.off('myEvent1')
+person7.trigger('myEvent1 myEvent2')
+</pre>
+
+<div class="headline">
+	<h3>删除所有事件</h3>
+	<button id="btn8">trigger</button>
+	<div style="clear:both"></div>
+</div>
+<pre>
+var person8 = {name: 'jack', age: 30}
+_.extend(person8, Backbone.Events)
+
+function handler1() {
+	alert(1)
+}
+function handler2() {
+	alert(2)
+}
+person8.on('myEvent1', handler1, window)
+person8.on('myEvent1', handler2)
+person8.on('myEvent2', handler2)
+person8.off()
+person8.trigger('myEvent1 myEvent2')
+</pre>
+
+<h1>派发</h1>
+<div class="headline">
+	<h3>派发一个事件</h3>
+	<button id="btn9">trigger</button>
+	<div style="clear:both"></div>
+</div>
+<pre>
+var person9 = {name: 'jack', age: 30}
+_.extend(person9, Backbone.Events)
+
+function handler1() {
+	alert(1)
+}
+function handler2() {
+	alert(2)
+}
+person9.on('myEvent1', handler1)
+person9.on('myEvent2', handler2)
+person9.trigger('myEvent1')
+</pre>
+
+<div class="headline">
+	<h3>派发多个事件</h3>
+	<button id="btn10">trigger</button>
+	<div style="clear:both"></div>
+</div>
+<pre>
+var person10 = {name: 'jack', age: 30}
+_.extend(person10, Backbone.Events)
+
+function handler1() {
+	alert(1)
+}
+function handler2() {
+	alert(2)
+}
+person10.on('myEvent1', handler1)
+person10.on('myEvent2', handler2)
+$('#btn10').click(function() {
+	person10.trigger('myEvent1 myEvent2')
+})
+</pre>
+
+<div class="headline">
+	<h3>给事件handler传参数</h3>
+	<button id="btn11">trigger</button>
+	<div style="clear:both"></div>
+</div>
+<pre>
+var person11 = {name: 'jack', age: 30}
+_.extend(person11, Backbone.Events)
+
+function handler1(x, y) {
+	alert(x+y)
+}
+person11.on('myEvent1', handler1)
+person11.trigger('myEvent', 3, 5)
+</pre>
+
+<div class="headline">
+	<h3>传all执行两次，Backbone.Collection用到</h3>
+	<button id="btn12">trigger</button>
+	<div style="clear:both"></div>
+</div>
+<pre>
+var person12 = {name: 'jack', age: 30}
+_.extend(person12, Backbone.Events)
+var globalX = 0
+function handler1() {
+	alert(globalX++)
+}
+person12.on('all', handler1)
+person12.trigger('all')
 </pre>
 
 <script>
@@ -158,25 +287,35 @@ person5.trigger('myEvent1 myEvent2')
 		person2.trigger('myEvent')
 	})
 	
-	// 删除特定事件的特定handler
+	// 空格间隔添加多个事件
 	var person3 = {name: 'jack', age: 30}
 	_.extend(person3, Backbone.Events)
+	person3.on('myEvent1 myEvent2', function() {
+		alert(this)
+	})
+	$('#btn3').click(function() {
+		person3.trigger('myEvent1 myEvent2')
+	})
+	
+	// 删除特定事件的特定handler
+	var person4 = {name: 'jack', age: 30}
+	_.extend(person4, Backbone.Events)
 	function handler1() {
 		alert(1)
 	}
 	function handler2() {
 		alert(2)
 	}
-	person3.on('myEvent', handler1)
-	person3.on('myEvent', handler2)
-	person3.off('myEvent', handler1)
-	$('#btn3').click(function() {
-		person3.trigger('myEvent')
+	person4.on('myEvent', handler1)
+	person4.on('myEvent', handler2)
+	person4.off('myEvent', handler1)
+	$('#btn4').click(function() {
+		person4.trigger('myEvent')
 	})
 	
 	// 删除相同事件上下文的handler
-	var person4 = {name: 'jack', age: 30}
-	_.extend(person4, Backbone.Events)
+	var person5 = {name: 'jack', age: 30}
+	_.extend(person5, Backbone.Events)
 	
 	function handler1() {
 		alert(1)
@@ -187,17 +326,17 @@ person5.trigger('myEvent1 myEvent2')
 	function handler3() {
 		alert(3)
 	}
-	person4.on('myEvent', handler1, window)
-	person4.on('myEvent', handler2, window)
-	person4.on('myEvent', handler3)
-	person4.off(null, null, window)
-	$('#btn4').click(function() {
-		person4.trigger('myEvent')
+	person5.on('myEvent', handler1, window)
+	person5.on('myEvent', handler2, window)
+	person5.on('myEvent', handler3)
+	person5.off(null, null, window)
+	$('#btn5').click(function() {
+		person5.trigger('myEvent')
 	})
 	
 	// 删除相同handler的事件
-	var person5 = {name: 'jack', age: 30}
-	_.extend(person5, Backbone.Events)
+	var person6 = {name: 'jack', age: 30}
+	_.extend(person6, Backbone.Events)
 	
 	function handler1() {
 		alert(1)
@@ -205,13 +344,107 @@ person5.trigger('myEvent1 myEvent2')
 	function handler2() {
 		alert(2)
 	}
-	person5.on('myEvent1', handler1, window)
-	person5.on('myEvent2', handler1)
-	person5.on('myEvent2', handler2)
-	person5.off(null, handler1)
-	$('#btn5').click(function() {
-		person5.trigger('myEvent1 myEvent2')
+	person6.on('myEvent1', handler1, window)
+	person6.on('myEvent2', handler1)
+	person6.on('myEvent2', handler2)
+	person6.off(null, handler1)
+	$('#btn6').click(function() {
+		person6.trigger('myEvent1 myEvent2')
 	})
+	
+	// 删除单类型所有事件
+	var person7 = {name: 'jack', age: 30}
+	_.extend(person7, Backbone.Events)
+	
+	function handler1() {
+		alert(1)
+	}
+	function handler2() {
+		alert('only trigger by myEvent2')
+	}
+	person7.on('myEvent1', handler1, window)
+	person7.on('myEvent1', handler2)
+	person7.on('myEvent2', handler2)
+	person7.off('myEvent1')
+	$('#btn7').click(function() {
+		person7.trigger('myEvent1 myEvent2')
+	})
+	
+	// 删除所有事件
+	var person8 = {name: 'jack', age: 30}
+	_.extend(person8, Backbone.Events)
+	
+	function handler1() {
+		alert(1)
+	}
+	function handler2() {
+		alert(2)
+	}
+	person8.on('myEvent1', handler1, window)
+	person8.on('myEvent1', handler2)
+	person8.on('myEvent2', handler2)
+	person8.off()
+	$('#btn8').click(function() {
+		person8.trigger('myEvent1 myEvent2')
+		alert('Nothing happend')
+	})
+	
+	// 派发一个事件
+	var person9 = {name: 'jack', age: 30}
+	_.extend(person9, Backbone.Events)
+	
+	function handler1() {
+		alert(1)
+	}
+	function handler2() {
+		alert(2)
+	}
+	person9.on('myEvent1', handler1)
+	person9.on('myEvent2', handler2)
+	$('#btn9').click(function() {
+		person9.trigger('myEvent1')
+	})
+	
+	// 派发多个事件
+	var person10 = {name: 'jack', age: 30}
+	_.extend(person10, Backbone.Events)
+	
+	function handler1() {
+		alert(1)
+	}
+	function handler2() {
+		alert(2)
+	}
+	person10.on('myEvent1', handler1)
+	person10.on('myEvent2', handler2)
+	$('#btn10').click(function() {
+		person10.trigger('myEvent1 myEvent2')
+	})
+	
+	// 给事件handler传参数
+	var person11 = {name: 'jack', age: 30}
+	_.extend(person11, Backbone.Events)
+	
+	function handler1(x, y) {
+		alert(x+y)
+	}
+	person11.on('myEvent1', handler1)
+	$('#btn11').click(function() {
+		person11.trigger('myEvent1', 3, 5)
+	})
+	
+	// 传all
+	var person12 = {name: 'jack', age: 30}
+	_.extend(person12, Backbone.Events)
+	var globalX = 0
+	function handler1() {
+		alert(globalX++)
+	}
+	person12.on('all', handler1)
+	$('#btn12').click(function() {
+		person12.trigger('all')
+	})
+	
 </script>
 
 	</body>
