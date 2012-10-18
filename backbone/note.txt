@@ -1,0 +1,10 @@
+Backbone学习记录
+
+Backbone.View
+1，与特定的el绑定，el可以来自页面，也可以自行创建。来自页面时el可设为选择器或dom对象，也可以设为jq对象。自行创建时默认为div，可使用tagName指定为其它类型，还可以设定className、id、attributes等。
+2，events设置为子元素代理事件，左部指定事件类型及子元素选择器，右部为事件处理器函数。
+3，多数时候需要指定一个Backbone.Model或Backbone.Collection与其关联，可以通过Backbone.View.extend({model: XXModel})扩展，可以通过new View({model: XXModel})传入。
+4，当view关联的model有变化时，去触发render函数，每个view应该自行实现render，它负责取模型数据去更新视图。这样每当数据有变化时，会自动去更新视图。
+5，render方法可以使用underscore的template方法去构建模板，也可以自行实现或使用第三方的。
+
+Backbone.Model
