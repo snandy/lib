@@ -8,3 +8,4 @@ Backbone.View
 5，render方法可以使用underscore的template方法去构建模板，也可以自行实现或使用第三方的。
 
 Backbone.Model
+
