@@ -1,35 +1,39 @@
 
 function Suggest(opt) {
-	var input = opt.input || null
-	var containerCls = opt.containerCls || 'suggest-container'
-	var itemCls = opt.itemCls || 'suggest-item'
-	var activeCls = opt.activeCls || 'suggest-active'
-	var width = opt.width
-	var opacity = opt.opacity
-	var data = opt.data || []
-	var visible = false
-	var activeItem = null
+	var input = opt.input
+		visible = false,
+		activeItem = null,
+		finalValue = ''
 	
 	var Model = Backbone.Model.extend({
-		initialize: function() {
-			this.set({html: ''})
+		defaults: {
+			panelCls: 'suggest-container',
+			itemCls: 'suggest-item',
+			activeCls: 'suggest-active',
+			opacity: opt.opacity,
+			width: opt.width,
+			data: opt.data || []
 		}
 	})
 	var model = new Model
 	
 	var View = Backbone.View.extend({
-		className: containerCls,
+		className: model.get('panelCls'),
 		initialize: function() {
 			var me = this
 			this.setPos()
+			this.$el.hide().appendTo('body')			
 			model.on('change', this.render, this)
-			this.$el.hide().appendTo('body')
 			$(input).keyup(function(e) {
-				if (!view.keys(e)) {
-					model.set({html: input.value}, {ev: e})
+				if (!me.onSpecKeys(e)) {
+					var options = {html: input.value}
+					model.set(options)
 				}
 			}).blur(function() { // blur会在click前发生，这里使用mousedown
 				me.hide()
+			})
+			$(window).resize(function() {
+				me.setPos()
 			})
 		},
 		events: {
@@ -40,31 +44,51 @@ function Suggest(opt) {
 			if (input.value === '') {
 				this.hide()
 			} else {
-				this.show(options.ev)
+				this.show()
 			}
 		},
 		hide: function() {
 			this.$el.hide()
 			visible = false
 		},
-		show: function(e) {
-			if (input.value.indexOf('@') !== -1) return
+		show: function() {
+			var value = input.value,
+				itemCls = model.get('itemCls'),
+				data = model.get('data'),
+				opacity = model.get('opacity'),
+				width = model.get('width')
+				
+			if (value.indexOf('@') !== -1) return
 			
 			this.items = []
-			if ($(input).attr('curr_val') !== input.value) {
-				this.el.innerHTML = ''
-				for (var i=0, len = data.length; i<len; i++) {
-					var item = $('<div>').addClass(itemCls).html(input.value + '@' + data[i])
-					this.items[i] = item
-					this.el.appendChild(item[0])
-				}
-				$(input).attr('curr_val', input.value)
+			this.el.innerHTML = ''
+			for (var i=0, len = data.length; i<len; i++) {
+				var item = $('<div>').addClass(itemCls).html(value + '@' + data[i])
+				this.items[i] = item
+				this.el.appendChild(item[0])
+			}
+			if (width) {
+				this.$el.width(width)
+			}
+			if (opacity) {
+				this.$el.css('opacity', opacity)
 			}
 			this.$el.show()
 			visible = true
+			finalValue = value
 		},
-		keys: function(e) {
-			var container = this.el
+		setPos: function() {
+			var pos = $(input).position()
+			this.$el.css({
+				position: 'absolute',
+				overflow: 'hidden',
+				left: pos.left,
+				top: pos.top + input.offsetHeight,
+				width: input.offsetWidth-1
+			})
+		},
+		onSpecKeys: function(e) {
+			var container = this.el, itemCls = model.get('itemCls'), activeCls = model.get('activeCls')
 			if (visible) {
 				switch (e.keyCode) {
 					case 13: // Enter
@@ -88,7 +112,7 @@ function Suggest(opt) {
 								activeItem.className = itemCls
 								activeItem = null
 								input.focus()
-								input.value = input.getAttribute("curr_val")
+								input.value = finalValue
 							}
 						}
 						return true
@@ -107,29 +131,21 @@ function Suggest(opt) {
 								activeItem.className = itemCls
 								activeItem = null
 								input.focus()
-								input.value = input.getAttribute("curr_val")
+								input.value = finalValue
 							}
 						}
 						return true
 					case 27: 
 						this.hide()
-						input.value = $(input).attr('curr_val')
+						input.value = finalValue
 						return true
 				}
 			}
 		},
-		setPos: function() {
-			var pos = $(input).position()
-			this.$el.css({
-				position: 'absolute',
-				overflow: 'hidden',
-				left: pos.left,
-				top: pos.top + input.offsetHeight,
-				width: $.browser.mozilla ? input.clientWidth : input.offsetWidth-2
-			})
-		},
 		onMouseOver: function(e) {
-			var target = e.target
+			var target = e.target,
+				itemCls = model.get('itemCls'),
+				activeCls = model.get('activeCls')
 			if (target.className === itemCls) {
 				if (activeItem) {
 					activeItem.className = itemCls
@@ -145,4 +161,6 @@ function Suggest(opt) {
 	})
 	var view = new View
 	
+	this.model = model
+	this.view = view
 }

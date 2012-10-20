@@ -3,7 +3,7 @@
 
 	<head>
     	<meta charset='utf-8' />
-    	<title>Backbone.View</title>
+    	<title>Backbone - Suggest</title>
 		<style type="text/css">
 			body{margin:0;padding:0;}
 			input{width:200px;}
@@ -18,18 +18,27 @@
   	</head>
 
 	<body>
-		<div style="width:400px;margin:30px auto;text-align:center;">
-			<label>新浪</label>
-			<input type="text" id="sina"/>
-			<br/><br/><br/><br/><br/><br/><br/><br/><br/>
-			<label>搜狐</label>
-			<input type="text" id="sohu"/>
+		<div style="width:520px;margin:30px auto;text-align:center;">
+			<div style="float:left">
+				<label>新浪</label>
+				<input type="text" id="sina"/>
+			</div>
+			<div style="float:right">
+				<label>搜狐</label>
+				<input type="text" id="sohu"/>
+			</div>
 		</div>
 		<script>
-    		var suggest = new Suggest({
+    		var sinaEl = new Suggest({
     			input: document.getElementById('sina'),
 				data: ['sina.cn','sina.com','vip.sina.com.cn','2008.sina.com','263.sina.com']
     		})
+    		var sohuEl = new Suggest({
+				opacity: 0.3,
+				width: 300,
+				input: document.getElementById('sohu'),
+				data: ['sohu.com','sogou.com','chinaren.com','vip.sohu.com','sohu.net','2008.sohu.com','sms.sohu.com']
+    		})    		
     	</script>
 	</body>
 </html>
