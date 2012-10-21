@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    	<meta charset='utf-8' />
+    	<title>Backbone - extend</title>
+	    <style type="text/css">
+	 	</style>
+    	<script src="http://documentcloud.github.com/underscore/underscore.js"></script>
+    	<script src="http://documentcloud.github.com/backbone/backbone.js"></script>
+    	<script src="extend.js"></script>
+    	<script>
+    		function Person(name, age) {
+    			this.name = name
+    			this.age = age
+    		}
+    		Person.prototype.setName = function(name) {
+    			this.name = name
+    		}
+    		Person.prototype.setAge = function(age) {
+    			this.age = age
+    		}
+    		
+    		Person.extend = extend
+    		
+    		var Man = Person.extend({
+	    			getName: function() {
+	    				return this.name;
+	    			},
+	    			getAge: function() {
+	    				return this.age;
+	    			}
+	    		}, {
+	    			COUNTRY: 'China'
+	    		})
+	    		
+	    	var Woman = Person.extend({
+		    		constructor: function(school) { // 不使用父类构造器
+		    			this.school = school
+		    		},
+		    		getSchool: function() {
+		    			return this.school
+		    		},
+		    		setSchool: function(school) {
+		    			this.school = school
+		    		}
+		    	})
+	    	
+    	</script>
+  	</head>
+	<body>
+
+
+	</body>
+</html>

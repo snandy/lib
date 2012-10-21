@@ -1,5 +1,18 @@
 Backbone学习记录
 
+Backbone.Events
+
+
+Backbone的写类方式，继承
+1，extend方法赋值给某个类时，该类使用extend方法，传两个对象，第一个扩展原型（protoProps），第二个扩展类自身（staticProps）。这时便构建了一个子类。
+2，子类默认的构造器用一个空函数包裹父类，但第一个参数protoProps有constructor将不使用父类构造器。即父类中this上的属性，方法子类不继承。
+
+
+Backbone.Model
+1，模型是保存应用程序数据的地方。使用Backbone.Model.extend去构建一个类，该类会自动继承Backbone.Model。
+2，可使用defaults指定默认属性，也可使用initialize方法构建复杂属性。
+3，
+
 Backbone.View
 1，与特定的el绑定，el可以来自页面，也可以自行创建。来自页面时el可设为选择器或dom对象，也可以设为jq对象。自行创建时默认为div，可使用tagName指定为其它类型，还可以设定className、id、attributes等。
 2，events设置为子元素代理事件，左部指定事件类型及子元素选择器，右部为事件处理器函数。
@@ -7,5 +20,5 @@ Backbone.View
 4，当view关联的model有变化时，去触发render函数，每个view应该自行实现render，它负责取模型数据去更新视图。这样每当数据有变化时，会自动去更新视图。
 5，render方法可以使用underscore的template方法去构建模板，也可以自行实现或使用第三方的。
 
-Backbone.Model
+
 
