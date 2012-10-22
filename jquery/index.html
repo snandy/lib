@@ -5,15 +5,18 @@
     	<meta charset='utf-8' />
     	<meta http-equiv="X-UA-Compatible" content="chrome=1" />
     	<title>jQuery Dialog</title>
-    	<script src="jquery-1.8.2.js"></script>
+    	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
     	<script src="jq-mask.js"></script>
     	<script src="jq-center.js"></script>
     	<script src="jq-dialog.js"></script>
   	</head>
 
 	<body>
-
-		<input type="button" value="会员登陆">
-
+		<input type="button" data-main="ss" value="会员登陆">
+<p data~xx="data">ppp</p>
+<script>
+	var el = document.getElementsByTagName('p')[0]
+	alert(el.getAttribute('data~xx'))
+</script>
 	</body>
 </html>
