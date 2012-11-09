@@ -1,0 +1,43 @@
+﻿#home
+{
+	background-image: url('../images/home_tab.zh-CN.gif');
+}
+body.home #home
+{
+	background-image: url('../images/home_tab_highlighted.zh-CN.gif');
+}
+#cv
+{
+	background-image: url('../images/cv_tab.zh-CN.gif');
+}
+body.cv #cv
+{
+	background-image: url('../images/cv_tab_highlighted.zh-CN.gif');
+}
+#portfolio
+{
+	background-image: url('../images/portfolio_tab.zh-CN.gif');
+}
+body.portfolio #portfolio
+{
+	background-image: url('../images/portfolio_tab_highlighted.zh-CN.gif');
+}
+#more
+{
+	background-image: url('../images/more_tab.zh-CN.gif');
+}
+body.more #more
+{
+	background-image: url('../images/more_tab_highlighted.zh-CN.gif');
+}
+
+body
+{
+	font-family: 微软雅黑, 宋体;
+}
+h2{
+	font-family: 微软雅黑, 宋体;
+}
+h3{
+	font-family: 微软雅黑, 宋体;
+}

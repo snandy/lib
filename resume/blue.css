@@ -1,0 +1,323 @@
+body
+{
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #e5ecf9;
+}
+#outerWrapper
+{
+    text-align: left;
+    width: 720px;
+    margin: 0 auto;
+    padding-bottom: 40px;
+    background-image: url('../images/paper_bottom.gif');
+    background-repeat: no-repeat;
+    background-position: center bottom;
+}
+#innerWrapper
+{
+    margin-top: 60px;
+    padding-top: 40px;
+    background-image: url('../images/paper_top.gif');
+    background-repeat: no-repeat;
+    background-position: center top;
+    position: relative;
+}
+
+#navigation
+{
+    position: absolute;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    left: 45px;
+    top: -40px;
+}
+#navigation li
+{
+    float: left;
+    width: 130px;
+    height: 80px;
+    background-repeat: no-repeat;
+}
+#navigation li a
+{
+    display: block;
+    width: 120px;
+    height: 40px;
+    margin: 20px 5px;
+    text-indent: -3000px;
+}
+
+#languages
+{
+    position: relative;
+    height: 0;
+    top: -20px;
+    margin: 0;
+    padding-right: 45px;
+    list-style-type: none;
+}
+#languages /* for IE6 */
+{
+    _position: absolute;
+    _top: 20px;
+}
+#languages li
+{
+    float: right;
+    width: 70px;
+}
+#languages li a
+{
+    display: block;
+    width: 60px;
+    height: 20px;
+    margin: 0 auto;
+    text-indent: -3000px;
+}
+
+#content
+{
+    background-image: url('../images/paper_background.gif');
+    background-repeat: repeat-y;
+    padding: 0 40px;
+    width: 640px;
+}
+#content:after
+{
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+#photoColumn
+{
+    float: left;    
+    margin: 0 20px 0 10px;
+    _margin-left: 5px;
+}
+#personalPhoto, #mvpLogo
+{
+    display: block;
+    margin-bottom: 20px;
+    border-style: none;
+}
+#rightColumn
+{
+    float: right;
+    width: 410px;
+}
+
+h2
+{
+    font-size: 12pt;
+    margin-top: 0;
+    padding: 2px 5px;
+    border-top: 1px #3366cc solid;
+    background-color: #e5ecf9;
+}
+h3
+{
+    font-size: 10pt;
+    margin-top: 0;
+    padding: 2px 10px;
+    border-bottom: 1px #cccccc solid;
+}
+.section
+{
+    font-size: 10pt;
+    clear: both;
+    padding: 10px 0 30px 0;
+}
+.section:after
+{
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+.linkList
+{
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+.linkList li
+{
+    margin: 5px 0;
+}
+.linkList li:after
+{
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+.linkList li a
+{
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    padding-right: 10px;
+}
+.linkList li span
+{
+    display: block;
+    margin-left: 110px;
+}
+.itemList
+{
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+.itemList li
+{
+    clear: both;
+    margin: 5px 0;
+}
+.itemList a
+{
+    color: inherit;
+    text-decoration: none;
+}
+.section:hover .itemList a
+{
+    color: #377BBF;
+}
+.section:hover .itemList a:hover
+{
+    text-decoration: underline;
+}
+.itemDate
+{
+    width: 169px;
+    float: left;
+    color: #cc9900;
+    font-weight: bold;
+    margin-left: 10px;
+}
+.itemDetail
+{
+    width: 430px;
+    float: right;
+    margin-right: 10px;
+}
+.itemDetail ul
+{
+    list-style-type: circle;
+}
+.itemDetail div
+{
+    padding-left: 30px;
+}
+.date
+{
+    color: #cc9900;
+    margin-right: 20px;
+}
+
+#contacts div
+{
+    clear: both;
+    margin: 5px 0;
+}
+#contacts div:after
+{
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+#contacts div label
+{
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    padding-right: 10px;
+}
+#contacts div span
+{
+    font-weight: bold;
+}
+
+.subSection
+{
+    clear: both;
+}
+.subSection:after
+{
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+.itemImage
+{
+    width: 219px;
+    float: left;
+    color: #cc9900;
+    font-weight: bold;
+    margin-left: 10px;
+}
+.itemDescriptionRight
+{
+    width: 390px;
+    float: right;
+    margin-right: 10px;
+}
+.itemDescriptionBottom
+{
+    clear: both;
+    margin: 0 10px;
+}
+.itemImage a
+{
+    padding: 5px;
+    border: 1px #cccccc solid;
+    float: left;
+    margin: 0 20px 10px 0;
+}
+.itemImageList a
+{
+    padding: 5px;
+    border: 1px #cccccc solid;
+    float: left;
+}
+.itemImage a:hover, .itemImageList a:hover
+{
+    background-color: #eeeeee;
+    border: 1px #999999 solid;
+}
+.itemImage a img, .itemImageList a img
+{
+    border-style: none;
+}
+.itemImageList
+{
+    list-style-type: none;
+    margin: 0 10px;
+    padding: 0;
+}
+.itemImageList li
+{
+    float: left;
+    margin: 0 10px 10px 0;
+}
+
+a.disabled
+{
+    text-decoration: underline;
+    color: #888888;
+    cursor: pointer;
+}
