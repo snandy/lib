@@ -1,0 +1,3584 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+form, ul, li, p, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+}
+img {
+    border: 0 none;
+}
+ul, li {
+    list-style-type: none;
+}
+.normalfont {
+    font-family: "����",Arial;
+    font-size: 12px;
+}
+.contactfont {
+    font-family: "����",Arial;
+    font-size: 12px;
+    line-height: 20px;
+}
+#top {
+    background-image: url("http://img01.51jobcdn.com/im/2009/areabg.gif");
+    background-repeat: repeat-x;
+    clear: both;
+    margin: 0 auto;
+    width: 1002px;
+}
+#arealogo, .labelbt, #logobg {
+    float: left;
+}
+.labelbt {
+    margin-left: 10px;
+    margin-top: 20px;
+}
+#areaver {
+    float: left;
+    line-height: 13px;
+    margin-left: 15px;
+    margin-top: 12px;
+}
+#areaver span {
+    display: block;
+    line-height: 24px;
+}
+.loginname {
+    color: #0263C1;
+    float: left;
+    font-family: Arial,Verdana,Helvetica,sans-serif;
+    font-size: 12px;
+    line-height: 15px;
+    margin-left: 8px;
+    margin-top: 12px;
+}
+.navbt {
+    background-color: #F9F9F9;
+    border: 1px solid #EFEEF3;
+    float: right;
+    height: 22px;
+    margin-left: 15px;
+    margin-right: 6px;
+    margin-top: 8px;
+}
+.navbt img {
+    vertical-align: middle;
+}
+.navbt li {
+    float: left;
+    font-size: 12px;
+    margin: 5px 5px 5px 7px;
+    text-align: center;
+    vertical-align: middle;
+}
+.orareg {
+    color: #FF7300;
+}
+.navbtbg li {
+    float: right;
+}
+.bts {
+    margin-top: 4px;
+}
+.btshow {
+    margin-top: -4px;
+    position: relative;
+}
+.menu2 {
+    background-image: url("http://img01.51jobcdn.com/im/2009/menu2bg.gif");
+    background-repeat: repeat-x;
+    height: 31px;
+    padding-left: 15px;
+    padding-top: 4px;
+}
+.menu_2 li {
+    float: left;
+    font-size: 12px;
+    line-height: 14px;
+    margin: 4px;
+}
+.arrow_ps {
+    text-align: center;
+}
+.menu2none {
+    font-size: 0;
+    height: 10px;
+    padding-left: 15px;
+}
+.menu1 {
+    height: 22px;
+}
+#bottom {
+    clear: both;
+    margin: 0 auto;
+    width: 1002px;
+}
+.bott1 {
+    background-image: url("http://img01.51jobcdn.com/im/2009/resumebottombg.gif");
+    background-repeat: repeat-x;
+    color: #333333;
+    font-family: Arial,Verdana,Helvetica,sans-serif;
+    font-size: 12px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    width: 1002px;
+}
+.btext li {
+    float: left;
+    font-family: "����";
+    font-size: 12px;
+    padding: 5px;
+    vertical-align: middle;
+}
+.btext {
+    margin-left: 155px;
+    padding-top: 12px;
+}
+#copyright {
+    background-color: #F8F6F7;
+    border-bottom: 2px solid #F7F7F7;
+    padding: 15px;
+    width: 972px;
+}
+.fontright {
+    color: #333333;
+    font-family: Arial,Verdana,Helvetica,sans-serif;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+}
+.clearboth {
+    clear: both;
+}
+.maincenter {
+    clear: both;
+    margin: 0 auto;
+    width: 1002px;
+}
+.mainleft {
+    margin-left: 19px;
+}
+.btname {
+    margin-left: 20px;
+    padding-top: 3px;
+}
+.btname2 {
+    padding-top: 6px;
+}
+.graybttop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/graybtbg.gif");
+    background-repeat: repeat-x;
+    border-bottom: 1px solid #C8C8C8;
+    height: 27px;
+}
+.graytop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/graytbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.graybott {
+    background-image: url("http://img01.51jobcdn.com/im/2009/graybbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.grayline {
+    background-color: #F8F8F8;
+    border-left: 1px solid #C8C8C8;
+    border-right: 1px solid #C8C8C8;
+}
+.graybttopbg {
+    background-color: #F8F8F8;
+    padding-bottom: 6px;
+}
+.bluebttop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/bluebtbg.gif");
+    background-repeat: repeat-x;
+    border-bottom: 1px solid #266FBB;
+    height: 25px;
+}
+.bluetop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/bluetbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.bluebott {
+    background-image: url("http://img01.51jobcdn.com/im/2009/bluebbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.blueline {
+    background-color: #EEF7FE;
+    border-left: 1px solid #266FBB;
+    border-right: 1px solid #266FBB;
+}
+.bluebttopbg {
+    background-color: #EEF7FE;
+    padding-bottom: 6px;
+}
+.redbttop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/redbtbg.gif");
+    background-repeat: repeat-x;
+    border-bottom: 1px solid #FE8929;
+    height: 25px;
+}
+.greenbttop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/greenbtbg.gif");
+    background-repeat: repeat-x;
+    border-bottom: 1px solid #0C7A3B;
+    height: 25px;
+}
+.redtop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/redtbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.redbott {
+    background-image: url("http://img01.51jobcdn.com/im/2009/redbbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.redline {
+    background-color: #FCEFE7;
+    border-left: 1px solid #FE8929;
+    border-right: 1px solid #FE8929;
+}
+.redline2 {
+    border-left: 1px solid #FE8929;
+    border-right: 1px solid #FE8929;
+}
+.redbttopbg {
+    background-color: #FCEFE7;
+    padding-bottom: 6px;
+}
+.itbttop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/it/bluebtbg.gif");
+    background-repeat: repeat-x;
+    border-bottom: 1px solid #1082A4;
+    height: 25px;
+}
+.ittop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/it/bluetbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.itbott {
+    background-image: url("http://img01.51jobcdn.com/im/2009/it/bluebbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.itline {
+    background-color: #EDFFFF;
+    border-left: 1px solid #1082A4;
+    border-right: 1px solid #1082A4;
+}
+.itbttopbg {
+    background-color: #EDFFFF;
+    padding-bottom: 6px;
+}
+.schoolbttop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/school/greenbtbg.gif");
+    background-repeat: repeat-x;
+    border-bottom: 1px solid #61BF23;
+    height: 25px;
+}
+.schooltop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/school/greentbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.schoolbott {
+    background-image: url("http://img01.51jobcdn.com/im/2009/school/greenbbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.schoolline {
+    background-color: #E2FECB;
+    border-left: 1px solid #61BF23;
+    border-right: 1px solid #61BF23;
+}
+.schoolbttopbg {
+    background-color: #E2FECB;
+    padding-bottom: 6px;
+}
+.advancebttop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/advance/dgraybtbg.gif");
+    background-repeat: repeat-x;
+    border-bottom: 1px solid #707070;
+    height: 25px;
+}
+.advancetop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/advance/dgraytbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.advancebott {
+    background-image: url("http://img01.51jobcdn.com/im/2009/advance/dgraybbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.advanceline {
+    background-color: #EDEDED;
+    border-left: 1px solid #707070;
+    border-right: 1px solid #707070;
+}
+.advancebttopbg {
+    background-color: #EDEDED;
+    padding-bottom: 6px;
+}
+.advancearticlebttop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/advance/dgraybtbg.gif");
+    background-repeat: repeat-x;
+    border-bottom: 1px solid #707070;
+    height: 25px;
+}
+.advancearticletop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/cls/dgrayarticletbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.advancearticlebott {
+    background-image: url("http://img01.51jobcdn.com/im/2009/cls/dgrayarticlebbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.advancearticleline {
+    background-color: #F9F9F9;
+    border-left: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
+}
+.trainbttop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/train/dgreenbtbg.gif");
+    background-repeat: repeat-x;
+    border-bottom: 1px solid #20844E;
+    height: 25px;
+}
+.traintop {
+    background-image: url("http://img01.51jobcdn.com/im/2009/train/dgreentbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.trainbott {
+    background-image: url("http://img01.51jobcdn.com/im/2009/train/dgreenbbg.gif");
+    background-repeat: repeat-x;
+    height: 6px;
+}
+.trainline {
+    background-color: #F2FDF7;
+    border-left: 1px solid #20844E;
+    border-right: 1px solid #20844E;
+}
+.trainbttopbg {
+    background-color: #F2FDF7;
+    padding-bottom: 6px;
+}
+.trainarticlebt {
+    padding-top: 5px;
+}
+.xyarticlebt {
+    padding-top: 5px;
+}
+.itarticlebt {
+    padding-top: 5px;
+}
+.blackbttop {
+    background-repeat: repeat-x;
+    height: 26px;
+}
+.blackbott {
+    height: 8px;
+}
+.flashwall_backgroud1 {
+    background-image: url("http://img01.51jobcdn.com/im/2009/area/1-2.png");
+    height: 327px;
+}
+.flashwall_backgroud2 {
+    background-image: url("http://img01.51jobcdn.com/im/2009/area/2-2.png");
+    background-repeat: no-repeat;
+    height: 327px;
+}
+.blackline {
+    padding-left: 10px;
+    padding-top: 10px;
+}
+a.font_show:link {
+    color: #333333;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: none;
+}
+a.font_show:visited {
+    color: #7E817E;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: none;
+}
+a.font_show:hover {
+    color: #FF7300;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: none;
+}
+a:link {
+    color: #333333;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: none;
+}
+a:visited {
+    color: #7E817E;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: none;
+}
+a:hover {
+    color: #FF7300;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: none;
+}
+a.nov:link {
+    color: #333333;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.nov:visited {
+    color: #333333;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.nov:hover {
+    color: #FF7F2C;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.white:link {
+    color: #FFFFFF;
+    font-size: 12px;
+    text-decoration: underline;
+}
+a.white:visited {
+    color: #FFFFFF;
+    font-size: 12px;
+    text-decoration: underline;
+}
+a.white:hover {
+    color: #FFFFFF;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.red:link {
+    color: #FF0000;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.red:visited {
+    color: #FF0000;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.red:hover {
+    color: #FF0000;
+    font-size: 12px;
+    text-decoration: underline;
+}
+a.orange:link {
+    color: #FF7300;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.orange:visited {
+    color: #FF7300;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.orange:hover {
+    color: #FF7300;
+    font-size: 12px;
+    text-decoration: underline;
+}
+a.orange1:link {
+    color: #FF7300;
+    font-size: 12px;
+    text-decoration: underline;
+}
+a.orange1:visited {
+    color: #FF7300;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.orange1:hover {
+    color: #FF7300;
+    font-size: 12px;
+    text-decoration: underline;
+}
+.orange1 {
+    color: #FF7300;
+}
+a.orange2:link {
+    color: #FF7300;
+    font-size: 14px;
+    text-decoration: none;
+}
+a.orange2:visited {
+    color: #FF7300;
+    font-size: 14px;
+    text-decoration: none;
+}
+a.orange2:hover {
+    color: #FF7300;
+    font-size: 14px;
+    text-decoration: underline;
+}
+a.black:link {
+    color: #333333;
+    font-size: 12px;
+    text-decoration: underline;
+}
+a.black:visited {
+    color: #333333;
+    font-size: 12px;
+    text-decoration: underline;
+}
+a.black:hover {
+    color: #FF7300;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.black1:link {
+    color: #333333;
+    font-size: 13px;
+    text-decoration: none;
+}
+a.black1:visited {
+    color: #333333;
+    font-size: 13px;
+    text-decoration: none;
+}
+a.black1:hover {
+    color: #FF7300;
+    font-size: 13px;
+    text-decoration: none;
+}
+a.blue:link {
+    color: #266EBA;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.blue:visited {
+    color: #266EBA;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.blue:hover {
+    color: #266EBA;
+    font-size: 12px;
+    text-decoration: underline;
+}
+a.blue1:link {
+    color: #1381A3;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.blue1:visited {
+    color: #1381A3;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.blue1:hover {
+    color: #1381A3;
+    font-size: 12px;
+    text-decoration: underline;
+}
+a.blue2:link {
+    color: #1A95E2;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.blue2:visited {
+    color: #1A95E2;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.blue2:hover {
+    color: #1A95E2;
+    font-size: 12px;
+    text-decoration: underline;
+}
+a.green:link {
+    color: #007236;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.green:visited {
+    color: #007236;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.green:hover {
+    color: #007236;
+    font-size: 12px;
+    text-decoration: underline;
+}
+a.green1:link {
+    color: #005825;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.green1:visited {
+    color: #005825;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.green1:hover {
+    color: #005825;
+    font-size: 12px;
+    text-decoration: underline;
+}
+a.green2:link {
+    color: #5CB018;
+    font-size: 14px;
+    text-decoration: none;
+}
+a.green2:visited {
+    color: #5CB018;
+    font-size: 14px;
+    text-decoration: none;
+}
+a.green2:hover {
+    color: #5CB018;
+    font-size: 14px;
+    text-decoration: underline;
+}
+a.green3:link {
+    color: #5CB018;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.green3:visited {
+    color: #5CB018;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.green3:hover {
+    color: #5CB018;
+    font-size: 12px;
+    text-decoration: underline;
+}
+.anbg {
+    background-color: #E7E7E7;
+    background-image: url("http://img01.51jobcdn.com/im/2009/selean.gif");
+    border-color: #FFFFFF;
+    border-right: 0 solid #FFFFFF;
+    border-style: solid;
+    border-width: 0;
+    color: #333333;
+    font-family: "����",arial,verdana,helvetica,sans-serif;
+    font-size: 12px;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 5px;
+    width: 86px;
+}
+.anbg2 {
+    background-color: #F5F5F5;
+    background-image: url("http://img01.51jobcdn.com/im/2009/selean1.gif");
+    border-color: #FFFFFF;
+    border-right: 0 solid #FFFFFF;
+    border-style: solid;
+    border-width: 0;
+    color: #333333;
+    font-family: "����",arial,verdana,helvetica,sans-serif;
+    font-size: 12px;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 5px;
+    width: 86px;
+}
+.choose {
+    background-color: #E7E7E7;
+    background-image: url("http://img01.51jobcdn.com/im/2009/btn_choose.gif");
+    border-color: #FFFFFF;
+    border-right: 0 solid #FFFFFF;
+    border-style: solid;
+    border-width: 0;
+    color: #333333;
+    cursor: pointer;
+    font-family: "����",arial,verdana,helvetica,sans-serif;
+    font-size: 12px;
+    height: 25px;
+    margin-top: 5px;
+    width: 128px;
+}
+.anbg1 {
+    background-color: #E7E7E7;
+    background-image: url("http://img01.51jobcdn.com/im/2009/it/sele.gif");
+    border-color: #FFFFFF;
+    border-right: 0 solid #FFFFFF;
+    border-style: solid;
+    border-width: 0;
+    color: #333333;
+    font-family: "����",arial,verdana,helvetica,sans-serif;
+    font-size: 12px;
+    height: 30px;
+    margin-top: 1px;
+    width: 70px;
+}
+.selebg {
+    background-color: #E7E7E7;
+    background-image: url("http://img01.51jobcdn.com/im/2009/area/selem.gif");
+    border-color: #FFFFFF;
+    border-right: 0 solid #FFFFFF;
+    border-style: solid;
+    border-width: 0;
+    color: #333333;
+    font-family: "����",arial,verdana,helvetica,sans-serif;
+    font-size: 12px;
+    height: 25px;
+    margin-top: 5px;
+    width: 143px;
+}
+.selebg1 {
+    background-color: #E7E7E7;
+    background-image: url("http://img01.51jobcdn.com/im/2009/area/selem2.gif");
+    border-color: #FFFFFF;
+    border-right: 0 solid #FFFFFF;
+    border-style: solid;
+    border-width: 0;
+    color: #333333;
+    font-family: "����",arial,verdana,helvetica,sans-serif;
+    font-size: 12px;
+    height: 25px;
+    margin-top: 5px;
+    width: 187px;
+}
+.selebg2 {
+    background-color: #E7E7E7;
+    background-image: url("http://img01.51jobcdn.com/im/2009/area/selem.gif");
+    border-color: #FFFFFF;
+    border-right: 0 solid #FFFFFF;
+    border-style: solid;
+    border-width: 0;
+    color: #333333;
+    font-family: "����",arial,verdana,helvetica,sans-serif;
+    font-size: 12px;
+    height: 25px;
+    width: 143px;
+}
+.selebgqz {
+    background-color: #E7E7E7;
+    background-image: url("http://img01.51jobcdn.com/im/2009/area/selemqz.gif");
+    border-color: #FFFFFF;
+    border-right: 0 solid #FFFFFF;
+    border-style: solid;
+    border-width: 0;
+    color: #333333;
+    font-family: "����",arial,verdana,helvetica,sans-serif;
+    font-size: 12px;
+    height: 25px;
+    margin-top: 5px;
+    width: 120px;
+}
+.kt_bg1 {
+    background-image: url("http://img01.51jobcdn.com/im/2009/lab1.gif");
+    background-repeat: no-repeat;
+    cursor: pointer;
+    height: 22px;
+    padding-top: 3px;
+    text-align: center;
+    width: 67px;
+}
+.kt_bg2 {
+    background-image: url("http://img01.51jobcdn.com/im/2009/lab2.gif");
+    background-repeat: no-repeat;
+    color: #FF7300;
+    cursor: pointer;
+    font-weight: bold;
+    height: 25px;
+    text-align: center;
+    vertical-align: middle;
+    width: 67px;
+}
+.kt_bg3 {
+    background-image: url("http://img01.51jobcdn.com/im/2009/lab3.gif");
+    background-repeat: no-repeat;
+    cursor: pointer;
+    height: 22px;
+    padding-top: 3px;
+    text-align: center;
+    width: 67px;
+}
+.search {
+    background-color: #FFFFFF;
+    background-image: url("http://img01.51jobcdn.com/im/2009/searchbg.gif");
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    border: 1px solid #A5A5A7;
+    font-size: 14px;
+    font-weight: bold;
+    height: 20px;
+    margin-top: 5px;
+    padding-left: 22px;
+    padding-top: 4px;
+    width: 185px;
+}
+.search1 {
+    background-color: #FFFFFF;
+    background-image: url("http://img01.51jobcdn.com/im/2009/searchbg.gif");
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    border: 1px solid #A5A5A7;
+    font-size: 14px;
+    font-weight: bold;
+    height: 20px;
+    padding-left: 22px;
+    padding-top: 5px;
+    width: 100px;
+}
+.search2 {
+    background-color: #FFFFFF;
+    background-image: url("http://img01.51jobcdn.com/im/2009/searchbg.gif");
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    border: 1px solid #A5A5A7;
+    font-size: 14px;
+    font-weight: bold;
+    height: 20px;
+    margin-top: 5px;
+    padding-left: 22px;
+    padding-top: 5px;
+    width: 173px;
+}
+.search3 {
+    background-color: #FFFFFF;
+    background-image: url("http://img01.51jobcdn.com/im/2009/searchbg.gif");
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    border: 1px solid #A5A5A7;
+    font-size: 14px;
+    font-weight: bold;
+    height: 20px;
+    margin-top: 5px;
+    padding-left: 22px;
+    padding-top: 5px;
+    width: 305px;
+}
+.search4 {
+    background-color: #FFFFFF;
+    background-image: url("http://img01.51jobcdn.com/im/2009/searchbg.gif");
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    border: 1px solid #A5A5A7;
+    font-size: 14px;
+    font-weight: bold;
+    height: 20px;
+    padding-left: 22px;
+    padding-top: 5px;
+    width: 200px;
+}
+.search5 {
+    background-color: #FFFFFF;
+    background-image: url("http://img01.51jobcdn.com/im/2009/searchbg.gif");
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    border: 1px solid #A5A5A7;
+    font-size: 14px;
+    font-weight: bold;
+    height: 20px;
+    padding-left: 22px;
+    padding-top: 5px;
+    width: 100px;
+}
+.search6 {
+    background-color: #FFFFFF;
+    background-image: url("http://img01.51jobcdn.com/im/2009/searchbg.gif");
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    border: 1px solid #A5A5A7;
+    font-size: 14px;
+    font-weight: bold;
+    height: 17px;
+    margin-top: 2px;
+    padding-left: 25px;
+    width: 145px;
+}
+.search7 {
+    background-color: #FFFFFF;
+    background-image: url("http://img01.51jobcdn.com/im/2009/searchbg.gif");
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    border: 1px solid #A5A5A7;
+    font-size: 14px;
+    font-weight: bold;
+    height: 25px;
+    line-height: 23px;
+    margin-top: 5px;
+    padding-left: 25px;
+    width: 485px;
+}
+.searchmy {
+    background-color: #FFFFFF;
+    background-image: url("http://img01.51jobcdn.com/im/2009/searchbg.gif");
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    border: 1px solid #A5A5A7;
+    height: 22px;
+    line-height: 30px;
+    margin-top: 8px;
+    padding-left: 25px;
+    width: 230px;
+}
+.searchxy {
+    background-color: #FFFFFF;
+    background-image: url("http://img01.51jobcdn.com/im/2009/searchbg.gif");
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    border: 1px solid #A5A5A7;
+    font-size: 14px;
+    font-weight: bold;
+    height: 20px;
+    padding-left: 22px;
+    padding-top: 5px;
+    width: 160px;
+}
+.top_login_head {
+    background-image: url("http://img01.51jobcdn.com/im/2009/bbs/btbg.gif");
+    background-repeat: repeat-x;
+    height: 28px;
+}
+.top_login_content {
+    background-image: url("http://img01.51jobcdn.com/im/2009/bbs/kbg.gif");
+    background-repeat: repeat-x;
+    color: #666666;
+    font-family: "����";
+    font-size: 12px;
+    height: 150px;
+}
+.top_login_container {
+    border: 1px solid #92959C;
+    display: none;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 283px;
+}
+.top_login_name {
+    color: #FF7300;
+    float: left;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 5px 5px 15px;
+}
+.top_login_close {
+    float: right;
+    padding: 5px;
+}
+.top_login_btn {
+    background-color: #E7E7E7;
+    background-image: url("http://img01.51jobcdn.com/im/2009/bbs/anbg.gif");
+    border-color: #FFFFFF;
+    border-right: 0 solid #FFFFFF;
+    border-style: solid;
+    border-width: 0;
+    color: #FF7300;
+    cursor: pointer;
+    font-family: "����",arial,verdana,helvetica,sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    height: 24px;
+    margin-top: 15px;
+    width: 56px;
+}
+.top_login_input {
+    height: 18px;
+    width: 110px;
+}
+#top_login_form_validate_tips {
+    color: red;
+}
+#top_login_form td {
+    vertical-align: middle;
+}
+.zz_51High {
+    background-color: #FFA22E;
+    color: #FFFFFF;
+}
+.zz_51Lower {
+    background-color: #FFFFFF;
+    color: #000000;
+}
+.zz_51LowerGray {
+    background-color: #F3F2F2;
+    color: #000000;
+}
+.zz_51LowerYellow {
+    background-color: #FEFFEF;
+    color: #000000;
+}
+.jobLayer {
+    font-size: 12px;
+}
+.jobLayer .title td {
+    background: url("http://img01.51jobcdn.com/im/2009/search/title_layer.gif") repeat scroll 0 0 transparent;
+    color: #FFFFFF;
+    height: 34px;
+    vertical-align: top;
+}
+.orange {
+    color: #FF7400;
+    font-size: 14px;
+    text-decoration: underline;
+}
+.jobLayer .title img, .jobLayer .title span {
+    float: left;
+    margin: 7px 0 0;
+}
+.jobLayer .title .ccType {
+    float: right;
+    margin: 7px 20px;
+}
+.jobLayer .title .ccType span {
+    float: none;
+    margin: 0;
+}
+.jobLayer .bigOrange {
+    color: #FF7400;
+    font-size: 14px;
+    font-weight: bold;
+}
+.jobLayer .gray {
+    background-color: #F7F7F7;
+}
+.jobLayer .blackBold {
+    color: #000000;
+    font-weight: bold;
+    padding-top: 3px;
+    vertical-align: top;
+}
+.jobLayer .cityOrange {
+    color: #FF7400;
+    font-size: 14px;
+    font-weight: bold;
+    padding-top: 3px;
+    vertical-align: top;
+}
+.jobLayer .jlSeprator {
+    background: url("http://img01.51jobcdn.com/im/2009/search/bgclear_bot.gif") repeat scroll 0 0 transparent;
+    height: 5px;
+}
+.jobLayer td {
+    height: 20px;
+    padding-left: 3px;
+}
+.jobLayer .bottomLine {
+    background-color: #FF7400;
+}
+.jobLayer .bottomLine td {
+    height: 4px;
+}
+.subLayer {
+    background-color: #FEFFEF;
+    border: 1px solid #FF7B00;
+}
+.jobLayer .bgGray {
+    background-color: #F6F6F6;
+}
+.sitemap_bt {
+    margin: 0 auto;
+    width: 900px;
+}
+.sitemap_left, .sitemap_center, .sitemap_right {
+    float: left;
+    font-family: "����";
+    font-size: 12px;
+    margin-right: 10px;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    width: 270px;
+}
+.site_com {
+    background-color: #FFFFFF;
+    height: 850px;
+    margin-left: 6px;
+    width: 260px;
+}
+.site_bt {
+    margin-bottom: 5px;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-top: 10px;
+}
+.site_title02 {
+    color: #5CB018;
+    font-size: 14px;
+    font-weight: bold;
+}
+.site_title01 {
+    color: #FF5800;
+    font-size: 14px;
+    font-weight: bold;
+}
+a.site_title:link {
+    color: #5CB018;
+    font-size: 14px;
+    font-weight: bold;
+}
+a.site_title:visited {
+    color: #5CB018;
+    font-size: 14px;
+    font-weight: bold;
+}
+a.site_title:hover {
+    color: #5CB018;
+    font-size: 14px;
+    font-weight: bold;
+}
+a.site_blue:link {
+    color: #1974DF;
+    font-size: 14px;
+    font-weight: bold;
+}
+a.site_blue:visited {
+    color: #1974DF;
+    font-size: 14px;
+    font-weight: bold;
+}
+a.site_blue:hover {
+    color: #1974DF;
+    font-size: 14px;
+    font-weight: bold;
+}
+a.site_red:link {
+    color: #FF5800;
+    font-size: 14px;
+    font-weight: bold;
+}
+a.site_red:visited {
+    color: #FF5800;
+    font-size: 14px;
+    font-weight: bold;
+}
+a.site_red:hover {
+    color: #FF5800;
+    font-size: 14px;
+    font-weight: bold;
+}
+.ctus {
+    font-family: Arial,"����";
+    font-size: 12px;
+    line-height: 23px;
+}
+.us_ml p {
+    margin-left: 5px;
+}
+.us_ml p span {
+    margin-right: 5px;
+}
+.abus {
+    font-family: "����";
+    font-size: 12px;
+    line-height: 20px;
+    text-indent: 2em;
+}
+.abus1 {
+    font-family: "����";
+    font-size: 12px;
+    line-height: 20px;
+}
+.srleft, .srright {
+    float: left;
+}
+.srleft {
+    margin-left: 20px;
+    margin-right: 30px;
+    width: 207px;
+}
+.srcom {
+    background-color: #FFFFFF;
+    margin-left: 6px;
+    width: 193px;
+}
+.srcom div {
+    padding: 10px;
+}
+.srcom p {
+    line-height: 20px;
+    margin-left: 20px;
+}
+.r_bt {
+    background-image: url("http://img01.51jobcdn.com/im/2009/bo/r_bt.gif");
+    background-repeat: no-repeat;
+    font-size: 14px;
+    font-weight: bold;
+    height: 26px;
+    padding-left: 40px;
+    width: 717px;
+}
+.medialeft, .mediaright {
+    float: left;
+}
+.medialeft {
+    margin-left: 20px;
+    margin-right: 30px;
+    margin-top: 10px;
+    width: 207px;
+}
+.htr {
+    border-style: dashed none none;
+    border-top: 1px dashed #CCCCCC;
+    border-width: 1px;
+}
+.mediaright {
+    width: 705px;
+}
+.media_com {
+    background-color: #FFFFFF;
+    margin-left: 6px;
+    width: 193px;
+}
+.media_name {
+    padding: 10px;
+}
+.mediaright td {
+    font-size: 12px;
+    line-height: 20px;
+}
+.mediaarrow {
+    margin-left: 28px;
+}
+.mediaarrow li {
+    background-image: url("http://img01.51jobcdn.com/im/2009/bo/arrow.gif");
+    background-position: 0 5px;
+    background-repeat: no-repeat;
+    font-size: 12px;
+    line-height: 20px;
+    list-style-type: none;
+    text-indent: 22px;
+}
+blockquote {
+    font-family: "����";
+    font-size: 12px;
+    line-height: 20px;
+}
+blockquote li {
+    margin-left: 40px;
+}
+.esearchhr_li li {
+    height: 20px;
+    margin-left: 20px;
+    text-align: left;
+}
+.hr_com {
+    background-color: #FFFFFF;
+    margin-left: 0;
+    width: 190px;
+}
+.or {
+    color: #FF7300;
+}
+.arts_right_title {
+    color: #333333;
+    font-family: "����";
+    font-size: 14px;
+    font-weight: 700;
+    height: 20px;
+    line-height: 23px;
+    padding-left: 42px;
+    vertical-align: middle;
+}
+.arts_left_column {
+    padding-bottom: 10px;
+}
+.arts_cls {
+    font-family: "����";
+    font-size: 12px;
+    margin-left: 10px;
+    width: 92%;
+}
+.arts_page {
+    font-size: 14px;
+}
+.arts_page li a {
+    font-size: 14px;
+    font-weight: normal;
+    text-decoration: underline;
+}
+.arts_page li {
+    float: left;
+    font-weight: bold;
+    height: 22px;
+    line-height: 22px;
+    padding-left: 5px;
+    padding-right: 5px;
+    vertical-align: middle;
+}
+.arts_right_column {
+    line-height: 20px;
+    width: 710px;
+}
+.arts_city_table {
+    font-family: "����";
+    font-size: 12px;
+}
+.arts_city_table td {
+    line-height: 24px;
+}
+.arts_city_area {
+    border-bottom: 1px solid #FF7200;
+    color: #FF7200;
+    font-size: 12px;
+    font-weight: 700;
+    height: 28px;
+    line-height: 28px;
+    padding-left: 15px;
+    padding-top: 4px;
+}
+.arts_city_area a {
+    color: #FF7200;
+}
+.article_right_column {
+    padding-bottom: 10px;
+}
+.arts_hot_top_title {
+    font-size: 12px;
+    font-weight: bold;
+    padding-bottom: 1px;
+    padding-top: 10px;
+    text-align: center;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.arts_hot_top_content {
+    font-size: 12px;
+    line-height: 17px;
+    padding-left: 5px;
+    text-indent: 2em;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.arts_hot_top_link {
+    margin-right: 3px;
+    padding-top: 10px;
+    text-align: right;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.bbshot_list {
+    width: 620px;
+}
+.bbshot_list li {
+    float: left;
+    font-family: "����";
+    line-height: 20px;
+    width: 310px;
+}
+.bbshot_tag_header {
+}
+.bbshot_tag_header li {
+    float: left;
+    height: 27px;
+    line-height: 27px;
+}
+.bbshot_tag_header li img {
+}
+.bbshot_tag_content {
+}
+.bbshot_tag_content li {
+    float: left;
+}
+.bbshot_left {
+    float: left;
+    padding-left: 5px;
+    padding-top: 10px;
+}
+.bbshot_right {
+    float: left;
+    padding-top: 10px;
+}
+#flashwall_right1 {
+    float: left;
+}
+#flashwall_right1 {
+    background-repeat: no-repeat;
+    height: 327px;
+    width: 545px;
+}
+.cflashwall_detailtable {
+    cursor: pointer;
+    display: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    z-index: 1;
+}
+.cshadowright {
+    background-image: url("http://img01.51jobcdn.com/im/2009/publish/bg_r.png");
+    background-position: right top;
+    background-repeat: no-repeat;
+    font-size: 0;
+    line-height: 0;
+    width: 6px;
+}
+.cshadowbottom {
+    background-image: url("http://img01.51jobcdn.com/im/2009/publish/bg_b.png");
+    background-position: left bottom;
+    background-repeat: no-repeat;
+    font-size: 0;
+    height: 6px;
+    line-height: 0;
+}
+.cshadowrightbottom {
+    background-image: url("http://img01.51jobcdn.com/im/2009/publish/bg_rb.png");
+    background-position: right bottom;
+    background-repeat: no-repeat;
+    font-size: 0;
+    height: 6px;
+    line-height: 0;
+}
+.flashwall {
+    margin: 0;
+    padding: 0;
+    width: 524px;
+}
+.flashwall li {
+    background-color: white;
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+    display: inline;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+.flashwall_2 {
+    margin: 0;
+    padding: 0;
+    width: 393px;
+}
+.flashwall_2 li {
+    background-color: white;
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+    display: inline;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+.cflashwall_tdfilter {
+    background-color: #A9A9A9;
+    opacity: 0.7;
+}
+.cflashwall_company_and_job {
+    background-color: #EFF8FF;
+    width: 200px;
+}
+.cflashwall_job {
+    font-size: 12px;
+    height: 22px;
+    line-height: 22px;
+    padding-left: 10px;
+    vertical-align: middle;
+}
+.cflashwall_company {
+    background-color: #0099CC;
+    background-image: url("http://img01.51jobcdn.com/im/2009/publish/flash_on_title.gif");
+    background-repeat: repeat-x;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    height: 22px;
+    line-height: 22px;
+    padding-left: 10px;
+    vertical-align: middle;
+}
+a.ccompany:link {
+    color: white;
+    text-decoration: none;
+}
+a.cjob:link {
+    color: #333333;
+    text-decoration: none;
+}
+.zc_new {
+    float: left;
+    padding-top: 10px;
+    text-align: left;
+}
+.comtext_zc_area1_2 {
+    background-color: #FFFFFF;
+    height: 41px;
+    margin: 0 6px;
+    width: 530px;
+}
+.comtext_zc_area1_2 li {
+    float: left;
+    font-family: "����";
+    height: 20px;
+    vertical-align: middle;
+    width: 260px;
+}
+.comtext_zc_area1_6 {
+    background-color: #FFFFFF;
+    height: 132px;
+    margin: 0 6px;
+    width: 530px;
+}
+.comtext_zc_area1_6 li {
+    float: left;
+    font-family: "����";
+    height: 22px;
+    line-height: 22px;
+    vertical-align: middle;
+    width: 263px;
+}
+.comtext_zc_area2_2 {
+    background-color: #FFFFFF;
+    height: 41px;
+    margin: 0 6px;
+    width: 400px;
+}
+.comtext_zc_area2_2 li {
+    float: left;
+    font-family: "����";
+    height: 20px;
+    vertical-align: middle;
+    width: 400px;
+}
+.comtext_zc_area2_6 {
+    background-color: #FFFFFF;
+    margin: 0 6px;
+    width: 400px;
+}
+.comtext_zc_area2_6 li {
+    float: left;
+    font-family: "����";
+    height: 22px;
+    line-height: 22px;
+    vertical-align: middle;
+    width: 400px;
+}
+.comtext_zc_area2 {
+    background-color: #FFFFFF;
+    height: 40px;
+    margin-left: 6px;
+    width: 530px;
+}
+.comtext_zc_index {
+    height: 116px;
+    width: 275px;
+}
+.comtext_zc_index2 {
+    height: 32px;
+    width: 275px;
+}
+.adtableb {
+    background-color: #C6E4FF;
+    width: 977px;
+}
+.adtableb td {
+    padding-left: 7px;
+    padding-top: 7px;
+    text-align: left;
+    width: 194px;
+}
+.adtableb_xy {
+    background-color: #DFFFDA;
+    width: 977px;
+}
+.adtableb_xy td {
+    padding-left: 7px;
+    padding-top: 7px;
+    text-align: left;
+    width: 194px;
+}
+.adtableb_gj {
+    background-color: #E2E2E2;
+    width: 977px;
+}
+.adtableb_gj td {
+    padding-left: 7px;
+    padding-top: 7px;
+    text-align: left;
+    width: 194px;
+}
+.adtableb_it {
+    background-color: #B8F8FF;
+    width: 977px;
+}
+.adtableb_it td {
+    padding-left: 7px;
+    padding-top: 7px;
+    text-align: left;
+    width: 194px;
+}
+.cnew51ctitle a.newblue:link {
+    color: #0258BF;
+    font-family: '����';
+    font-size: 12px;
+    text-decoration: none;
+}
+.cnew51ctd {
+    background-color: #F2F2F2;
+    height: 60px;
+    width: 114px;
+}
+.adtablec {
+    border-left: 1px solid #C6E4FF;
+    border-right: 1px solid #C6E4FF;
+    padding-top: 7px;
+    text-align: left;
+    width: 977px;
+}
+.adtablec td {
+    padding-left: 7px;
+    text-align: center;
+    width: 121px;
+}
+.adtablec_top {
+    border-left: 1px solid #C6E4FF;
+    border-right: 1px solid #C6E4FF;
+    border-top: 1px solid #C6E4FF;
+    padding-top: 7px;
+    text-align: left;
+    width: 977px;
+}
+.adtablec_bottom {
+    border-bottom: 1px solid #C6E4FF;
+    border-left: 1px solid #C6E4FF;
+    border-right: 1px solid #C6E4FF;
+    padding-top: 7px;
+    text-align: left;
+    width: 977px;
+}
+.adtablec_xy {
+    border-left: 1px solid #DFFFDA;
+    border-right: 1px solid #DFFFDA;
+    padding-top: 7px;
+    text-align: left;
+    width: 977px;
+}
+.adtablec_xy td {
+    padding-left: 7px;
+    text-align: center;
+    width: 121px;
+}
+.adtablec_xy_top {
+    border-left: 1px solid #DFFFDA;
+    border-right: 1px solid #DFFFDA;
+    border-top: 1px solid #DFFFDA;
+    padding-top: 7px;
+    text-align: left;
+    width: 977px;
+}
+.adtablec_xy_bottom {
+    border-bottom: 1px solid #DFFFDA;
+    border-left: 1px solid #DFFFDA;
+    border-right: 1px solid #DFFFDA;
+    padding-top: 7px;
+    text-align: left;
+    width: 977px;
+}
+.adtablec_gj {
+    border-left: 1px solid #E2E2E2;
+    border-right: 1px solid #E2E2E2;
+    padding-top: 7px;
+    text-align: left;
+    width: 977px;
+}
+.adtablec_gj td {
+    padding-left: 7px;
+    text-align: center;
+    width: 121px;
+}
+.adtablec_gj_top {
+    border-left: 1px solid #E2E2E2;
+    border-right: 1px solid #E2E2E2;
+    border-top: 1px solid #E2E2E2;
+    padding-top: 7px;
+    text-align: left;
+    width: 977px;
+}
+.adtablec_gj_bottom {
+    border-bottom: 1px solid #E2E2E2;
+    border-left: 1px solid #E2E2E2;
+    border-right: 1px solid #E2E2E2;
+    padding-top: 7px;
+    text-align: left;
+    width: 977px;
+}
+.adtablec_it {
+    border-left: 1px solid #B8F8FF;
+    border-right: 1px solid #B8F8FF;
+    padding-top: 7px;
+    text-align: left;
+    width: 977px;
+}
+.adtablec_it td {
+    padding-left: 7px;
+    text-align: center;
+    width: 121px;
+}
+.adtablec_it_top {
+    border-left: 1px solid #B8F8FF;
+    border-right: 1px solid #B8F8FF;
+    border-top: 1px solid #B8F8FF;
+    padding-top: 7px;
+    text-align: left;
+    width: 977px;
+}
+.adtablec_it_bottom {
+    border-bottom: 1px solid #B8F8FF;
+    border-left: 1px solid #B8F8FF;
+    border-right: 1px solid #B8F8FF;
+    padding-top: 7px;
+    text-align: left;
+    width: 977px;
+}
+.cnew51cimage {
+    background-color: #F2F2F2;
+    padding-top: 5px;
+}
+.cnew51ctitle {
+    background-color: #F2F2F2;
+    padding-left: 5px;
+    padding-top: 3px;
+    text-align: center;
+}
+.cnew51dtd {
+    height: 30px;
+    width: 90px;
+}
+.cnew51dimage {
+    text-align: center;
+}
+.cnew51d {
+    background-color: #C6E4FF;
+    margin-left: 0;
+    width: 968px;
+}
+.adtabled {
+    background-color: #C6E4FF;
+    padding-top: 7px;
+    width: 977px;
+}
+.adtabled td {
+    padding-left: 7px;
+    text-align: left;
+    width: 97px;
+}
+.adtabled_it {
+    background-color: #B8F8FF;
+    padding-top: 7px;
+    width: 977px;
+}
+.adtabled_it td {
+    padding-left: 7px;
+    text-align: left;
+    width: 97px;
+}
+.adtabled_gj {
+    background-color: #E2E2E2;
+    padding-top: 7px;
+    width: 977px;
+}
+.adtabled_gj td {
+    padding-left: 7px;
+    text-align: left;
+    width: 97px;
+}
+.adtabled_xy {
+    background-color: #DFFFDA;
+    padding-top: 7px;
+    width: 977px;
+}
+.adtabled_xy td {
+    padding-left: 7px;
+    text-align: left;
+    width: 97px;
+}
+.bannerleft {
+    padding: 0 5px 10px;
+}
+#fidea {
+    margin-bottom: 10px;
+    margin-left: 20px;
+    margin-top: 0;
+    padding: 0;
+    width: 964px;
+}
+#anbu {
+    background-color: #FFFAF6;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-top: 5px;
+    width: 940px;
+}
+#anbu li {
+    background-image: url("http://img01.51jobcdn.com/im/2009/area/areabtbg.gif");
+    background-repeat: no-repeat;
+    float: left;
+    font-family: Verdana,Arial,Helvetica,sans-serif,"����";
+    font-size: 14px;
+    height: 25px;
+    line-height: 25px;
+    padding-bottom: 5px;
+    padding-left: 2px;
+    padding-right: 1px;
+    text-indent: 26px;
+    vertical-align: middle;
+    width: 183px;
+}
+#anbu li a:link {
+    color: #333333;
+    font-size: 12px;
+    text-decoration: none;
+}
+#anbu li a:hover {
+    color: #333333;
+    font-size: 12px;
+    text-decoration: none;
+}
+#anbu li a:visited {
+    color: #333333;
+    font-size: 12px;
+    text-decoration: none;
+}
+#anbu_it {
+    background-color: #F6FEFF;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-top: 5px;
+    width: 940px;
+}
+#anbu_it li {
+    background-image: url("http://img01.51jobcdn.com/im/2009/it/btn_bg.gif");
+    background-repeat: no-repeat;
+    float: left;
+    font-family: Verdana,Arial,Helvetica,sans-serif,"����";
+    font-size: 14px;
+    height: 25px;
+    line-height: 25px;
+    padding-bottom: 5px;
+    padding-left: 2px;
+    padding-right: 1px;
+    text-indent: 15px;
+    vertical-align: middle;
+    width: 230px;
+}
+#anbu_it li a:link {
+    color: #333333;
+    font-size: 12px;
+    text-decoration: none;
+}
+#anbu_it li a:hover {
+    color: #333333;
+    font-size: 12px;
+    text-decoration: none;
+}
+#anbu_it li a:visited {
+    color: #333333;
+    font-size: 12px;
+    text-decoration: none;
+}
+#dataidea_1 {
+    clear: both;
+    margin-top: 16px;
+    padding-left: 6px;
+}
+#dataidea_1 td {
+    white-space: nowrap;
+}
+.dot_bg {
+    background-image: url("http://img01.51jobcdn.com/im/2009/area/bgclear_bot.gif");
+    background-position: left center;
+    background-repeat: repeat-x;
+    height: 3px;
+    margin: 0 6px;
+    width: 98.8%;
+}
+a.font_show_blues:link {
+    color: #0056C2;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: none;
+}
+a.font_show_blues:visited {
+    color: #0056C2;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: none;
+}
+a.font_show_blues:hover {
+    color: #0056C2;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: underline;
+}
+A.font_show:link {
+    color: #333333;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: none;
+}
+A.font_show:visited {
+    color: #7E817E;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: none;
+}
+A.font_show:hover {
+    color: #FF7300;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: none;
+}
+.input_box {
+    border: 1px solid #6F90AF;
+    font-weight: bold;
+    text-align: center;
+}
+.resume_dynamic_title {
+    color: #0175E8;
+}
+.resume_dynamic_contents {
+    color: #33940B;
+}
+.diqucengcu td {
+    line-height: 24px;
+}
+.diqucengcu .danshuang {
+    background-color: #FFFFFF;
+}
+.diqucengcu strong {
+    color: #FF5F00;
+    font-family: Arial,Helvetica,sans-serif;
+}
+.diqucengcu span {
+    color: #0174E7;
+}
+.window04 {
+    background: url("http://img01.51jobcdn.com/im/2009/my/folder/gray_bg02.gif") repeat-x scroll 0 0 transparent;
+    border: 1px solid #82868D;
+    font-size: 12px;
+    overflow: hidden;
+    padding: 0;
+    width: 326px;
+}
+.window_title {
+    background: url("http://img01.51jobcdn.com/im/2009/my/window_title_bg.gif") repeat-x scroll 0 0 transparent;
+    color: #FF5F00;
+    font-size: 14px;
+    font-weight: bold;
+    height: 28px;
+    line-height: 28px;
+    padding-left: 20px;
+}
+
+
+.navbtbg {
+    background-image: url("http://img01.51jobcdn.com/im/2009/navbtbg.gif");
+    background-repeat: repeat-x;
+    height: 31px;
+}
+#areaver span a:link {
+    color: #FF7300;
+    font-family: Arial,Verdana,Helvetica,sans-serif;
+    font-size: 12px;
+    text-decoration: none;
+}
+#areaver span a:hover {
+    color: #FF7300;
+    font-family: Arial,Verdana,Helvetica,sans-serif;
+    font-size: 12px;
+    text-decoration: underline;
+}
+#areaver span a:visited {
+    color: #FF7300;
+    font-family: Arial,Verdana,Helvetica,sans-serif;
+    font-size: 12px;
+    text-decoration: none;
+}
+#bott {
+    background-image: url("http://img01.51jobcdn.com/im/2009/bottombg1.gif");
+    background-repeat: repeat-x;
+    height: 41px;
+    text-align: center;
+    width: 1002px;
+}
+.text_red {
+    color: #FF0000;
+}
+.err_red {
+    color: #FF0000;
+}
+.text_gray {
+    color: #818181;
+}
+a.blue3 {
+    color: #0365C0;
+    cursor: pointer;
+    font-size: 12px;
+    text-decoration: underline;
+}
+a:hover .blue3 {
+    color: #0365C0;
+    font-size: 12px;
+    text-decoration: none;
+}
+#content {
+    color: #333333;
+    font-family: "Arial";
+    font-size: 12px;
+    line-height: 1.5em;
+    margin: 0 auto;
+    padding: 0;
+    width: 1000px;
+}
+.h1_class {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/title_bg01.gif") no-repeat scroll 0 0 transparent;
+    clear: both;
+    color: #FF840D;
+    font-size: 14px;
+    font-weight: bold;
+    height: 30px;
+    line-height: 30px;
+    margin: 20px auto 12px;
+    padding: 0 0 0 42px;
+    width: 790px;
+}
+.setopen {
+    line-height: 30px;
+    margin: 0 auto;
+    padding: 0;
+    width: 700px;
+}
+.setopen_con {
+    margin: 15px auto 30px;
+    padding: 0;
+    width: 700px;
+}
+.open_con {
+    background: none repeat scroll 0 0 #FFFFFF;
+    clear: both;
+    margin: 0 auto;
+    padding: 0;
+    width: 684px;
+}
+.weight666 {
+    line-height: 30px;
+    margin: 5px auto;
+    text-align: center;
+    width: 666px;
+}
+.gary_bg {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/box_title_bg01.gif") repeat-x scroll 0 0 transparent;
+    color: #FF7200;
+    font-weight: bold;
+    height: 24px;
+    line-height: 24px;
+    margin: 0;
+    padding: 0;
+    width: 666px;
+}
+.space01 {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/space01.gif") no-repeat scroll right center transparent;
+}
+.weight190 {
+    width: 190px;
+}
+.dotline {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/dotline.gif") repeat-x scroll center bottom transparent;
+}
+.width90p {
+    margin-left: 10px;
+    width: 90%;
+}
+.line02 {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/line.gif") repeat-x scroll 0 0 transparent;
+    height: 4px;
+}
+.h2_class {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/title_bg01.gif") no-repeat scroll 0 0 transparent;
+    clear: both;
+    color: #333333;
+    font-size: 12px;
+    font-weight: bold;
+    height: 30px;
+    line-height: 25px;
+    margin: 0 auto 10px;
+    padding: 0 0 0 42px;
+    width: 790px;
+}
+.jobletter {
+    margin: 20px auto;
+    padding: 0;
+    width: 800px;
+}
+.jobletter_con {
+    background: none repeat scroll 0 0 #FFFFFF;
+    clear: both;
+    margin: 10px auto;
+    padding: 0;
+    width: 688px;
+}
+.jobletter_con_box {
+    background: none repeat scroll 0 0 #FFFFFF;
+    clear: both;
+    margin: 0 auto;
+    padding: 0;
+    width: 676px;
+}
+.weight690 {
+    line-height: 30px;
+    margin: 5px auto;
+    text-align: center;
+    width: 670px;
+}
+.tdh30 {
+    height: 30px;
+}
+.gary_bg02 {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/box_title_bg01.gif") repeat-x scroll 0 0 transparent;
+    font-weight: bold;
+    height: 24px;
+    line-height: 24px;
+    width: 1000px;
+}
+.gary_bgjb {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/box_title_bg01.gif") repeat-x scroll 0 0 transparent;
+    height: 24px;
+    line-height: 24px;
+    margin: 0;
+    padding: 0;
+    width: 600px;
+}
+.space01 {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/space01.gif") no-repeat scroll right center transparent;
+}
+.weight190 {
+    width: 190px;
+}
+.weight330 {
+    width: 330px;
+}
+.weight280 {
+    width: 280px;
+}
+.weight100 {
+    width: 100px;
+}
+.weight80 {
+    width: 80px;
+}
+.weight30 {
+    width: 30px;
+}
+.weight150 {
+    width: 150px;
+}
+.weight220 {
+    width: 220px;
+}
+.dotline {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/dotline.gif") repeat-x scroll 0 0 transparent;
+}
+.dotline_out {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/dotline.gif") repeat-x scroll center bottom transparent;
+}
+.height5 {
+    height: 5px;
+}
+.title01 {
+    line-height: 25px;
+    margin: 0 auto;
+    padding: 0;
+    width: 690px;
+}
+.gary_bg03 {
+    background: none repeat scroll 0 0 #F5F5F5;
+    height: 25px;
+    line-height: 25px;
+    margin: 0 auto 20px;
+    width: 826px;
+}
+.btn_sr {
+    height: 40px;
+    margin: 10px auto;
+    text-align: center;
+    width: 800px;
+}
+.sendresume_con {
+    background: none repeat scroll 0 0 #FFFFFF;
+    clear: both;
+    margin: 10px auto;
+    padding: 0;
+    width: 780px;
+}
+.sendresume_con_box {
+    background: none repeat scroll 0 0 #FFFFFF;
+    clear: both;
+    margin: 0 auto;
+    padding: 0;
+    width: 766px;
+}
+.weight766 {
+    line-height: 30px;
+    margin: 0 auto 5px;
+    text-align: left;
+    width: 766px;
+}
+.weight740_out {
+    line-height: 30px;
+    margin: 0 auto 5px;
+    text-align: left;
+    width: 740px;
+}
+.gary_bg04 {
+    background: none repeat scroll 0 0 #FFFAF5;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 0 0 10px;
+}
+.padding_l10 {
+    padding: 0 0 0 10px;
+}
+.padding_l5 {
+    padding: 0 0 0 5px;
+}
+.padding_l30 {
+    padding: 0 0 0 30px;
+}
+.height15 {
+    height: 15px;
+}
+.sendsuccess_con {
+    background: none repeat scroll 0 0 #FFFFFF;
+    clear: both;
+    margin: 10px auto;
+    padding: 0;
+    width: 650px;
+}
+.sendsuccess_con_box {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/cresume/sendresume_bg.gif") no-repeat scroll left center transparent;
+    clear: both;
+    height: 200px;
+    margin: 0 auto;
+    padding: 0;
+    width: 636px;
+}
+.sendsuccess_con_box li {
+    margin: 0;
+    padding: 30px 0 0 230px;
+}
+.title02 {
+    line-height: 25px;
+    margin: 0 0 0 20px;
+    padding: 0;
+    width: 780px;
+}
+.weight280 {
+    width: 280px;
+}
+.weight380 {
+    width: 380px;
+}
+.plaster_resume_title {
+    margin: 10px auto;
+    padding: 0;
+    width: 855px;
+}
+.plaster_ei_btn {
+    background: url("http://img01.51jobcdn.com/im/2009/my/btn_check_bg.gif") no-repeat scroll 0 0 transparent;
+    border: 0 none;
+    font-size: 12px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    width: 150px;
+}
+.plaster_resume {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/plaster_bg.gif") repeat-x scroll 0 0 transparent;
+    border: 1px solid #FF8100;
+    clear: both;
+    margin: 0 auto 10px;
+    padding: 0;
+    width: 855px;
+}
+.textright {
+    float: right;
+    line-height: 33px;
+}
+.ssin {
+    float: left;
+}
+#Opennessinfo, .ssinfo, .ssinfo1 {
+    float: left;
+    line-height: 33px;
+}
+.ssinfo1 {
+}
+#Opennessinfo {
+    margin-top: 5px;
+}
+.ssinfo {
+    margin-top: 5px;
+}
+#pr_box {
+    margin: 15px auto 0;
+    padding: 0;
+    width: 823px;
+}
+.font14org {
+    color: #FD7102;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 24px;
+    margin: 0;
+}
+.rusume810bg {
+    background: none repeat scroll 0 0 #FFFFFF;
+    margin: 0 auto;
+    padding: 0;
+    width: 810px;
+}
+.rusume810bg1 {
+    background: none repeat scroll 0 0 #FFFFFF;
+    margin-left: 15px;
+    width: 810px;
+}
+.weight810 {
+    line-height: 30px;
+    margin: 5px 0;
+    padding: 0;
+    width: 810px;
+}
+.weight250 {
+    width: 250px;
+}
+#edit {
+    margin: 15px auto 0;
+    padding: 0;
+    width: 823px;
+}
+.pr_boxp {
+    height: 50px;
+    line-height: 50px;
+    margin: 15px auto 0;
+    text-align: center;
+    width: 823px;
+}
+.edit_btn_bg {
+    background: none repeat scroll 0 0 #EDEDED;
+    border-top: 1px solid #CBCBCB;
+    height: 32px;
+    line-height: 32px;
+    margin: 0 auto;
+    padding: 2px 10px 0;
+    text-align: right;
+    width: 806px;
+}
+.edit_text {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #A5ACB2;
+    line-height: 2.5em;
+    margin: 0 auto;
+    padding: 15px;
+    width: 793px;
+}
+.resume_write {
+    margin: 10px auto;
+    padding: 0;
+    width: 967px;
+}
+.rew_top {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/cresume/title_writeresume_bg.gif") no-repeat scroll 0 0 transparent;
+    height: 66px;
+    margin: 0;
+    padding: 0;
+    width: 967px;
+}
+.rew_down {
+    background: none repeat scroll 0 0 #FFF1E6;
+    border-left: 1px solid #FF8B2A;
+    border-right: 1px solid #FF8B2A;
+    overflow: hidden;
+    padding: 0 6px;
+    width: 953px;
+}
+.rew_conl {
+    background: none repeat scroll 0 0 #FFFFFF;
+    float: left;
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+    width: 780px;
+}
+.rew_conr {
+    float: left;
+    height: 620px;
+    width: 171px;
+}
+.rew_conr li {
+    height: 20px;
+    line-height: 20px;
+    margin: 3px 5px 3px 10px;
+    padding: 0;
+    width: 150px;
+}
+.btn_resume {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/cresume/nav_left_bg.gif") no-repeat scroll 2px 50% transparent;
+}
+.text_blue_bg {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/cresume/text_bbg.gif") no-repeat scroll 0 0 transparent;
+    clear: both;
+    color: #346699;
+    height: 109px;
+    margin: 0 auto;
+    padding: 30px 5px 0;
+    width: 148px;
+}
+.rew_top_con {
+    height: 40px;
+    margin: 0 0 0 177px;
+    padding: 18px 0 0;
+    text-align: left;
+    width: 770px;
+}
+.rew_con {
+    margin: 0 auto;
+    padding: 0;
+    width: 775px;
+}
+.rew_con_paragraph {
+    width: 775px;
+}
+.paragraph_title {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/box_title_bg01.gif") repeat-x scroll 0 0 transparent;
+    color: #FF7101;
+    font-size: 14px;
+    font-weight: bold;
+    height: 24px;
+    line-height: 24px;
+    margin: 0 0 5px 5px;
+    padding: 0 0 0 20px;
+    width: 760px;
+}
+.weight780 {
+    line-height: 30px;
+    margin: 5px 0 0;
+    width: 774px;
+}
+.weight110 {
+    width: 110px;
+}
+.weight115 {
+    width: 115px;
+}
+.weight120 {
+    width: 120px;
+}
+.weight125 {
+    width: 125px;
+}
+.weight130 {
+    width: 130px;
+}
+.weight140 {
+    width: 140px;
+}
+.weight145 {
+    width: 145px;
+}
+.weight160 {
+    width: 160px;
+}
+.weight170 {
+    width: 170px;
+}
+.padding_l20 {
+    padding: 0 0 0 20px;
+}
+.weight180 {
+    width: 180px;
+}
+.weight260 {
+    width: 260px;
+}
+.weight290 {
+    width: 290px;
+}
+.weight650 {
+    width: 650px;
+}
+.weight680 {
+    width: 680px;
+}
+.weight400 {
+    width: 400px;
+}
+.weight450 {
+    width: 450px;
+}
+.weight480 {
+    width: 480px;
+}
+.weight540 {
+    width: 540px;
+}
+.weight500 {
+    width: 500px;
+}
+.weight590 {
+    width: 590px;
+}
+.weight700 {
+    width: 700px;
+}
+.weight60 {
+    width: 60px;
+}
+.weight90 {
+    width: 90px;
+}
+.weight70 {
+    width: 70px;
+}
+.weight75 {
+    width: 75px;
+}
+.weight78 {
+    width: 76px;
+}
+.weight60 {
+    width: 60px;
+}
+.weight65 {
+    width: 65px;
+}
+.weight40 {
+    width: 40px;
+}
+.line-height20 {
+    line-height: 20px;
+}
+.margin_l94 {
+    margin: 0 0 -5px 94px;
+}
+#resume_center {
+    margin: 0 auto;
+    padding: 0;
+    width: 966px;
+}
+.btn01 {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/cresume/btn_gray03.gif") no-repeat scroll 0 0 transparent;
+    border: 0 none;
+    height: 36px;
+    line-height: 30px;
+    padding: 0 0 4px 22px;
+    text-align: left;
+    width: 90px;
+}
+.btn02 {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/cresume/btn_gray02.gif") no-repeat scroll 0 0 transparent;
+    border: 0 none;
+    height: 36px;
+    padding: 0 0 4px 20px;
+    text-align: left;
+    width: 110px;
+}
+.width650 {
+    width: 680px;
+}
+.resume_center_con {
+    margin: 0;
+    padding: 0;
+    width: 966px;
+}
+#recon_wbg {
+    background: none repeat scroll 0 0 #FFFFFF;
+    line-height: 25px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 5px 0;
+    width: 952px;
+}
+#resume_down {
+    margin: 20px auto;
+    padding: 0;
+    width: 966px;
+}
+.width95 {
+    width: 95px;
+}
+.width55 {
+    width: 55px;
+}
+.text_center {
+    text-align: center;
+}
+.text_blue {
+    color: #0A6AD0;
+}
+.line01 {
+    background: none repeat scroll 0 0 #DBDBDB;
+    height: 1px;
+}
+#redown_l {
+    float: left;
+    margin: 0 0 20px;
+    padding: 0;
+    width: 638px;
+}
+#redown_r {
+    float: left;
+    margin: 0 0 0 10px;
+    padding: 0;
+    width: 316px;
+}
+.redown_lcon {
+    margin: 0;
+    padding: 0;
+    width: 638px;
+}
+.redown_r_salary {
+    height: 200px;
+}
+.redown_ltop {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/cresume/text_checked_top.gif") no-repeat scroll 0 0 transparent;
+    height: 37px;
+    line-height: 37px;
+    margin: 0;
+    padding: 0 0 0 225px;
+}
+.redown_lcon_bg {
+    background: none repeat scroll 0 0 #FFFFFF;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 0;
+    width: 624px;
+}
+.margintop8 {
+    line-height: 25px;
+    margin-top: 8px;
+}
+.text_p {
+    margin: 10px 0 10px 20px;
+    text-align: left;
+}
+.redown_r_top {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/cresume/title_qclass_bg.jpg") no-repeat scroll 0 0 transparent;
+    color: #5996EC;
+    font-weight: bold;
+    height: 24px;
+    line-height: 22px;
+    margin: 0;
+    padding: 63px 0 0;
+    text-align: center;
+    width: 315px;
+}
+.redown_r_con {
+    background: none repeat scroll 0 0 #F4F4F4;
+    border-left: 1px solid #707070;
+    border-right: 1px solid #707070;
+    overflow: hidden;
+    width: 313px;
+}
+.redown_r_con_bg {
+    background: none repeat scroll 0 0 #FFFFFF;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 3px;
+    width: 295px;
+}
+.redown_r_down {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/down_qclass_bg.gif") no-repeat scroll 0 0 transparent;
+    height: 7px;
+    padding-bottom: 10px;
+    width: 315px;
+}
+.redown_r_con_bg ul {
+    float: left;
+    margin: 0 0 0 1px;
+    padding: 0;
+    width: 145px;
+}
+.redown_r_con_bg li {
+    margin: 1px 0;
+    overflow: hidden;
+    padding: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 145px;
+}
+.qu_bg {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/qclass_bg.gif") no-repeat scroll 0 0 transparent;
+    color: #FF752C;
+    font-weight: bold;
+    height: 51px;
+    margin: 3px auto;
+    padding: 11px 0 0 54px;
+    width: 84px;
+}
+.page_number {
+    color: #FF7200;
+    font-weight: bold;
+    height: 16px;
+    line-height: 16px;
+    padding: 1px;
+    text-align: center;
+    width: 16px;
+}
+#check_resume {
+    margin: 0 auto 20px;
+    padding: 0;
+    width: 966px;
+}
+.text14b {
+    font-size: 14px;
+    font-weight: bold;
+    height: 30px;
+    vertical-align: bottom;
+}
+.cheakre_p {
+    margin: 10px auto;
+}
+#resume_clueon {
+    margin: 10px auto;
+    padding: 0;
+    width: 830px;
+}
+#clueon_top {
+    margin: 0;
+    padding: 0;
+}
+.clueon_title {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/title_bg01.gif") no-repeat scroll 0 0 transparent;
+    clear: both;
+    font-size: 12px;
+    font-weight: bold;
+    height: 30px;
+    line-height: 30px;
+    margin: 20px auto 12px;
+    padding: 0 0 0 42px;
+    width: 790px;
+}
+.clueon_con {
+    margin: 0 auto;
+    padding: 0;
+    width: 790px;
+}
+.clueon_down {
+    background: none repeat scroll 0 0 #F4F4F4;
+    height: 26px;
+    line-height: 26px;
+    margin: 10px auto;
+    padding: 0 10px 0 0;
+    text-align: right;
+    width: 802px;
+}
+.barp {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/bar_bg.gif") repeat-x scroll 0 0 transparent;
+    border: 1px solid #AEB8D8;
+    float: left;
+    height: 10px;
+    line-height: 10px;
+    margin: 7px 0 7px 5px;
+    padding: 0;
+    text-align: left;
+    width: 114px;
+}
+.baro {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/bar.gif") repeat scroll right 50% transparent;
+    height: 10px;
+    margin: 0;
+    padding: 0;
+}
+.window01 {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/gray_bg02.gif") repeat-x scroll 0 0 transparent;
+    border: 1px solid #82868D;
+    font-size: 12px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    width: 465px;
+}
+.window03 {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/gray_bg021.gif") repeat-x scroll 0 0 transparent;
+    border: 1px solid #82868D;
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    width: 350px;
+}
+.window04 {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/gray_bg022.gif") repeat-x scroll 0 0 transparent;
+    border: 1px solid #82868D;
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    width: 350px;
+}
+.window02 {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/gray_bg02.gif") repeat-x scroll 0 0 transparent;
+    border: 1px solid #82868D;
+    font-size: 12px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    width: 526px;
+}
+.window_title {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/window_title_bg.gif") repeat-x scroll 0 0 transparent;
+    color: #FF5F00;
+    font-size: 14px;
+    font-weight: bold;
+    height: 28px;
+    line-height: 28px;
+    padding-left: 20px;
+}
+.window_con {
+    background: none repeat scroll 0 0 #FFFFFF;
+    margin: 0 auto 7px;
+    padding: 0;
+    width: 451px;
+}
+.window_con02 {
+    background: none repeat scroll 0 0 #FFFFFF;
+    margin: 7px;
+    padding: 0;
+    width: 511px;
+}
+.window_context {
+    padding: 5px 0;
+}
+.window_con_bg {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/hand_bg.gif") no-repeat scroll right 100% transparent;
+    margin: 0;
+    padding: 10px;
+}
+.window_con_bg02 {
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+}
+.window_con_bg03 {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/hand_bg.gif") no-repeat scroll right 100% transparent;
+    line-height: 28px;
+    margin: 0;
+    padding: 20px 0;
+}
+.window_close {
+    margin: 0 5px 0 386px;
+}
+.window_close02 {
+    margin: 0 5px 0 6px;
+}
+.window_close03 {
+    margin: 0 5px 0 350px;
+}
+.window_close04 {
+    margin: 0 5px 0 330px;
+}
+.window_close08 {
+    margin: 0 5px 0 280px;
+}
+.window_close11 {
+    margin: 0 5px 0 300px;
+}
+.window_close12 {
+    margin: 0 5px 0 230px;
+}
+.window_close13 {
+    margin: 0 5px 0 170px;
+}
+.amend_lab {
+    height: 29px;
+    margin: 0 auto;
+    padding: 0;
+    width: 385px;
+}
+.amend_lab li {
+    float: left;
+}
+.amend_con {
+    clear: both;
+    margin: 10px auto;
+    padding: 0;
+    text-align: left;
+    width: 385px;
+}
+.amend_btn {
+    clear: both;
+    margin: 5px auto;
+    padding: 0;
+    text-align: center;
+    width: 385px;
+}
+.input180 {
+    height: 15px;
+    line-height: 15px;
+    padding: 1px 3px 0;
+    width: 180px;
+}
+.gary_bg_window {
+    background: none repeat scroll 0 0 #F8F8F8;
+    font-size: 14px;
+    font-weight: bold;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 50px;
+    width: 461px;
+}
+.win_apply {
+    line-height: 30px;
+}
+.line_height20 {
+    line-height: 20px;
+}
+.v1, .v2, .v3 {
+    margin: 0 auto;
+    padding: 0;
+    width: 778px;
+}
+.v1_top {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/v1_top.gif") no-repeat scroll 0 0 transparent;
+    font-size: 14px;
+    font-weight: bold;
+    height: 75px;
+    line-height: 78px;
+    margin: 0 0 -3px;
+    padding: 3px 0 0;
+    text-align: center;
+}
+.v1b_top {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/v1b_top.gif") no-repeat scroll 0 0 transparent;
+    font-size: 14px;
+    font-weight: bold;
+    height: 75px;
+    line-height: 78px;
+    margin: 0 0 -3px;
+    padding: 3px 0 0;
+    text-align: center;
+}
+.v1_middle {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/v1_middle.gif") repeat-y scroll 0 0 transparent;
+    overflow: hidden;
+    width: 778px;
+}
+.v1b_middle {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/v1b_middle.gif") repeat-y scroll 0 0 transparent;
+    overflow: hidden;
+    width: 778px;
+}
+.v1_t {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/v1_bar.gif") no-repeat scroll 0 0 transparent;
+    font-size: 12px;
+    font-weight: bold;
+    height: 16px;
+    line-height: 18px;
+    margin: 0 0 10px 1px;
+    padding: 2px 0 0 55px;
+}
+.v1b_t {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/v1b_bar.gif") no-repeat scroll 0 0 transparent;
+    font-size: 12px;
+    font-weight: bold;
+    height: 16px;
+    line-height: 18px;
+    margin: 0 0 10px 1px;
+    padding: 2px 0 0 55px;
+}
+.v1_down {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/v1_down.gif") no-repeat scroll 0 0 transparent;
+    height: 10px;
+    width: 778px;
+}
+.v1b_down {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/v1b_down.gif") no-repeat scroll 0 0 transparent;
+    height: 10px;
+    width: 778px;
+}
+.v_table01 {
+    line-height: 22px;
+    margin: 0 0 15px 20px;
+    padding: 0;
+    text-align: left;
+    width: 710px;
+}
+.v2_top {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/v2_top.gif") no-repeat scroll 0 0 transparent;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: bold;
+    height: 83px;
+    line-height: 100px;
+    margin: 0 0 -1px;
+    padding: 18px 0 0 42px;
+    text-align: left;
+}
+.v2_middle {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-bottom: 1px solid #92B0EC;
+    border-left: 1px solid #92B0EC;
+    border-right: 1px solid #92B0EC;
+    overflow: hidden;
+    width: 776px;
+}
+.v2_t {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/v2_bar.gif") no-repeat scroll 0 0 transparent;
+    font-size: 12px;
+    font-weight: bold;
+    height: 37px;
+    line-height: 28px;
+    margin: 0 0 10px 20px;
+    padding: 0 0 0 8px;
+}
+.v_table02 {
+    line-height: 22px;
+    margin: 0 0 15px 40px;
+    padding: 0;
+    text-align: left;
+    width: 700px;
+}
+.v3_top {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/v3_top.gif") no-repeat scroll 0 0 transparent;
+    font-size: 14px;
+    font-weight: bold;
+    height: 95px;
+    line-height: 95px;
+    margin: 0;
+    padding: 0 0 0 135px;
+    text-align: left;
+}
+.v3_middle {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/v3_middle.gif") repeat-y scroll 0 0 transparent;
+    overflow: hidden;
+    width: 778px;
+}
+.v3_t {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/v3_bar.gif") no-repeat scroll 0 0 transparent;
+    font-size: 12px;
+    font-weight: bold;
+    height: 29px;
+    line-height: 29px;
+    margin: 0 0 10px 15px;
+    padding: 0 0 0 45px;
+}
+.v3_down {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/v3_down.gif") no-repeat scroll 0 0 transparent;
+    height: 20px;
+    width: 778px;
+}
+.v_table03 {
+    line-height: 22px;
+    margin: 0 0 15px 40px;
+    padding: 0;
+    text-align: left;
+    width: 700px;
+}
+.ei_btn {
+    background: url("http://img01.51jobcdn.com/im/2009/my/btn_check_bg.gif") no-repeat scroll 0 0 transparent;
+    border: 0 none;
+    font-size: 12px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    width: 187px;
+}
+.input140 {
+    color: #666666;
+    height: 12px;
+    line-height: 12px;
+    padding: 1px;
+    width: 140px;
+}
+.amend_con {
+    clear: both;
+    margin: 10px auto;
+    padding: 0;
+    text-align: left;
+    width: 385px;
+}
+.amend_lab {
+    height: 29px;
+    margin: 0 auto;
+    padding: 0;
+    width: 385px;
+}
+.amend_lab li {
+    float: left;
+}
+.width5p {
+    width: 5%;
+}
+.width15p {
+    width: 15%;
+}
+.width20p {
+    width: 20%;
+}
+.width25p {
+    width: 25%;
+}
+.width30p {
+    width: 30%;
+}
+.width35p {
+    width: 35%;
+}
+.width40p {
+    width: 40%;
+}
+.width45p {
+    width: 45%;
+}
+.width50p {
+    width: 50%;
+}
+.width55p {
+    width: 55%;
+}
+.width60p {
+    width: 60%;
+}
+.width65p {
+    width: 65%;
+}
+.width70p {
+    width: 70%;
+}
+.width75p {
+    width: 75%;
+}
+.width80p {
+    width: 80%;
+}
+.width90p {
+    width: 90%;
+}
+.width100p {
+    width: 100%;
+}
+.com {
+    width: 652px;
+}
+.comtext {
+    background-color: #FFFFFF;
+    background-image: url("http://img01.51jobcdn.com/im/2009/cv/cresume/cgbg.gif");
+    background-position: left bottom;
+    background-repeat: no-repeat;
+    height: 400px;
+    margin-left: 6px;
+    width: 638px;
+}
+.com1 {
+    float: left;
+    padding-left: 50px;
+    padding-top: 20px;
+}
+.com3 {
+    float: right;
+    padding-right: 35px;
+    padding-top: 20px;
+}
+.com2 {
+    font-weight: bold;
+    padding-left: 60px;
+}
+.com4 {
+    padding-bottom: 15px;
+    padding-left: 130px;
+    padding-top: 40px;
+}
+.cvs {
+    width: 420px;
+}
+.cvs li {
+    float: left;
+    padding: 3px;
+    width: 70px;
+}
+.location {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/kbg.gif") repeat-x scroll 0 0 transparent;
+    border: 1px solid #82868D;
+    font-size: 12px;
+    width: 420px;
+}
+.location_con {
+    margin: 0 auto 7px;
+    padding: 0;
+    width: 380px;
+}
+.icon_need {
+    float: left;
+    margin-top: 4px;
+}
+.icon_width {
+    float: left;
+    width: 80px;
+}
+a.yuan:link {
+    color: #333333;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: none;
+}
+a.yuan:visited {
+    color: #333333;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: none;
+}
+a.yuan:hover {
+    color: #333333;
+    font-family: "����";
+    font-size: 12px;
+    text-decoration: underline;
+}
+.new1_position {
+    margin-left: 70px;
+    margin-top: -8px;
+    position: absolute;
+}
+#ad_cont {
+    height: 450px;
+    margin: 1px auto 2px;
+    overflow: hidden;
+    position: relative;
+    width: 1000px;
+}
+#success_cont {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/cresume/success_bg.gif") no-repeat scroll 0 0 transparent;
+    font-family: arial,"����";
+    font-size: 12px;
+    height: 369px;
+    left: 260px;
+    line-height: 20px;
+    margin: 25px auto 0;
+    padding: 17px;
+    position: absolute;
+    width: 454px;
+}
+.success_words {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/cresume/success_wordsbg.gif") no-repeat scroll 0 0 transparent;
+    display: block;
+    height: 130px;
+    padding: 10px;
+    text-align: right;
+}
+.classbottom {
+    margin-top: 95px;
+}
+.window02b {
+    background: url("http://img01.51jobcdn.com/im/2009/my/folder/gray_bg01.gif") repeat-x scroll center bottom transparent;
+    border: 1px solid #82868D;
+    font-size: 12px;
+    overflow: hidden;
+    padding: 0;
+    width: 441px;
+}
+.window_con03b {
+    margin: 0 auto;
+    padding: 5px 0 0 10px;
+    width: 428px;
+}
+.window_con_bg05 {
+    margin: 0;
+    padding: 10px 0;
+    text-align: left;
+}
+a.orange3:link {
+    color: #FF7300;
+    font-size: 14px;
+    text-decoration: underline;
+}
+a.orange3:visited {
+    color: #FF7300;
+    font-size: 14px;
+    text-decoration: underline;
+}
+a.orange3:hover {
+    color: #FF7300;
+    font-size: 14px;
+    text-decoration: underline;
+}
+a.orange5:link {
+    color: #FF7300;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.orange5:visited {
+    color: #FF7300;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.orange5:hover {
+    color: #FF7300;
+    font-size: 12px;
+    text-decoration: none;
+}
+.orange5 {
+    color: #FF7300;
+    font-size: 14px;
+}
+.orange6 {
+    color: #FF7300;
+    font-size: 12px;
+}
+a.grey5:link {
+    color: #9A9999;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.grey5:visited {
+    color: #9A9999;
+    font-size: 12px;
+    text-decoration: none;
+}
+a.grey5:hover {
+    color: #FF7300;
+    font-size: 12px;
+    text-decoration: underline;
+}
+.grey5 {
+    color: #9A9999;
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 0 0 0 10px;
+}
+.window_close15 {
+    margin: 0 5px 0 383px;
+}
+.province {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/kbg.gif") repeat-x scroll center bottom transparent;
+    border: 1px solid #82868D;
+    font-size: 12px;
+}
+.province_con {
+    margin: 0 auto 7px;
+    padding: 0;
+}
+.province_cvs li {
+    float: left;
+    padding: 3px;
+}
+.resume_nav {
+    background-color: #F9F9F9;
+    border: 1px solid #EFEEF3;
+    float: right;
+    margin: 0 6px 0 15px;
+}
+.resume_nav ul {
+    list-style: none outside none;
+    margin: 0;
+}
+.resume_nav li {
+    float: left;
+    font-size: 12px;
+    margin: 0 5px 0 7px;
+    text-align: center;
+    vertical-align: middle;
+}
+.resume_nav img {
+    vertical-align: middle;
+}
+#ChangeLanguage a {
+    text-decoration: underline;
+}
+.rew_conr li a {
+    font-weight: bold;
+    text-decoration: underline;
+}
+.rew_conr li.change_group {
+    float: left;
+    margin: 5px 0 0 10px;
+}
+.rew_conr li.change_group a {
+    color: #1D8C32;
+    font-size: 12px;
+    font-weight: normal;
+    text-decoration: none;
+}
+.rew_conr .required {
+    margin-left: 35px;
+}
+.rew_conl .col_name {
+    background: none repeat scroll 0 0 #F3F7F9;
+    font-weight: bold;
+    width: 84px;
+}
+.rew_conr li#histogram {
+    border-bottom: 1px solid #FFD5B7;
+}
+#BPI_info table {
+    border-bottom: 1px solid #E9EDF1;
+    margin: 0 0 10px 10px;
+}
+#Edu_edit table, #Work_edit table, #Other_info table, #Tra_edit table, #Lan_edit table, #Language_info table, #IT_edit table, #Prj_edit table, #Cert_edit table, #Attach_edit table, #Api_edit table, #Misc_edit table, #Mast_edit table, #Spi2p_edit table, #Awd_edit table, #Exp_edit table, #Exp1_edit table {
+    border-bottom: 1px solid #E9EDF1;
+    border-right: 1px solid #E9EDF1;
+    margin: 0 20px 10px 10px;
+}
+#BPI_info td, #Edu_edit td, #Work_edit td, #Other_info td, #Tra_edit td, #Lan_edit td, #Language_info td, #IT_edit td, #Prj_edit td, #Cert_edit td, #Attach_edit td, #Api_edit td, #Misc_edit td, #Mast_edit td, #Spi2p_edit td, #Awd_edit td, #Exp_edit td, #Exp1_edit td {
+    border-top: 1px solid #E9EDF1;
+    padding-left: 10px;
+}
+#BPI_info td.height10 {
+    border: 0 none;
+    height: 0;
+}
+#BPI_info table.noborder, #BPI_info td.noborder, #Edu_edit table.linedot, #Edu_edit td.noborder, #Work_edit table.linedot, #Work_edit td.noborder, #Tra_edit table.linedot, #Tra_edit td.noborder, #Lan_edit table.linedot, #Lan_edit td.noborder, #Prj_edit table.linedot, #Prj_edit td.noborder, #Cert_edit table.linedot, #Cert_edit td.noborder, #Attach_edit table.linedot, #Attach_edit td.noborder, #Misc_edit table.linedot, #Misc_edit td.noborder, #Awd_edit table.linedot, #Awd_edit td.noborder, #Exp_edit table.linedot, #Exp_edit td.noborder, #Exp1_edit table.linedot, #Exp1_edit td.noborder {
+    border: 0 none;
+}
+.weight195 {
+    width: 195px;
+}
+.rew_conl .weight700 {
+    width: 700px;
+}
+.rew_conr .notice {
+    height: 109px;
+    margin: 3px 5px;
+    padding: 30px 5px 0;
+}
+.rew_conl .subtitle {
+    height: 37px;
+    line-height: 37px;
+}
+.rew_conl .title_blue {
+    color: #2774C1;
+}
+.weight215 {
+    width: 215px;
+}
+.rew_conl .weight60 {
+    width: 60px;
+}
+.rew_conl .weight100 {
+    width: 100px;
+}
+.resume_write_mdf {
+    margin: 5px auto;
+}
+.rew_top_mdf {
+    height: 57px;
+}
+.rew_down_mdf {
+    padding: 0 5px;
+    width: auto;
+}
+.rew_conl_mdf {
+    float: right;
+    height: 440px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    position: static;
+    width: 778px;
+}
+.rew_conr_mdf {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/cresume/bg_left_nav_content.gif") repeat-y scroll 0 0 transparent;
+    border-left: 3px solid #FFFFFF;
+    border-right: 2px solid #FF8C28;
+    height: 440px;
+    width: 172px;
+}
+.rew_conr_mdf li {
+    height: 23px;
+    line-height: 23px;
+    margin: 0;
+    width: auto;
+}
+.btn_resume_mdf {
+    background: none repeat scroll 2px 50% transparent;
+    border-bottom: 1px solid #FFD5B7;
+}
+.rew_top_con_mdf {
+    margin: 10px 0 0 330px;
+    padding: 0;
+    width: 627px;
+}
+.paragraph_title_mdf {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/box_title_bg02.gif") repeat-x scroll 0 0 transparent;
+    line-height: 29px;
+    width: 750px;
+}
+.weight780_mdf {
+    height: 25px;
+    line-height: 25px;
+    width: 735px;
+}
+.icon_width_mdf {
+    margin: 0 30px 0 20px;
+}
+.weight670 {
+    width: 670px;
+}
+.line02_mdf {
+    clear: both;
+    margin: 5px 5px 15px 10px;
+}
+.weight240 {
+    width: 240px;
+}
+td.card_type #CardType {
+    width: 155px;
+}
+.weight105 {
+    width: 105px;
+}
+li#histogram table {
+    margin-left: 5px;
+}
+li#histogram table.baro {
+    margin-left: 0;
+}
+.rew_conr_mdf .all_check {
+    margin: 10px 0 10px 15px;
+}
+.rew_conr .left_nav_top {
+    background: url("http://img01.51jobcdn.com/im/2009/cv/cresume/bg_left_nav_top.gif") no-repeat scroll 0 0 transparent;
+}
+.luckcode_main {
+    height: 301px;
+    left: -220px;
+    position: absolute;
+    top: -150px;
+    width: 441px;
+}
+.luckcode_main_1 {
+    left: 410px;
+    padding: 6px 8px 0 0;
+    position: absolute;
+    text-align: right;
+    top: 0;
+}
+.luckcode_main_2 {
+    color: red;
+    font-size: 14px;
+    font-weight: bold;
+    height: 60px;
+    left: 220px;
+    position: absolute;
+    top: 100px;
+}
+.luckcode_main_3a {
+    color: #000000;
+    font-size: 12px;
+    line-height: 30px;
+}
+.luckcode_main_3 {
+    color: #666666;
+    font-size: 12px;
+    height: 50px;
+    left: 220px;
+    position: absolute;
+    top: 165px;
+}
+.luckcode_main_4 {
+    height: 50px;
+    left: 220px;
+    position: absolute;
+    top: 220px;
+}
