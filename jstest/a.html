@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+</head>
+<body>
+	<p>This is a Paragrph</p>
+	<script type="text/javascript">
+a =  { 
+    m: function() { 
+        this.n = function(x) {
+        	alert(x+2)
+        }
+        return 1                
+    }, 
+    n: function(x) { 
+        alert(x+1) 
+    }
+}
+a.n(a.m())
+	</script>
+</body>
+</html>
