@@ -9,29 +9,43 @@
   	</head>
 	<body>
 		<script>
-			function fn1() {
-				console.log(1)
-			}
-			function fn2() {
-				console.log(2)
-			}
-			function fn3() {
-				console.log(this)
-				console.log(arguments)
-			}
-			var callbacks = $.Callbacks()
-			// callbacks.add(fn1);
-			// callbacks.add(fn1, fn2);
-			// callbacks.add([fn1, fn2]);
-			
-			// remove 
-			callbacks.remove(fn1);
-			
-			// fire
-			callbacks.add(fn3);
-			callbacks.fire('abc');
-			
-			// 
+function fn1() {
+	console.log(1)
+}
+function fn2() {
+	console.log(2)
+	return false // 注意这里
+}
+function fn3() {
+	console.log(3)
+}
+function fn4() {
+	console.log(this)
+	console.log(arguments)
+}
+var callbacks = $.Callbacks('stopOnFalse');
+// callbacks.add(fn1);
+// callbacks.add(fn1, fn2);
+// callbacks.add([fn1, fn2]);
+
+// remove 
+//callbacks.remove(fn1);
+
+// fire
+// callbacks.add(fn1, fn2, fn3);
+// callbacks.fire();
+a = {
+    m: function() {
+        this.n = function(x){alert(x+2)}
+        return 1
+    },
+    n: function(x) {
+    	alert(x+1)
+    }
+}
+a.n(a.m()) // ?alert(a.n)
+
+
 		</script>
 	</body>
 </html>
