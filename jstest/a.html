@@ -8,29 +8,37 @@
  $(function(){
      $("input[type='file']").change(function(evt){
          var files = evt.target.files; 
- 		 console.log(files)
-         // for (var i = 0, f; f = files[i]; i++) {
-//  
-           // if (!f.type.match('image.*')) {
-             // continue;
-           // }
-//  
-           // var reader = new FileReader();
-//  
-           // reader.onload = (function(theFile) {
-             // return function(e) {                                
-              // $("#list img").attr("src",e.target.result);  //预览图片的位置                 
-             // };
-           // })(f);
-//  
-           // reader.readAsDataURL(f);
-         // }
+ 		   console.log(files)
+         for (var i = 0, f; f = files[i]; i++) {
+ 
+           if (!f.type.match('image.*')) {
+             continue;
+           }
+ 
+           var reader = new FileReader();
+ 
+           reader.onload = (function(theFile) {
+             return function(e) {                                
+              $("#list img").attr("src",e.target.result);  //预览图片的位置                 
+             };
+           })(f);
+ 
+           reader.readAsDataURL(f);
+         }
      });
+
+     $()
  })
  
  </script>
  </head>
  <body>
+
+<div id="dd">
+  <p class="sss">33</p>
+  <a href="#">sohu</a>
+</div>
+
  <form enctype="multipart/form-data" action="" method="post">
    <input type="file" name="imageUpload" />
    <div id="list"><img src=""></div>
