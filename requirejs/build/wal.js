@@ -1,9 +1,14 @@
 var requirejs = require('../lib/node_modules/requirejs/bin/r');
 
 var config = {
-    baseUrl: '../js/scripts',
-    name: 'runner',
-    out: '../dist/main-built.js'
+    baseUrl: 'js/scripts',
+    paths: {
+    	jquery: 'empty:'
+    },
+    name: 'main',
+    out: 'dist/main.js',
+    optimize: 'none',
+    logLevel: 3
 };
 
 requirejs.optimize(config, function (buildResponse) {
@@ -11,5 +16,6 @@ requirejs.optimize(config, function (buildResponse) {
     //included. Load the built file for the contents.
     //Use config.out to get the optimized file contents.
     //var contents = fs.readFileSync(config.out, 'utf8');
+    // console.log(requirejs.optimize);
 });
-console.log(requirejs.optimize)
+
