@@ -1,0 +1,8 @@
+$.when
+
+1 接受若干个对象
+2 参数为一个且非Deferred对象将立即执行回调函数
+3 Deferred对象和非Deferred对象混杂时，对于非Deferred对象remaining减1
+4 Deferred对象总数 = 内部构建的Deferred对象 + 所传参数中包含的Deferred对象
+5 所传参数中所有Deferred对象每当resolve时remaining减1，直到为0时（所有都resolve）执行的回调
+6 

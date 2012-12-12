@@ -15,8 +15,11 @@
 		<input type="button" data-main="ss" value="会员登陆">
 <p data~xx="data">ppp</p>
 <script>
-	var el = document.getElementsByTagName('p')[0]
-	alert(el.getAttribute('data~xx'))
+	var obj = {};
+	$(obj).on('a', function(e, data) {
+		alert(data)
+	})
+	$(obj).trigger('a', [2,3])
 </script>
 	</body>
 </html>
