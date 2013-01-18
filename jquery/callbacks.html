@@ -5,46 +5,74 @@
     	<meta charset='utf-8' />
     	<meta http-equiv="X-UA-Compatible" content="chrome=1" />
     	<title>jQuery Dialog</title>
-    	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.js"></script>
+    	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.js"></script>
   	</head>
 	<body>
 		<script>
 function fn1() {
-	console.log(1)
+	alert('done1')
 }
 function fn2() {
-	console.log(2)
-	return false // 注意这里
+	alert('done2')
 }
 function fn3() {
-	console.log(3)
+	alert('all done')
 }
-function fn4() {
-	console.log(this)
-	console.log(arguments)
+
+var deferred1 = $.Deferred()
+var deferred2 = $.Deferred()
+
+deferred1.done(fn1)
+deferred2.done(fn2)
+$.when(deferred1, deferred2).done(fn3)
+
+// setTimeout(function() {
+	// deferred1.resolve()
+	// deferred2.resolve()
+// }, 3000)
+//deferred.then(fn1, fn2, fn3)
+
+
+// 观察者模式
+var observer = {
+	hash: {},
+	subscribe: function(id, callback) {
+		if (typeof id !== 'string') {
+			return
+		}
+		if (!this.hash[id]) {
+			this.hash[id] = $.Callbacks()
+			this.hash[id].add(callback)
+		} else {
+			this.hash[id].add(callback)
+		}
+	},
+	publish: function(id) {
+		if (!this.hash[id]) {
+			return
+		}
+		this.hash[id].fire(id)
+	}
 }
-var callbacks = $.Callbacks('stopOnFalse');
-// callbacks.add(fn1);
-// callbacks.add(fn1, fn2);
-// callbacks.add([fn1, fn2]);
 
-// remove 
-//callbacks.remove(fn1);
+// 订阅
+observer.subscribe('mailArrived', function() {
+	alert('来信了')
+})
+observer.subscribe('mailArrived', function() {
+	alert('又来信了')
+})
+observer.subscribe('mailSend', function() {
+	alert('发信成功')
+})
 
-// fire
-// callbacks.add(fn1, fn2, fn3);
-// callbacks.fire();
-a = {
-    m: function() {
-        this.n = function(x){alert(x+2)}
-        return 1
-    },
-    n: function(x) {
-    	alert(x+1)
-    }
-}
-a.n(a.m()) // ?alert(a.n)
-
+// 发布
+setTimeout(function() {
+	observer.publish('mailArrived')
+}, 5000)
+setTimeout(function() {
+	observer.publish('mailSend')
+}, 10000)
 
 		</script>
 	</body>

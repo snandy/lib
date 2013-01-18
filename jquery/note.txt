@@ -1,4 +1,4 @@
-$.when
+$.when(subordinate /*, subordinateN*/)
 
 1 接受若干个对象
 2 参数为一个且非Deferred对象将立即执行回调函数
@@ -6,3 +6,16 @@ $.when
 4 Deferred对象总数 = 内部构建的Deferred对象 + 所传参数中包含的Deferred对象
 5 所传参数中所有Deferred对象每当resolve时remaining减1，直到为0时（所有都resolve）执行的回调
 6 
+
+$.get(url, [data], callback, type)
+1 
+
+
+jQuery.speed
+
+1 第一个参数speed两种形式的处理 对象和字符串，如果是对象则直接扩展它
+2 对opt.duration的处理，
+	$.fx.off 为true则关闭动画效果
+	opt.duration为数字则直接使用
+	opt.duration为字符串，判断是否在jQuery.fx.speeds中定义过，定义过则取
+	最后才使用$.fx.speeds._default
