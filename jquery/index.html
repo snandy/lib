@@ -9,22 +9,16 @@
 	<body>
 		<abbr>xhr</abbr>
 		<input type="button" data-main="ss" value="会员登陆">
-		
-		<div style="width:400px;background:gold;">
-			<p style="width:auto;margin-right: 100px;">ppp</p>
-		</div>
-		<p>ss</p>
+	
+		<p style="background: gold">ss</p>
 <script>
-	function a1(next) {
-		alert(next)
-		console.log(1)
-	}
-	function a2() {console.log(2)}
-	function a3() {console.log(3)}
-	
-	var div = $('div')[0]
-	$.queue(div, 'a', a1)
-	
+	function ff1() {console.log(1)}
+	function ff2() {console.log(2)}
+	function ff3() {console.log(3)}
+	// $('p').queue(ff1);
+	// $('p').queue(ff2);
+	// $('p').queue(ff3);
+$('p').slideUp(300).delay(3000).fadeIn(400);
 </script>
 	</body>
 </html>
