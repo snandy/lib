@@ -10,6 +10,9 @@ $.when(subordinate /*, subordinateN*/)
 $.get(url, [data], callback, type)
 1 
 
+jQuery.fx 模块概述
+jQuery提供了一些方法可以在页面上添加一些动画，包括一些经常使用的简单的，基本的动画。当然你也可以自定义一些精巧的，复杂的动画。
+基本的动画方法是animate，其它如toggle、show、hide、slideDown、slideUp、slideToggle、fadeIn、fadeOut、fadeToggle都是调用animate。
 
 jQuery.speed
 
@@ -20,10 +23,11 @@ jQuery.speed
 	opt.duration为字符串，判断是否在jQuery.fx.speeds中定义过，定义过则取
 	最后才使用$.fx.speeds._default
 	
-3 propFilter 函数
+3 propFilter
 	$.cssHooks的borderWidth, margin, padding有expand方法
 	
-4 genFx 生成动画需要的标准参数对象， 两个参数type, includeWidth。
+4 genFx
+	生成动画需要的标准参数对象， 两个参数type, includeWidth。
 	仅传type时 生成如下结构对象
 		{
 			height: true,
@@ -44,4 +48,4 @@ jQuery.speed
 			paddingLeft: true,
 			paddingRight: true
 		}
-5 
+5 slideUp - animate - queue - $.dequeue - Animate(this, prop, optall)
