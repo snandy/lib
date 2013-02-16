@@ -8,7 +8,7 @@
 		  display: none; background-color: #090;
 		}
 	</style>
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="jquery-1.9.1.js"></script>
 </head>
 <body>
  
@@ -32,6 +32,25 @@ $("button").on( "click", function() {
     $( "p" ).append( " Finished! " );
   });
 });
+
+function ff1() {
+	alert(1)
+}
+function ff2() {
+	alert(2)
+}
+function succ() {
+	alert('done')
+}
+$body = $('body')
+$body.queue('mx', ff1);
+$body.queue('mx', ff2);
+
+var promise = $body.promise('mx');
+promise.done(succ);
+
+
+
 </script>
  
 </body>
