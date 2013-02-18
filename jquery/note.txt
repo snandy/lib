@@ -23,12 +23,12 @@ jQuery.speed
 	opt.duration为字符串，判断是否在jQuery.fx.speeds中定义过，定义过则取
 	最后才使用$.fx.speeds._default
 	
-3 propFilter
+propFilter
 	$.cssHooks的borderWidth, margin, padding有expand方法
 	
-4 genFx
-	生成动画需要的标准参数对象， 两个参数type, includeWidth。
-	仅传type时 生成如下结构对象
+genFx
+1	生成动画需要的标准参数对象， 两个参数type, includeWidth。
+2	仅传type时 生成如下结构对象
 		{
 			height: true,
 			marginTop: true,
@@ -36,7 +36,7 @@ jQuery.speed
 			marginBottom: true,
 			paddingBottom: true
 		}
-	includeWidth为true时，会包含marginLeft, marginRight, paddingLeft, paddingRight
+3	includeWidth为true时，水平方向也包括。包含marginLeft, marginRight, paddingLeft, paddingRight
 		{
 			height: true,
 			marginTop: true,
@@ -48,4 +48,6 @@ jQuery.speed
 			paddingLeft: true,
 			paddingRight: true
 		}
-5 slideUp - animate - queue - $.dequeue - Animate(this, prop, optall)
+
+slideUp的执行过程	
+	slideUp - animate - queue - $.dequeue - Animate(this, prop, optall)

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Effects.js</title>
+	<style>
+		div {
+		  height: 50px; 
+		  width: 50px;
+		  float: left; 
+		  margin-right: 10px;
+		  background-color: #090;
+		}
+	</style>
+	<script src="jquery-1.9.1.js"></script>
+</head>
+<body>
+ 
+<button>Go</button>
+<p>Ready...</p>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+ 
+ 
+<script>
+	$('div')
+		.animate({width: 0, height: 0}, {
+			duration: 4000,
+			done: function(){
+				console.log('done')
+			}
+		})
+</script>
+ 
+</body>
+</html>

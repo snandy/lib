@@ -49,7 +49,9 @@ $body.queue('mx', ff2);
 var promise = $body.promise('mx');
 promise.done(succ);
 
-
+setInterval(function() {
+	$body.dequeue('mx')
+}, 1500)
 
 </script>
  
