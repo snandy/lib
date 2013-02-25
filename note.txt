@@ -16,25 +16,34 @@ Objective-c 记录
 
 
 自我介绍（项目经验）
+
 JS
 	1 有几种数据类型？ 基本类型、组合类型
 	2 闭包
 	3 继承的实现方式
-	4 
-	
+	4 ajax
+	5 JSONP
+
+CSS
+	什么盒模型？
+	display哪些个取值？
+	你经常使用的几个css hack？
+
 jQuery
 	
-	
-模块化 RequireJS 
+了解前端模块化开发吗？ 有哪些规范？相关的库有哪些？
+RequireJS/Curl/SeaJS/do.js/in.js/ 
 
 Backbone / Underscore
 
 Node.js
 
-说说几条性能优化的建议?
+说说几条前端性能优化的建议？
 
 平时使用的开发工具？
 
 经常访问的技术网站或关注的相关微博账号？
 
-几个经常使用的css hack？
+
+
+
