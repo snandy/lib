@@ -27,26 +27,26 @@ propFilter
 	$.cssHooks的borderWidth, margin, padding有expand方法
 	
 genFx
-1	生成动画需要的标准参数对象， 两个参数type, includeWidth。
-2	仅传type时 生成如下结构对象
+1	生成动画需要的标准参数对象传给animate方法， 两个参数type, includeWidth。
+2	仅传type时如genFx('show')，生成以下结构对象
 		{
-			height: true,
-			marginTop: true,
-			paddingTop: true,
-			marginBottom: true,
-			paddingBottom: true
+			height: 'show',
+			marginTop: 'show',
+			paddingTop: 'show',
+			marginBottom: 'show',
+			paddingBottom: 'show'
 		}
-3	includeWidth为true时，水平方向也包括。包含marginLeft, marginRight, paddingLeft, paddingRight
+3	includeWidth为true时，水平方向将被包含。包含marginLeft, marginRight, paddingLeft, paddingRight
 		{
-			height: true,
-			marginTop: true,
-			paddingTop: true,
-			marginBottom: true,
-			paddingBottom: true,
-			marginLeft: true,
-			marginRight: true,
-			paddingLeft: true,
-			paddingRight: true
+			height: 'show',
+			marginTop: 'show',
+			paddingTop: 'show',
+			marginBottom: 'show',
+			paddingBottom: 'show',
+			marginLeft: 'show',
+			marginRight: 'show',
+			paddingLeft: 'show',
+			paddingRight: 'show'
 		}
 
 slideUp的执行过程	
