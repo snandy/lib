@@ -15,26 +15,29 @@ Objective-c 记录
 数据类型
 
 
-自我介绍（项目经验）
-
 JS
-	1 有几种数据类型？ 基本类型、组合类型
+	1 有几种数据类型？ 基本类型、复合类型
 	2 闭包
 	3 继承的实现方式
 	4 ajax
 	5 JSONP
 
 CSS
-	什么盒模型？
-	display哪些个取值？
-	你经常使用的几个css hack？
+	1 什么盒模型？
+	2 display哪些个取值？
+	3 经常使用的几个css hack？
 
 jQuery
+	1 选择器的大概实现
+	2 事件API
+	3 链式调用的实现
+	4 Deferred模块
+
 	
 了解前端模块化开发吗？ 有哪些规范？相关的库有哪些？
 RequireJS/Curl/SeaJS/do.js/in.js/ 
 
-Backbone / Underscore
+MVC: Backbone / Underscore
 
 Node.js
 
@@ -43,6 +46,10 @@ Node.js
 平时使用的开发工具？
 
 经常访问的技术网站或关注的相关微博账号？
+
+编码
+	1 写一个函数去掉数组中重复的元素
+	2 写一个兼容性较好的添加事件函数
 
 
 
