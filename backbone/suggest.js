@@ -22,7 +22,7 @@ function Suggest(opt) {
 		initialize: function() {
 			var me = this
 			this.setPos()
-			this.$el.hide().appendTo('body')			
+			this.$el.hide().appendTo('body')
 			model.on('change', this.render, this)
 			$(input).keyup(function(e) {
 				if (!me.onSpecKeys(e)) {

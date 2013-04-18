@@ -1,4 +1,4 @@
-~ function() {
+~function() {
 	// Shared empty constructor function to aid in prototype-chain creation.
 	var ctor = function() {
 	};
@@ -54,4 +54,4 @@
 	};
 
 	window.extend = extend;
-}()
+}();
