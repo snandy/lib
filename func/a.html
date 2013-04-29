@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>关于全选的实现（非假checkbox，163/sina邮箱是用图片）</title>
+		<style>
+			div.op {
+				margin: 10px 0;
+			}
+			div.op a{
+				margin: 0 10px;
+			}
+			div.list p {
+				margin: 0;
+				padding: 5px 0;
+			}
+			div.list p:hover {
+				background:#f5f5f5;
+			}
+			div.list p.selected {
+				background:#ffffd5;
+			}
+			p a {
+				margin: 0 15px 0 15px;
+			}
+		</style>
+		<script src="js/jquery-1.9.1.js"></script>
+	</head>
+	<body style="height: 3000px">
+		<div class="op">
+			<label><input type="checkbox">全选</label><a href="javascript://;">删除</a>
+		</div>
+		<div class="list">
+			<p>
+				<input type="checkbox"><a href="">京东商城</a><span>您还有商品未评价哦</span><a href="">删除</a>
+			</p>
+			<p>
+				<input type="checkbox"><a href="">天猫商城</a><span>您购买的商品已经发货</span><a href="">删除</a>
+			</p>
+			<p>
+				<input type="checkbox"><a href="">国美在线</a><span>您购买的商品已经发货</span><a href="">删除</a>
+			</p>
+		</div>
+		<div class="op">
+			<label><input type="checkbox">全选</label><a href="javascript://;">删除</a>
+		</div>
+		
+		<script>
+			$('.op input').click(function() {
+				var $all  = $('.op input')
+				var $self = $(this), $another
+				$another = $self[0] === $all[0] ? $all.eq(1) : $all.eq(0)
+				
+				if ($self[0].checked) {
+					$('.list p').addClass('selected')
+					$('.list input').prop('checked', true)
+					$another.prop('checked', true)
+					// $another[0].checked = true
+				} else {
+					$('.list p').removeClass('selected')
+					$('.list input').prop('checked', false)
+					$another.prop('checked', false)
+				}
+			})
+			$('.list input').click(function() {
+				var $checkbox = $(this)
+				if ($checkbox[0].checked) {
+					$(this).parent().addClass('selected')
+				} else {
+					$(this).parent().removeClass('selected')
+				}
+				if (isAllSelected()) {
+					$('.op input').prop('checked', true)
+				} else {
+					$('.op input').prop('checked', false)
+				}
+			})
+			
+			function isAllSelected() {
+				var boo = true
+				$('.list input').each(function() {
+					if (this.checked === false) {
+						boo = false
+					}
+				})
+				return boo
+			}
+		</script>
+	</body>	
+</html>
