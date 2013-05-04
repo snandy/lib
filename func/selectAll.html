@@ -25,6 +25,7 @@
 			}
 		</style>
 		<script src="../jquery/jquery-1.9.1.js"></script>
+		<script src="js/selectAll.js"></script>
 	</head>
 	<body style="height: 3000px">
 		<div class="op">
@@ -46,45 +47,7 @@
 		</div>
 		
 		<script>
-			$('.op input').click(function() {
-				var $all  = $('.op input')
-				var $self = $(this), $another
-				$another = $self[0] === $all[0] ? $all.eq(1) : $all.eq(0)
-				
-				if ($self[0].checked) {
-					$('.list p').addClass('selected')
-					$('.list input').prop('checked', true)
-					$another.prop('checked', true)
-					// $another[0].checked = true
-				} else {
-					$('.list p').removeClass('selected')
-					$('.list input').prop('checked', false)
-					$another.prop('checked', false)
-				}
-			})
-			$('.list input').click(function() {
-				var $checkbox = $(this)
-				if ($checkbox[0].checked) {
-					$(this).parent().addClass('selected')
-				} else {
-					$(this).parent().removeClass('selected')
-				}
-				if (isAllSelected()) {
-					$('.op input').prop('checked', true)
-				} else {
-					$('.op input').prop('checked', false)
-				}
-			})
-			
-			function isAllSelected() {
-				var boo = true
-				$('.list input').each(function() {
-					if (this.checked === false) {
-						boo = false
-					}
-				})
-				return boo
-			}
+			$.selectAll('.op input', '.list input', '.list p');
 		</script>
 	</body>	
 </html>
