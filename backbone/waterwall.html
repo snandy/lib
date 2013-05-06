@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    	<meta charset='utf-8' />
+    	<title>$.waterwall</title>
+	    <style type="text/css">
+	 		body {margin:0;padding:0;}
+
+	 	</style>
+    	<script src="jquery-1.9.1.js"></script>
+    	<script src="underscore.js"></script>
+    	<script src="backbone.js"></script>
+    	<script src="scrollWater.js"></script>
+
+  	</head>
+
+	<body>
+		<div style="height:800px">dd</div>
+		<p>refEl</p>
+    	<script>
+    		var time = 0
+    		function cb() {
+    			var html = '<p style="height:100px">added' + time++ + '</p>'
+    			$(html).appendTo(document.body)
+    		}
+    		$.scrollWater('p', cb, 5)
+    	</script>
+	</body>
+</html>
