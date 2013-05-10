@@ -4,23 +4,25 @@
     	<meta charset='utf-8' />
     	<meta http-equiv="X-UA-Compatible" content="chrome=1" />
     	<title>jQuery Dialog</title>
-    	<script src="jquery-1.9.0.js"></script>
+    	<script src="jquery-1.10.0-beta1.js"></script>
   	</head>
 	<body>
 		<abbr>xhr</abbr>
 		<input type="button" data-main="ss" value="会员登陆">
-	
 		<p style="background: gold">ss</p>
+		<script id="tpl" type="text/template">
+			<div>
+				<p> 
+					<span>dd</span>
+					<a href="http://ss.com">ddd</a>
+				</p>
+			</div>
+		</script>
 <script>
-	function ff1() {console.log(1)}
-	function ff2() {console.log(2)}
-	function ff3() {console.log(3)}
-	// $('p').queue(ff1);
-	// $('p').queue(ff2);
-	// $('p').queue(ff3);
-// $('p').slideUp(300).delay(3000).fadeIn(400);
-	$('p')
-		.slideUp(300)
+	var str = $('#tpl').html()
+	var rsingleTag = /^<(\w+)\s*\/?>(?:<\/\1>|)$/
+	// var parsed = rsingleTag.exec(str)
+	// $.parseHTML(str)
 </script>
 	</body>
 </html>
