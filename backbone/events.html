@@ -34,7 +34,7 @@
 	    	}
 	 	</style>
     	<script src="jquery-1.9.1.js"></script>
-    	<script src="http://documentcloud.github.com/underscore/underscore.js"></script>
+    	<script src="underscore.js"></script>
     	<script src="backbone.js"></script>
   	</head>
 
@@ -445,6 +445,22 @@ person12.trigger('all')
 		person12.trigger('all')
 	})
 	
+	// listenTo
+	function Person(name, age) {
+		this.name = name;
+		this.gae  = age;
+	}
+ 	_.extend(Person.prototype, Backbone.Events, {
+ 		setName: function(name) {
+ 			this.name = name;
+ 			this.trigger('change')
+ 		}
+ 	});
+ 	var p1 = new Person('John Resig', 30)
+
+	Backbone.Events.listenTo(p1, 'change', function() {
+		console.log('aa')
+	})
 </script>
 
 	</body>

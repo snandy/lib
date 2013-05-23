@@ -5,31 +5,32 @@
  <title>html5 图片上传预览</title>
  <script src="../jquery/jquery-1.8.3.js" type="text/javascript"></script>
  <script type="text/javascript">
- $(function(){
-     $("input[type='file']").change(function(evt){
-         var files = evt.target.files; 
- 		   console.log(files)
-         for (var i = 0, f; f = files[i]; i++) {
- 
-           if (!f.type.match('image.*')) {
-             continue;
-           }
- 
-           var reader = new FileReader();
- 
-           reader.onload = (function(theFile) {
-             return function(e) {                                
-              $("#list img").attr("src",e.target.result);  //预览图片的位置                 
-             };
-           })(f);
- 
-           reader.readAsDataURL(f);
-         }
-     });
+B = function(ua){
+    var b = {
+        ie: /msie/.test(ua) && !/opera/.test(ua),
+        opera: /opera/.test(ua),
+        safari: /webkit/.test(ua) && !/chrome/.test(ua),
+        firefox: /firefox/.test(ua),
+        chrome: /chrome/.test(ua),
+        maxthon: /maxthon/.test(ua),
+        sogou: /se/.test(ua),
+        tt: /TencentTraveler/.test(ua)
+    };
+    var mark = '';
+    for (var i in b) {
+        if (b[i]) { mark = "safari" == i ? "version" : i; break; }
+    }
+    b.version = mark && RegExp("(?:" + mark + ")[\\/: ]([\\d.]+)").test(ua) ? RegExp.$1 : "0";
+    b.ie6 = b.msie && parseInt(b.version, 10) == 6;
+    b.ie7 = b.msie && parseInt(b.version, 10) == 7;
+    b.ie8 = b.msie && parseInt(b.version, 10) == 8;
+    b.ie9 = b.msie && parseInt(b.version, 10) == 9;
+    return b;
+}(navigator.userAgent.toLowerCase());
 
-     $()
- })
- 
+reg = /^[a-zA-Z\u4E00-\u9FA5\d_-]{1,20}$/;
+
+re1 = /^[a-z]{1,5}$/i;
  </script>
  </head>
  <body>
@@ -37,11 +38,9 @@
 <div id="dd">
   <p class="sss">33</p>
   <a href="#">sohu</a>
+
 </div>
 
- <form enctype="multipart/form-data" action="" method="post">
-   <input type="file" name="imageUpload" />
-   <div id="list"><img src=""></div>
- </form>
+<input type="date" >
  </body>
  </html>
