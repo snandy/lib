@@ -55,7 +55,7 @@ function sideNum(x, y) {
 }
 
 //初始化大小
-var n = 1000;
+var n = 5;
 var arr = [];
 for(var i = 0; i < n; i++) {
   arr.push([]);
@@ -67,19 +67,19 @@ var mid = Math.floor((n - 0.1)/2)
 
 function render() {
 	temp = []
-	var start = '<table border="1">'
-	var end = '</table>'
+	var start = '<div>'
+	var end = '</div>'
 	for (var i = 0; i < n; i++) {
-		var str = '<tr>'
+		var str = ''
 		for (var j = 0; j < n; j++) {
 			var num = arr[i][j] = sideNum(j-mid, mid-i)
-	    	str += '<td>' + num + '</td>'
+	    	str += (num + '&nbsp;')
 	  	}
-	  	str += '</tr>'
+	  	str += '<br>'
 	  	temp.push(str)
 	}
 	var table = start + temp.join('') + end
-	// $w(table)
+	$w(table)
 }
 render()
 </script>
