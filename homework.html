@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+<head>
+	<style>
+		#output {
+			width: 500px;
+			height: 400px;
+			overflow: auto;
+		}
+		td{width:30px;height:30px;text-align:center}
+	</style>
+	<script src="jquery-1.10.0.js"></script>
+</head>
+<body>
+<label for="integer">Input an integer:</label>
+<input id="integer"/>
+<br/><br/>
+<h4>Output</h4>
+<div id="output" style="border:1px solid gray;">...</div>
+<script>
+
+// x, y坐标绝对值最大数为层 l
+function calculateLayer(x, y) {
+    return Math.max(Math.abs(x), Math.abs(y));
+}
+
+// 分成4个边，右下左上
+function calculateSideAndLayer(x, y) {
+    var layer = calculateLayer(x, y);
+
+    // side 边的编号，默认右边
+    var obj = {layer: layer, side: 1};
+
+    // 下边
+    if (-y == layer && x >= y && x != layer) {
+    	obj.side = 2;
+    	return obj;
+    }
+    // 左边
+    if(-x == layer && x < y) {
+        obj.side = 3;
+        return obj;
+    }
+    // 上边
+    if(y == layer && x <= y) {
+    	obj.side = 4;
+    	return obj;
+    }
+
+    return obj;
+}
+
+// 每个边按规律分段计算展开数
+function sideNum(x, y) {
+    // console.log(x, ', ', y)
+    var obj = calculateSideAndLayer(x, y);
+    var s = obj.side;
+    var l = obj.layer;
+    
+    //层l的最大可容纳数为l * 8
+    var maxNum = l * 8;
+
+    //层l最大数为 4l(l+1)
+    var max = 4 * l * (l + 1);
+  
+    //每个边的最大数
+    var temp = l * (s * 2 - 1);
+
+    switch(s) {
+    	case 1:  // 1 随y递减递增
+    		temp = temp - y;
+    		break;
+    	case 2: // 2 随x递减递增
+    		temp = temp - x;
+    		break;
+    	case 3: // 3 随y递增递增
+    		temp = temp + y;
+    		break;
+    	case 4: // 4 随x递增递增
+    		temp = temp + x;
+    		break;
+    	default:;
+    }
+
+    return temp + max - maxNum;
+}
+
+function render(integer, mid) {
+    var temp = [];
+    var start = '<table>';
+    var end = '</table>';
+    for (var i = 0; i < integer; i++) {
+		    var str = '<tr>';
+		    for (var j = 0; j < integer; j++) {
+            console.log(i, ', ', j)
+            var num = arr[i][j] = sideNum(j-mid, mid-i)
+	    	    str += ('<td>' + num + '</td>');
+        }
+        str += '</tr>';
+        temp.push(str);
+	}
+	var table = start + temp.join('') + end;
+	document.getElementById('output').innerHTML = table;
+}
+
+// 初始化大小
+var arr = [];
+document.getElementById('integer').onkeyup = function() {
+	var integer = parseInt(this.value);
+	for (var i = 0; i < integer; i++) {
+	    arr.push([]);
+	}
+	// 中点位置，(n - 0.1)取奇数的中点
+	// 坐标系平移到中点，并采用笛卡尔坐标系
+	// (x-mid, mid-y)
+	var mid = Math.floor((integer - 0.1)/2);
+	render(integer, mid);
+};
+
+</script>
+</body>
+</html>
