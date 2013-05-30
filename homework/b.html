@@ -1,20 +1,20 @@
 <!doctype html>
 <html>
 <head>
-    <title>Spiral matrix</title>
+    <title>Matrix</title>
     <meta charset="utf-8">
-    <style>
-        #output {
-            width: 500px;
-            height: 400px;
-            overflow: auto;
-        }
-        td {
+	<style>
+		#output {
+			width: 500px;
+			height: 400px;
+			overflow: auto;
+		}
+		td {
             width:30px;
             height:30px;
             text-align:center;
         }
-    </style>
+	</style>
 </head>
 <body>
     <label for="integer">Input an integer:</label>
@@ -38,8 +38,8 @@ function calculateSideAndLayer(x, y) {
 
     // 下边
     if (-y == layer && x >= y && x != layer) {
-        obj.side = 2;
-        return obj;
+    	obj.side = 2;
+    	return obj;
     }
     // 左边
     if (-x == layer && x < y) {
@@ -48,8 +48,8 @@ function calculateSideAndLayer(x, y) {
     }
     // 上边
     if (y == layer && x <= y) {
-        obj.side = 4;
-        return obj;
+    	obj.side = 4;
+    	return obj;
     }
 
     return obj;
@@ -57,7 +57,7 @@ function calculateSideAndLayer(x, y) {
 
 // 每个边按规律分段计算展开数
 function sideNum(x, y) {
-    // console.log(x, ', ', y)
+    console.log(x, ', ', y)
     var obj = calculateSideAndLayer(x, y);
     var side = obj.side;
     var layer = obj.layer;
@@ -73,25 +73,24 @@ function sideNum(x, y) {
 
     var num;
     switch (side) {
-        case 1:  // 1 随y递减递增
-            num = sideMax - y;
-            break;
-        case 2: // 2 随x递减递增
-            num = sideMax - x;
-            break;
-        case 3: // 3 随y递增递增
-            num = sideMax + y;
-            break;
-        case 4: // 4 随x递增递增
-            num = sideMax + x;
-            break;
-        default:;
+    	case 1:  // 1 随y递减递增
+    		num = sideMax - y;
+    		break;
+    	case 2: // 2 随x递减递增
+    		num = sideMax - x;
+    		break;
+    	case 3: // 3 随y递增递增
+    		num = sideMax + y;
+    		break;
+    	case 4: // 4 随x递增递增
+    		num = sideMax + x;
+    		break;
+    	default:;
     }
 
-    return num + max - maxNum + 1;
+    return num + max - maxNum;
 }
 
-// 渲染到页面
 function render(integer, mid) {
     var temp = [];
     var start = '<table>';
@@ -107,22 +106,22 @@ function render(integer, mid) {
         str += '</tr>';
         temp[i] = str;
     }
-    var table = start + temp.join('') + end;
-    document.getElementById('output').innerHTML = table;
+	var table = start + temp.join('') + end;
+	document.getElementById('output').innerHTML = table;
 }
 
 // 初始化大小
 var arr = [];
 document.getElementById('integer').onkeyup = function() {
-    var integer = parseInt(this.value);
-    for (var i = 0; i < integer; i++) {
-        arr.push([]);
-    }
-    // 中点位置，(n - 0.1)取奇数的中点
-    // 坐标系平移到中点，并采用笛卡尔坐标系
-    // (x-mid, mid-y)
-    var mid = Math.floor((integer - 0.1)/2);
-    render(integer, mid);
+	var integer = parseInt(this.value);
+	for (var i = 0; i < integer; i++) {
+	    arr.push([]);
+	}
+	// 中点位置，(n - 0.1)取奇数的中点
+	// 坐标系平移到中点，并采用笛卡尔坐标系
+	// (x-mid, mid-y)
+	var mid = Math.floor((integer - 0.1)/2);
+	render(integer, mid);
 };
 
 </script>

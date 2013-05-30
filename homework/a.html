@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+    <title>Matrix</title>
+    <meta charset="utf-8">
+	<style>
+		#output {
+			width: 500px;
+			height: 400px;
+			overflow: auto;
+		}
+		td {
+            width:30px;
+            height:30px;
+            text-align:center;
+        }
+	</style>
+</head>
+<body>
+    <label for="integer">Input an integer:</label>
+    <input id="integer"/>
+    <br/><br/>
+    <h4>Output</h4>
+    <div id="output" style="border:1px solid gray;">...</div>
+<script>
+// 生成一个二维数组
+function matrix(n) {
+    var arr = Array(n);
+    while(n) {
+        arr[--n] = [];
+    }
+    return arr;
+}
+
+function spiralArray(n) {
+    var arr = matrix(n);
+    var x = 0,
+        y = 0,
+        j = 0,
+        dx = 1, 
+        dy = 0,
+        total = n * n--;
+        
+    while (total >= 0) {
+        arr[y][x] = total--;
+        x += dx;
+        y += dy;
+        if (++j == n) {
+            if (dy < 0) {
+                x++;
+                y++;
+                n -= 2;
+            }
+            j = dx;
+            dx = -dy;
+            dy = j;
+            j = 0;
+        }
+    }
+
+    for (var i=0; i<arr.length; i++) {
+        arr[i].reverse()
+    }
+    return arr;
+}
+
+function render(n) {
+    var strArr = []
+    var arr = spiralArray(n)
+    var start = '<table>';
+    var end = '</table>';
+    for (i = 0; i < n; i++) {
+        strArr[i] = arr[i].join(' ')
+    }
+	var table = start + strArr.join('<br/>') + end;
+	document.getElementById('output').innerHTML = table;
+}
+
+// 初始化大小
+var arr = [];
+document.getElementById('integer').onkeyup = function() {
+	var integer = parseInt(this.value);
+	render(integer);
+};
+
+</script>
+</body>
+</html>
