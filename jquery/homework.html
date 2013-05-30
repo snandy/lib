@@ -89,25 +89,16 @@ function render(integer, mid) {
     var start = '<table>';
     var end = '</table>';
 
-   	var i = 0;
-	function execute() {
-		if (i == integer) {
-			clearInterval(integer)
-			return;	
-		}
-	    for (; i < integer; i++) {
-			var str = '<tr>';
-			for (var j = 0; j < integer; j++) {
-	            // console.log(i, ', ', j)
-	            var num = arr[i][j] = sideNum(j-mid, mid-i)
-		    	str += ('<td>' + num + '</td>');
-	        }
-	        str += '</tr>';
-	        temp.push(str);
-		}	
+    for (var i = 0; i < integer; i++) {
+		var str = '<tr>';
+		for (var j = 0; j < integer; j++) {
+            // console.log(i, ', ', j)
+            var num = arr[i][j] = sideNum(j-mid, mid-i)
+	    	str += ('<td>' + num + '</td>');
+        }
+        str += '</tr>';
+        temp.push(str);
 	}
-
-	var interval = setInterval(execute, 10)
 	var table = start + temp.join('') + end;
 	document.getElementById('output').innerHTML = table;
 }

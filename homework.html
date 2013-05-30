@@ -1,22 +1,27 @@
 <!doctype html>
 <html>
 <head>
+    <title>Matrix</title>
+    <meta charset="utf-8">
 	<style>
 		#output {
 			width: 500px;
 			height: 400px;
 			overflow: auto;
 		}
-		td{width:30px;height:30px;text-align:center}
+		td {
+            width:30px;
+            height:30px;
+            text-align:center;
+        }
 	</style>
-	<script src="jquery-1.10.0.js"></script>
 </head>
 <body>
-<label for="integer">Input an integer:</label>
-<input id="integer"/>
-<br/><br/>
-<h4>Output</h4>
-<div id="output" style="border:1px solid gray;">...</div>
+    <label for="integer">Input an integer:</label>
+    <input id="integer"/>
+    <br/><br/>
+    <h4>Output</h4>
+    <div id="output" style="border:1px solid gray;">...</div>
 <script>
 
 // x, y坐标绝对值最大数为层 l
@@ -37,12 +42,12 @@ function calculateSideAndLayer(x, y) {
     	return obj;
     }
     // 左边
-    if(-x == layer && x < y) {
+    if (-x == layer && x < y) {
         obj.side = 3;
         return obj;
     }
     // 上边
-    if(y == layer && x <= y) {
+    if (y == layer && x <= y) {
     	obj.side = 4;
     	return obj;
     }
@@ -54,51 +59,53 @@ function calculateSideAndLayer(x, y) {
 function sideNum(x, y) {
     console.log(x, ', ', y)
     var obj = calculateSideAndLayer(x, y);
-    var s = obj.side;
-    var l = obj.layer;
+    var side = obj.side;
+    var layer = obj.layer;
     
-    // 层l的最大可容纳数为l * 8
-    var maxNum = l * 8;
+    // 层l的最大可容纳数
+    var maxNum = layer * 8;
 
-    // 层l最大数为 4l(l+1)
-    var max = 4 * l * (l + 1);
+    // 层layer最大数为 4*layer(layer+1)
+    var max = 4 * layer * (layer + 1);
   
     // 每个边的最大数
-    var temp = l * (s * 2 - 1);
+    var sideMax = layer * (side * 2 - 1);
 
-    switch(s) {
+    var num;
+    switch (side) {
     	case 1:  // 1 随y递减递增
-    		temp = temp - y;
+    		num = sideMax - y;
     		break;
     	case 2: // 2 随x递减递增
-    		temp = temp - x;
+    		num = sideMax - x;
     		break;
     	case 3: // 3 随y递增递增
-    		temp = temp + y;
+    		num = sideMax + y;
     		break;
     	case 4: // 4 随x递增递增
-    		temp = temp + x;
+    		num = sideMax + x;
     		break;
     	default:;
     }
 
-    return temp + max - maxNum;
+    return num + max - maxNum;
 }
 
 function render(integer, mid) {
     var temp = [];
     var start = '<table>';
     var end = '</table>';
-    for (var i = 0; i < integer; i++) {
-		var str = '<tr>';
-		for (var j = 0; j < integer; j++) {
-            // console.log(i, ', ', j)
-            var num = arr[i][j] = sideNum(j-mid, mid-i);
-            str += ('<td>' + num + '</td>');
+    var i = integer;
+    while (i--) {
+        var str = '<tr>';
+        var j = integer;
+        while (j--) {
+            var num = sideNum(j-mid, mid-i);
+            str = ('<td>' + num + '</td>') + str;
         }
         str += '</tr>';
-        temp.push(str);
-	}
+        temp[i] = str;
+    }
 	var table = start + temp.join('') + end;
 	document.getElementById('output').innerHTML = table;
 }
