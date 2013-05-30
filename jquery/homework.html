@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
 	<style>
@@ -9,7 +9,6 @@
 		}
 		td{width:30px;height:30px;text-align:center}
 	</style>
-	<script src="jquery-1.10.0.js"></script>
 </head>
 <body>
 <label for="integer">Input an integer:</label>
@@ -17,8 +16,8 @@
 <br/><br/>
 <h4>Output</h4>
 <div id="output" style="border:1px solid gray;">...</div>
-<script>
 
+<script>
 // x, y坐标绝对值最大数为层 l
 function calculateLayer(x, y) {
     return Math.max(Math.abs(x), Math.abs(y));
@@ -52,18 +51,18 @@ function calculateSideAndLayer(x, y) {
 
 // 每个边按规律分段计算展开数
 function sideNum(x, y) {
-    console.log(x, ', ', y)
+    // console.log(x, ', ', y)
     var obj = calculateSideAndLayer(x, y);
     var s = obj.side;
     var l = obj.layer;
     
-    // 层l的最大可容纳数为l * 8
+    //层l的最大可容纳数为l * 8
     var maxNum = l * 8;
 
-    // 层l最大数为 4l(l+1)
+    //层l最大数为 4l(l+1)
     var max = 4 * l * (l + 1);
   
-    // 每个边的最大数
+    //每个边的最大数
     var temp = l * (s * 2 - 1);
 
     switch(s) {
@@ -89,16 +88,26 @@ function render(integer, mid) {
     var temp = [];
     var start = '<table>';
     var end = '</table>';
-    for (var i = 0; i < integer; i++) {
-		var str = '<tr>';
-		for (var j = 0; j < integer; j++) {
-            // console.log(i, ', ', j)
-            var num = arr[i][j] = sideNum(j-mid, mid-i);
-            str += ('<td>' + num + '</td>');
-        }
-        str += '</tr>';
-        temp.push(str);
+
+   	var i = 0;
+	function execute() {
+		if (i == integer) {
+			clearInterval(integer)
+			return;	
+		}
+	    for (; i < integer; i++) {
+			var str = '<tr>';
+			for (var j = 0; j < integer; j++) {
+	            // console.log(i, ', ', j)
+	            var num = arr[i][j] = sideNum(j-mid, mid-i)
+		    	str += ('<td>' + num + '</td>');
+	        }
+	        str += '</tr>';
+	        temp.push(str);
+		}	
 	}
+
+	var interval = setInterval(execute, 10)
 	var table = start + temp.join('') + end;
 	document.getElementById('output').innerHTML = table;
 }
