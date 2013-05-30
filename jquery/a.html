@@ -11,13 +11,13 @@
 var $w = function(s){document.write(s)}
 
 //x, y坐标绝对值最大数为层 l
-function layer(x, y) {
+function calculateLayer(x, y) {
     return Math.max(Math.abs(x), Math.abs(y));
 }
 
 //分成4个边，右下左上
-function side(x, y) {
-    var l = layer(x, y)
+function calculateSideAndLayer(x, y) {
+    var l = calculateLayer(x, y)
     var s = 1 //边的编号，默认为右边
 
     if (-y == l && x >= y && x != l) //下边
@@ -27,14 +27,15 @@ function side(x, y) {
     else if(y == l && x <= y) //上边
         s = 4;
 
-    return s
+    return {side: s, layer: l}
 }
 
 //每个边按规律分段计算展开数
 function sideNum(x, y) {
-    console.log(x, ',', y)
-    var s = side(x, y)
-    var l = layer(x, y)
+    // console.log(x, ', ', y)
+    var obj = calculateSideAndLayer(x, y)
+    var s = obj.side
+    var l = obj.layer
     
     //层l的最大可容纳数为l * 8
     var maxNum = l * 8
@@ -54,19 +55,19 @@ function sideNum(x, y) {
     else
         temp = temp + x //4 随x递增递增
 
-    return temp + max - maxNum + 1
+    return temp + max - maxNum
 }
 
 //初始化大小
-var n = 5;
+var n = 4;
 var arr = [];
 for (var i = 0; i < n; i++) {
     arr.push([]);
 }
-//中点位置，(n - 0.9)取奇数的中点
+//中点位置，(n - 0.1)取奇数的中点
 //坐标系平移到中点，并采用笛卡尔坐标系
 //(x-mid, mid-y)
-var mid = Math.floor((n - 0.9)/2)
+var mid = Math.floor((n - 0.1)/2)
 
 function render() {
     var temp = []
@@ -75,6 +76,7 @@ function render() {
     for (var i = 0; i < n; i++) {
 		    var str = '<tr>'
 		    for (var j = 0; j < n; j++) {
+            console.log(i, ', ', j)
             var num = arr[i][j] = sideNum(j-mid, mid-i)
 	    	    str += ('<td>' + num + '</td>')
         }
