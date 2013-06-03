@@ -64,3 +64,32 @@ var CustomModel = Backbone.Model.extend({
 
 var m1 = new CustomModel('John', 30)
 console.log(m1.constructor === MyConstructor) // true
+
+3 返回的类有个特殊属性 __super__，用它很方便的取得父类原型，进而取到父类构造器，最后在子类中去调用父类。类似于Java里的super关键字
+
+
+function Person(name, age) {
+	this.name = name
+	this.age = age
+}
+Person.extend = Backbone.Model.extend // 把Backbone的extend拿出来用，O(∩_∩)O~
+
+function ManConstructor(name, age) {
+	ManConstructor.__super__.constructor.call(this, name, age)
+	this.gender = 'male'
+}
+var Man = Person.extend({
+	constructor: ManConstructor
+})
+var man = new Man('John', 30)
+console.log(man) // ManConstructor { name="John", age=30, gender="male"}
+
+关于这种用法的妙处，可以看看这篇文章 http://www.cnblogs.com/snandy/archive/2011/03/23/1992080.html
+
+
+1 通过Model(View/Router等)的extend方法写类，产生的类直接继承了Model(View/Router等)
+2 如果写的类不是Backbone提供的类，那么可以象3那样，把extend方法拿出来
+3 
+
+
+

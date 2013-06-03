@@ -24,105 +24,81 @@
     <div id="output" style="border:1px solid gray;">...</div>
 <script>
 
-// x, y坐标绝对值最大数为层 l
-function calculateLayer(x, y) {
-    return Math.max(Math.abs(x), Math.abs(y));
+var m = 5;  
+var map= makeArray(m);
+var ct = getCenter(m); //中心点
+
+var zs = [], ys = [], zx=[], yx=[];
+//先算出四角方向的所有数值
+for (var i=0; i<=ct; i++){
+    var zb = [ct,ct];
+    //左上
+    zs.unshift((i*2)*(i*2)+i*2);
+    //左下
+    zx.unshift((i*2)*(i*2));
+    //右上
+    ys.unshift((i*2+1)*(i*2+1)-1)
+    //右下
+    if (i!==ct) yx.unshift((i*2+1)*(i*2+1)+(i*2+1));
+}
+//根据四角的数字，去计算中间数值
+//上角
+for (var i=0; i<=m-ct; i++){
+    var x = zs[i];
+    for (var n=i; n<m-i; n++){
+        map[i][n]= x++;
+    }
+}
+//下角
+var y=0
+for (var i=m-1; i>=m-ct; i--){
+    var x = zx[y];
+    y++
+    for (var n = m-i-1; n <= i; n++){
+        map[i][n] = x--;
+    }
+}
+//左
+for (var i=0; i<=m-ct; i++){
+    var x = zs[i];
+    for (var n=i; n<m-i; n++){
+        map[n][i]= x--;
+    }
+}
+//右
+var y=0;
+for (var i=m-1; i>=m-ct; i--){
+    var x = yx[y];
+    y++
+    for (var n = i; n >= m-i; n--){
+        map[n][i]= x--;
+    }
 }
 
-// 分成4个边，右下左上
-function calculateSideAndLayer(x, y) {
-    var layer = calculateLayer(x, y);
-
-    // side 边的编号，默认右边
-    var obj = {layer: layer, side: 1};
-
-    // 下边
-    if (-y == layer && x >= y && x != layer) {
-    	obj.side = 2;
-    	return obj;
+//输出
+h='<table>';
+for (var i=0; i<m; i++){
+    h+='</tr>';
+    for (var n=0; n<m; n++){
+        h+='<td>';
+        h+=map[i][n];
+        h+='</td>';
     }
-    // 左边
-    if (-x == layer && x < y) {
-        obj.side = 3;
-        return obj;
-    }
-    // 上边
-    if (y == layer && x <= y) {
-    	obj.side = 4;
-    	return obj;
-    }
-
-    return obj;
+    h+='</tr>';
 }
-
-// 每个边按规律分段计算展开数
-function sideNum(x, y) {
-    console.log(x, ', ', y)
-    var obj = calculateSideAndLayer(x, y);
-    var side = obj.side;
-    var layer = obj.layer;
+h+='</table>';
+document.write(h)
     
-    // 层l的最大可容纳数
-    var maxNum = layer * 8;
-
-    // 层layer最大数为 4*layer(layer+1)
-    var max = 4 * layer * (layer + 1);
-  
-    // 每个边的最大数
-    var sideMax = layer * (side * 2 - 1);
-
-    var num;
-    switch (side) {
-    	case 1:  // 1 随y递减递增
-    		num = sideMax - y;
-    		break;
-    	case 2: // 2 随x递减递增
-    		num = sideMax - x;
-    		break;
-    	case 3: // 3 随y递增递增
-    		num = sideMax + y;
-    		break;
-    	case 4: // 4 随x递增递增
-    		num = sideMax + x;
-    		break;
-    	default:;
-    }
-
-    return num + max - maxNum;
+function getCenter(m){
+    return parseInt( m/2, 10 );
 }
-
-function render(integer, mid) {
-    var temp = [];
-    var start = '<table>';
-    var end = '</table>';
-    var i = integer;
-    while (i--) {
-        var str = '<tr>';
-        var j = integer;
-        while (j--) {
-            var num = sideNum(j-mid, mid-i);
-            str = ('<td>' + num + '</td>') + str;
-        }
-        str += '</tr>';
-        temp[i] = str;
+function makeArray (m,n){
+    var m = m || 1,n = n||m,a=[];
+    for (var i=0; i<m; i++){
+        a[i]=new Array(m);
     }
-	var table = start + temp.join('') + end;
-	document.getElementById('output').innerHTML = table;
+    return a;
 }
-
-// 初始化大小
-var arr = [];
-document.getElementById('integer').onkeyup = function() {
-	var integer = parseInt(this.value);
-	for (var i = 0; i < integer; i++) {
-	    arr.push([]);
-	}
-	// 中点位置，(n - 0.1)取奇数的中点
-	// 坐标系平移到中点，并采用笛卡尔坐标系
-	// (x-mid, mid-y)
-	var mid = Math.floor((integer - 0.1)/2);
-	render(integer, mid);
-};
 
 </script>
 </body>
