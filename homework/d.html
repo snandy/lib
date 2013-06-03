@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+    <title>Matrix</title>
+    <meta charset="utf-8">
+	<style>
+		#output {
+			width: 500px;
+			height: 400px;
+			overflow: auto;
+		}
+		td {
+            width:30px;
+            height:30px;
+            text-align:center;
+        }
+	</style>
+</head>
+<body>
+    <label for="integer">Input an integer:</label>
+    <input id="integer"/>
+    <br/><br/>
+    <h4>Output</h4>
+    <div id="output" style="border:1px solid gray;">...</div>
+<script>
+function matrix(n) {
+    var arr = Array(n);
+    while(n) {
+        arr[--n] = [];
+    }
+    return arr;
+}
+function spiralMatrix(n) {
+    var data = matrix(n);
+
+    var x, y;
+    x = y = Math.floor((n-1)/2);
+    data[x][y] = 1;
+
+    var len = 1;
+    var count = 0;
+    var num = 2;
+
+    var dir = 2;
+
+    while (num <= n*n) {
+        for (var i = 0; i<len; i++) {
+            switch (dir) {
+                case 2: ++y; break; // 右
+                case 3: ++x; break; // 下
+                case 0: --y; break; // 左
+                case 1: --x; break; // 上
+                default: break;
+            }
+            data[x][y] = num++;
+        }
+        count++;
+        if (count == 2) {
+            count = 0;
+            len++;
+        }
+        dir = (dir+1)%4;
+    }
+
+    return data;
+}
+var arr = spiralMatrix(4)
+arr.forEach(function(line) {
+    console.log(line)
+})
+</script>
+</body>
+</html>

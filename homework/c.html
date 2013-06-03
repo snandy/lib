@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+    <title>Matrix</title>
+    <meta charset="utf-8">
+	<style>
+		#output {
+			width: 500px;
+			height: 400px;
+			overflow: auto;
+		}
+		td {
+            width:30px;
+            height:30px;
+            text-align:center;
+        }
+	</style>
+    <script type="text/javascript" src="c.js"></script>
+</head>
+<body>
+    <label for="integer">Input an integer:</label>
+    <input id="integer"/>
+    <br/><br/>
+    <h4>Output</h4>
+    <div id="output" style="border:1px solid gray;">...</div>
+<script>
+document.getElementById('integer').onkeyup = function() {
+    var integer = parseInt(this.value);
+    calcSpiral(integer)
+};
+</script>
+</body>
+</html>
