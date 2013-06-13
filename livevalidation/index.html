@@ -2,11 +2,77 @@
 <html>
   <head>
     <meta charset='utf-8' />
-    <title>Lib</title>
+    <title>LiveValidation</title>
+    <link rel="stylesheet" type="text/css" href="consolidated_common.css" />
+    <style>
+        .LV_validation_message{
+            font-weight:bold;
+            margin:0 0 0 5px;
+        } 
+        .LV_valid {
+            color:#00CC00;
+        }
+        .LV_invalid {
+            color:#CC0000;
+        }
+        .LV_valid_field,
+        input.LV_valid_field:hover, 
+        input.LV_valid_field:active,
+        textarea.LV_valid_field:hover, 
+        textarea.LV_valid_field:active {
+            border: 1px solid #00CC00;
+        }
+        .LV_invalid_field, 
+        input.LV_invalid_field:hover, 
+        input.LV_invalid_field:active,
+        textarea.LV_invalid_field:hover, 
+        textarea.LV_invalid_field:active {
+            border: 1px solid #CC0000;
+        }
+        
+        table {
+        	width: 500px;
+        	border: 0;
+        	border-collapse:separate;
+        }
+        table td {
+        	border: 0;
+        }
+        table .col1 {
+        	width: 20%;
+        	text-align: right;
+        }
+    </style>
+    <script type="text/javascript" src="livevalidation_standalone.js"></script>
   </head>
 
   <body>
-    
+    <form>
+    	<table cellpadding="0">
+    		<tr>
+    			<td class="col1">存在性</td>
+    			<td><input id="lv1" type="text"/></td>
+    		</tr>
+    		<tr>
+    			<td class="col1">数字</td>
+    			<td><input id="lv2" type="text"/></td>
+    		</tr>
+    		<tr>
+    			<td class="col1">数字</td>
+    			<td><input id="lv3" type="text"/></td>
+    		</tr>    		
+    	</table>
+        <script type="text/javascript">
+            var lv1 = new LiveValidation('lv1');
+            lv1.add(Validate.Presence);
+            
+            var lv2 = new LiveValidation('lv2');
+            lv2.add(Validate.Numericality);
+            
+            
+        </script>
+    </form>   
+
 
   </body>
 </html>
