@@ -15,14 +15,18 @@
 			var MyRouter = Backbone.Router.extend({
 				routes : {
 					"help" : "help",    // #help
+					"getA" : "getA"
 				},
 				help: function() {
 					console.log(3)
+				},
+				getA: function() {
+					console.log('A')
 				}
 			});
 			
 			var router = new MyRouter()
-			Backbone.history.start();
+			Backbone.history.start({pubState:true});
 		</script>
 	</body>
 </html>

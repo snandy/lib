@@ -53,7 +53,7 @@
   };
 
   // Turn on `emulateHTTP` to support legacy HTTP servers. Setting this option
-  // will fake `"PUT"` and `"DELETE"` requests via the `_method` parameter and
+  // will fake `"PATCH"`, `"PUT"` and `"DELETE"` requests via the `_method` parameter and
   // set a `X-Http-Method-Override` header.
   Backbone.emulateHTTP = false;
 
@@ -685,7 +685,6 @@
           if (remove) modelMap[existing.cid] = true;
           if (merge) {
             attrs = attrs === model ? model.attributes : options._attrs;
-            delete options._attrs;
             existing.set(attrs, options);
             if (sortable && !sort && existing.hasChanged(sortAttr)) sort = true;
           }
@@ -701,6 +700,7 @@
           if (model.id != null) this._byId[model.id] = model;
         }
         if (order) order.push(existing || model);
+        delete options._attrs;
       }
 
       // Remove nonexistent models if appropriate.
@@ -1176,8 +1176,7 @@
     // If we're sending a `PATCH` request, and we're in an old Internet Explorer
     // that still has ActiveX enabled by default, override jQuery to use that
     // for XHR instead. Remove this line when jQuery supports `PATCH` on IE8.
-    if (params.type === 'PATCH' && window.ActiveXObject &&
-          !(window.external && window.external.msActiveXFilteringEnabled)) {
+    if (params.type === 'PATCH' && noXhrPatch) {
       params.xhr = function() {
         return new ActiveXObject("Microsoft.XMLHTTP");
       };
@@ -1188,6 +1187,8 @@
     model.trigger('request', model, xhr, options);
     return xhr;
   };
+
+  var noXhrPatch = typeof window !== 'undefined' && !!window.ActiveXObject && !(window.XMLHttpRequest && (new XMLHttpRequest).dispatchEvent);
 
   // Map from CRUD to HTTP for our default `Backbone.sync` implementation.
   var methodMap = {
@@ -1400,19 +1401,25 @@
       var loc = this.location;
       var atRoot = loc.pathname.replace(/[^\/]$/, '$&/') === this.root;
 
-      // If we've started off with a route from a `pushState`-enabled browser,
-      // but we're currently in a browser that doesn't support it...
-      if (this._wantsHashChange && this._wantsPushState && !this._hasPushState && !atRoot) {
-        this.fragment = this.getFragment(null, true);
-        this.location.replace(this.root + this.location.search + '#' + this.fragment);
-        // Return immediately as browser will do redirect to new url
-        return true;
+      // Transition from hashChange to pushState or vice versa if both are
+      // requested.
+      if (this._wantsHashChange && this._wantsPushState) {
 
-      // Or if we've started out with a hash-based route, but we're currently
-      // in a browser where it could be `pushState`-based instead...
-      } else if (this._wantsPushState && this._hasPushState && atRoot && loc.hash) {
-        this.fragment = this.getHash().replace(routeStripper, '');
-        this.history.replaceState({}, document.title, this.root + this.fragment + loc.search);
+        // If we've started off with a route from a `pushState`-enabled
+        // browser, but we're currently in a browser that doesn't support it...
+        if (!this._hasPushState && !atRoot) {
+          this.fragment = this.getFragment(null, true);
+          this.location.replace(this.root + this.location.search + '#' + this.fragment);
+          // Return immediately as browser will do redirect to new url
+          return true;
+
+        // Or if we've started out with a hash-based route, but we're currently
+        // in a browser where it could be `pushState`-based instead...
+        } else if (this._hasPushState && atRoot && loc.hash) {
+          this.fragment = this.getHash().replace(routeStripper, '');
+          this.history.replaceState({}, document.title, this.root + this.fragment + loc.search);
+        }
+
       }
 
       if (!this.options.silent) return this.loadUrl();
@@ -1441,7 +1448,7 @@
       }
       if (current === this.fragment) return false;
       if (this.iframe) this.navigate(current);
-      this.loadUrl() || this.loadUrl(this.getHash());
+      this.loadUrl();
     },
 
     // Attempt to load the current URL fragment. If a route succeeds with a

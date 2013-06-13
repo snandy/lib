@@ -1,66 +1,28 @@
-Backbone的写类方式
+Backbone.sync-将模型同步到服务器
 
-说Backbone的写类方式，不得不提 extend 方法，该方法定义在Backbone.js的底部。不到30行代码，它是私有的，外部并不能访问。
-也就是说，这个方法只在Backbone内部使用，为其它模块服务。
+1 sync方法把model持久化存储到服务器端，你可以重写该方法的实现方式，它默认使用jQuery的$.ajax。
 
-其实这个说法不严谨，虽然extend不能直接访问，但它通过一行代码
-Model.extend = Collection.extend = Router.extend = View.extend = History.extend = extend;
+2 整个Backbone，只有Model和Collection的sync会调用Backbone.sync。
 
-转身变为Backbone.Model.extend、Backbone.Collection.extend、Backbone.View.extend、Backbone.Router.extend、Backbone.History.extend后，外部还是可以访问得到。
+3 请求类型由第一个参数method决定，可以是create/update/patch/delete/read。它默认采用RESTful请求。
 
-在一个闭包内，写一个私有的函数，然后把该函数赋值给多个类的或类原型。这些写法并不少见，这样写节省了内存，函数实例其实只有一份。
+4 请求的数据由第二个参数model决定，URL默认是model的url，数据是model的attributes转成JSON。数据类型默认是JSON类型。
 
-此外，不要把这里的extend 和 _.extend 搞混了。_.extend是underscore提供的叫底层的方法，用来mixin对象。这里的extend则是用来写类。
-
-介绍下extend
-
-它接受两个参数，都是对象类型
-它返回一个类（构造器，函数），怎么叫都行
-第一个参数的所有属性、方法都会拷贝到类的原型上（实例对象上）
-第二个参数的所有属性、方法都会拷贝的类上（类静态属性、方法）
-第一个参数中如果有constructor属性，那么最后就返回它，否则返回内部提供的child
-返回的类有个特殊属性 __super__，可以使用它很方便的取得父类原型，进而取到父类构造器，进而在子类中去调用父类。类似于Java里的super关键字。
+5 请求后会触发model的request的事件，如果添加了该事件的handler后。
 
 
-下面详细说说
+执行流程
+1 处理type，从methodMap
+2 初始化options
+3 初始化params，含type/dataType/url
+4 create/update/patch时，params的contentType为application/json，params.data确保有值，值为model转为json
+5 emulateJSON
+6 mimicking HTTP
+7 非GET时， processData为false
+8 PATCH时 IE低版本重写xhr
+9 触发request事件
 
-1 两个参数，都是对象类型，第一个扩展为原型方法，第二个扩展为类方法
 
-var instanceObj = {
-	name: '',
-	getName: function() {},
-	setName: function(name) {}
-}
-var classObj = {
-	trim: function(str) {},
-	mix: function() {}
-}
-
-// 生成一个新类CustomModel，它具有Backbone.Model的所有方法
-var CustomModel = Backbone.Model.extend(instanceObj, classObj)
-
-// instanceObj属性都拷贝到了CustomModel.prototype 上
-_.each(['name','getName', 'setName'], function(attr) {
-	console.log(attr in CustomModel.prototype)
-})
-
-// classObj属性都拷贝到了 CustomModel 上
-_.each(['trim','mix'], function(attr) {
-	console.log(attr in CustomModel)
-})
-
-2 参数中如果有constructor属性，那么最后就返回它，否则返回内部提供的child
-
-这实际上告诉使用者可以自定义构造器，而不使用内部的child。
-function MyConstructor(name, age) {
-	this.name = name;
-	this.age  = age;
-}
-var CustomModel = Backbone.Model.extend({
-	constructor: MyConstructor,
-	getName: function(){},
-	setName: function(){}
-})
-
-var m1 = new CustomModel('John', 30)
-console.log(m1.constructor === MyConstructor) // true
+相关：
+http://zh.wikipedia.org/wiki/REST
+http://www.ruanyifeng.com/blog/2011/09/restful.html
