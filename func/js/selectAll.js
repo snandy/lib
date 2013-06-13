@@ -22,12 +22,12 @@ $.selectAll = function(opCheckbox, listCheckbox, item, target) {
 	
 	if (typeof item === 'string') {
 		$item = $(item)
-	} else {
+	} else {$('');
 		$item = item
 	}
 
 	target = target || 'div'
-
+	
 	$op.click(function() {
 		var $self = $(this), $another
 		$another = $self[0] === $op[0] ? $op.eq(1) : $op.eq(0)

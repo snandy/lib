@@ -2,15 +2,20 @@
 // Copyright (c) 2007-2010 Alec Hill (www.livevalidation.com)
 // LiveValidation is licensed under the terms of the MIT License
 
-~function(win) {
-	
+~function(win, doc, undefined) {
+
 function noop(){}
+
+function $(id) {
+	return typeof id === 'string' ? doc.getElementById(id) : id
+}
+
 /**
  *  validates a form field in real-time based on validations you assign to it
  *  @param element {mixed} - either a dom element reference or the string id of the element to validate
- *  @param optionsObj {Object} - general options, see below for details
+ *  @param option {Object} - general options, see below for details
  *
- *  optionsObj properties:
+ *  option properties:
  *		validMessage {String} - the message to show when the field passes validation (set to '' or false to not insert any message)
  *							(DEFAULT: 'Thankyou!')
  *		beforeValidation {Function} - function to execute directly before validation is performed
@@ -39,8 +44,8 @@ function noop(){}
  *							(DEFAULT: false)			
  */
 
-var LiveValidation = function(element, optionsObj) {
-	this.initialize(element, optionsObj)
+var LiveValidation = function(element, option) {
+	this.initialize(element, option)
 }
 
 LiveValidation.VERSION = '1.4 standalone'
@@ -78,12 +83,12 @@ LiveValidation.prototype = {
 	 * initialises all of the properties and events
 	 * @param - Same as constructor above
 	 */
-	initialize: function(element, optionsObj) {
+	initialize: function(element, option) {
 		var self = this
 		if (!element) {
 			throw new Error('LiveValidation::initialize - No element reference or element id has been provided!')
 		}
-		this.element = element.nodeName ? element : document.getElementById(element)
+		this.element = element.nodeName ? element : $(element)
 		if (!this.element) {
 			throw new Error('LiveValidation::initialize - No element with reference or id of ' + element + ' exists!')
 		}
@@ -92,28 +97,28 @@ LiveValidation.prototype = {
 		this.elementType = this.getElementType()
 		this.form = this.element.form
 		// options
-		var options = optionsObj || {}
-		this.validMessage = options.validMessage || 'Thankyou!'
-		var node = options.insertAfterWhatNode || this.element
-		this.insertAfterWhatNode = node.nodeType ? node : document.getElementById(node)
-		this.onlyOnBlur =	options.onlyOnBlur || false
-		this.wait = options.wait || 0
-		this.onlyOnSubmit = options.onlyOnSubmit || false
+		var option = option || {}
+		this.validMessage = option.validMessage || 'Thankyou!'
+		var node = option.insertAfterWhatNode || this.element
+		this.insertAfterWhatNode = node.nodeType ? node : $(node)
+		this.onlyOnBlur =	option.onlyOnBlur || false
+		this.wait = option.wait || 0
+		this.onlyOnSubmit = option.onlyOnSubmit || false
 		// hooks
-		this.beforeValidation = options.beforeValidation || noop
-		this.beforeValid = options.beforeValid || noop
-		this.onValid = options.onValid || function() {
+		this.beforeValidation = option.beforeValidation || noop
+		this.beforeValid = option.beforeValid || noop
+		this.onValid = option.onValid || function() {
 			this.insertMessage(this.createMessageSpan())
 			this.addFieldClass()
 		}
-		this.afterValid = options.afterValid || noop
-		this.beforeInvalid = options.beforeInvalid || noop
-		this.onInvalid = options.onInvalid || function() {
+		this.afterValid = option.afterValid || noop
+		this.beforeInvalid = option.beforeInvalid || noop
+		this.onInvalid = option.onInvalid || function() {
 			this.insertMessage(this.createMessageSpan())
 			this.addFieldClass()
 		}
-		this.afterInvalid = options.afterInvalid || noop
-		this.afterValidation = options.afterValidation || noop
+		this.afterInvalid = option.afterInvalid || noop
+		this.afterValidation = option.afterValidation || noop
 		// add to form if it has been provided
 		if (this.form) {
 			this.formObj = LiveValidationForm.getInstance(this.form)
@@ -192,25 +197,25 @@ LiveValidation.prototype = {
 	},
 	/**
 	 * adds a validation to perform to a LiveValidation object
-	 * @param validationFunction {Function} - validation function to be used (ie Validate.Presence )
-	 * @param validationoption {Object} - parameters for doing the validation, if wanted or necessary
+	 * @param validateFunc {Function} - validation function to be used (ie Validate.Presence )
+	 * @param validateOption {Object} - parameters for doing the validation, if wanted or necessary
 	 * @return {Object} - the LiveValidation object itself so that calls can be chained
 	 */
-	add: function(validationFunction, validationoption) {
-		this.validations.push( {type: validationFunction, params: validationoption || {} } )
+	add: function(validateFunc, validateOption) {
+		this.validations.push( {type: validateFunc, params: validateOption || {} } )
 		return this
 	},
 	/**
 	 * removes a validation from a LiveValidation object - must have exactly the same arguments as used to add it 
-	 * @param validationFunction {Function} - validation function to be used (ie Validate.Presence )
-	 * @param validationoption {Object} - parameters for doing the validation, if wanted or necessary
+	 * @param validateFunc {Function} - validation function to be used (ie Validate.Presence )
+	 * @param validateOption {Object} - parameters for doing the validation, if wanted or necessary
 	 * @return {Object} - the LiveValidation object itself so that calls can be chained
 	 */
-	remove: function(validationFunction, validationoption) {
+	remove: function(validateFunc, validateOption) {
 		var victimless = []
 		for ( var i = 0, len = this.validations.length; i < len; i++) {
 			var v = this.validations[i]
-			if (v.type != validationFunction && v.params != validationoption) {
+			if (v.type != validateFunc && v.params != validateOption) {
 				victimless.push(v)
 			}
 		}
@@ -248,8 +253,8 @@ LiveValidation.prototype = {
 	},
 	/**
 	 * gets the type of element, to check whether it is compatible
-	 * @param validationFunction {Function} - validation function to be used (ie Validate.Presence )
-	 * @param validationoption {Object} - parameters for doing the validation, if wanted or necessary
+	 * @param validateFunc {Function} - validation function to be used (ie Validate.Presence )
+	 * @param validateOption {Object} - parameters for doing the validation, if wanted or necessary
 	 */
 	getElementType: function() {
 		var nn = this.element.nodeName.toUpperCase()
@@ -275,37 +280,37 @@ LiveValidation.prototype = {
 	},
 	/**
 	 * loops through all the validations added to the LiveValidation object and checks them one by one
-	 * @param validationFunction {Function} - validation function to be used (ie Validate.Presence )
-	 * @param validationoption {Object} - parameters for doing the validation, if wanted or necessary
+	 * @param validateFunc {Function} - validation function to be used (ie Validate.Presence )
+	 * @param validateOption {Object} - parameters for doing the validation, if wanted or necessary
 	 * @return {Boolean} - whether the all the validations passed or if one failed
 	 */
-	doValidations: function(){
+	doValidations: function() {
 		this.validationFailed = false;
 		for (var i = 0, len = this.validations.length; i < len; ++i) {
-			this.validationFailed = !this.validateElement(this.validations[i].type, this.validations[i].params);
+			this.validationFailed = !this.validateElement(this.validations[i].type, this.validations[i].params)
 			if (this.validationFailed) {
 				return false
 			} 
 		}
-		this.message = this.validMessage;
-		return true;
+		this.message = this.validMessage
+		return true
 	},
 	/**
 	 * performs validation on the element and handles any error (validation or otherwise) it throws up
-	 * @param validationFunction {Function} - validation function to be used (ie Validate.Presence )
-	 * @param validationoption {Object} - parameters for doing the validation, if wanted or necessary
+	 * @param validateFunc {Function} - validation function to be used (ie Validate.Presence )
+	 * @param validateOption {Object} - parameters for doing the validation, if wanted or necessary
 	 * @return {Boolean} - whether the validation has passed or failed
 	 */
-	validateElement: function(validationFunction, validationoption) {
+	validateElement: function(validateFunc, validateOption) {
 		// check whether we should display the message when empty
-		switch (validationFunction) {
+		switch (validateFunc) {
 			case Validate.Presence:
 			case Validate.Confirmation:
 			case Validate.Acceptance:
 				this.displayMessageWhenEmpty = true;
 				break;
 			case Validate.Custom:
-				if (validationoption.displayMessageWhenEmpty) {
+				if (validateOption.displayMessageWhenEmpty) {
 					this.displayMessageWhenEmpty = true;
 				}
 				break;
@@ -313,7 +318,7 @@ LiveValidation.prototype = {
 		// select and checkbox elements vals are handled differently
 		var val = (this.elementType == LiveValidation.SELECT) ? 
 					this.element.options[this.element.selectedIndex].value : this.element.value; 
-		if (validationFunction == Validate.Acceptance) {
+		if (validateFunc == Validate.Acceptance) {
 			var msg = 'LiveValidation::validateElement - Element to validate acceptance must be a checkbox!'
 			if (this.elementType != LiveValidation.CHECKBOX) {
 				throw new Error(msg);
@@ -323,7 +328,7 @@ LiveValidation.prototype = {
 		// now validate
 		var isValid = true;
 		try {
-			validationFunction(val, validationoption);
+			validateFunc(val, validateOption)
 		} catch(error) {
 			if (error instanceof Validate.Error) {
 				if ( val !== '' || (val === '' && this.displayMessageWhenEmpty) ) {
@@ -331,10 +336,12 @@ LiveValidation.prototype = {
 					// Opera 10 adds stacktrace after newline
 					this.message = error.message.split('\n')[0];
 					isValid = false;
+					console.log(error)
 				}
 			} else {
 				throw error
 			}
+			
 		} finally {
 			return isValid
 		}
@@ -391,8 +398,8 @@ LiveValidation.prototype = {
 	 * @return {HTMLSpanObject} - a span element with the message in it
 	 */
 	createMessageSpan: function() {
-		var span = document.createElement('span')
-		var textNode = document.createTextNode(this.message)
+		var span = doc.createElement('span')
+		var textNode = doc.createTextNode(this.message)
 		span.appendChild(textNode)
 		return span
 	},
@@ -439,7 +446,7 @@ LiveValidation.prototype = {
 	removeMessage: function() {
 		var nextEl
 		var el = this.insertAfterWhatNode
-		while(el.nextSibling){
+		while (el.nextSibling) {
 			if (el.nextSibling.nodeType === 1) {
 				nextEl = el.nextSibling;
 				break;
@@ -501,7 +508,7 @@ LiveValidationForm.getInstance = function(element) {
 	if (!element) {
 		throw new Error('LiveValidationForm::getInstance - No element reference or element id has been provided!')
 	}
-	var el = element.nodeName ? element : document.getElementById(element)
+	var el = element.nodeName ? element : $(element)
 	var rand = Math.random() * Math.random()
 	if (!el.id){
 		el.id = 'formId_' + rand.toString().replace(/\./, '') + new Date().valueOf()
@@ -535,7 +542,7 @@ LiveValidationForm.prototype = {
 			self.valid ? self.onValid() : self.onInvalid();
 			self.afterValidation();
 			if (self.valid) {
-				ret = self.oldOnSubmit.call(this, e || window.event) !== false
+				ret = self.oldOnSubmit.call(this, e || win.event) !== false
 			}
 			if (!ret) {
 				return ret
@@ -852,7 +859,7 @@ var Validate = {
 		}
 		var option = option || {}
 		var message = option.failureMessage || 'Does not match!'
-		var match = option.match.nodeName ? option.match : document.getElementById(option.match)
+		var match = option.match.nodeName ? option.match : $(option.match)
 		if (!match) {
 			throw new Error('Validate::Confirmation - There is no reference with name of, or element with id of ' + option.match + '!')
 		}
@@ -903,17 +910,17 @@ var Validate = {
 	},
 	/**
 	 *  validates whatever it is you pass in, and handles the validation error for you so it gives a nice true or false reply
-	 *  @param validationFunction {Function} - validation function to be used (ie Validation.validatePresence )
+	 *  @param validateFunc {Function} - validation function to be used (ie Validation.validatePresence )
 	 *  @param val {mixed} - val to be checked if true or not (usually a boolean from the checked val of a checkbox)
-	 *  @param validationoption {Object} - parameters for doing the validation, if wanted or necessary
+	 *  @param validateOption {Object} - parameters for doing the validation, if wanted or necessary
 	 */
-	now: function(validationFunction, val, validationoption) {
-		if (!validationFunction) {
+	now: function(validateFunc, val, validateOption) {
+		if (!validateFunc) {
 			throw new Error('Validate::now - Validation function must be provided!')
 		}
 		var isValid = true
 		try {	
-			validationFunction(val, validationoption || {})
+			validateFunc(val, validateOption || {})
 		} catch(error) {
 			if (error instanceof Validate.Error) {
 			 isValid = false
@@ -929,7 +936,7 @@ var Validate = {
 	 * @param errorMessage {String} - message to display
 	 */
 	fail: function(errorMsg) {
-		throw new Validate.Error(errorMsg)
+		throw new this.Error(errorMsg)
 	},
 	Error: function(errorMsg) {
 		this.message = errorMsg
@@ -942,4 +949,4 @@ win.LiveValidation = LiveValidation
 win.LiveValidationForm = LiveValidationForm
 win.Validate = Validate
 
-}(this);
+}(this, document);
