@@ -1,25 +1,29 @@
 
 ~function(win, doc, undefined) {
 
+var TYPE = {
+	textarea: 1,
+	text: 2,
+	password: 3,
+	checkbox: 4,
+	select: 5,
+	file: 6	
+}
+
 function noop(){}
 
 function $(id) {
 	return typeof id === 'string' ? doc.getElementById(id) : id
 }
 
-var TYPE = {
-	textarea: 1,
-	text: 2,
-	password: 3,
-	checkbox: 4,
-	SELECT: 5,
-	FILE: 6	
+function ZVError(errorMsg) {
+	this.message = errorMsg
+	this.name = 'ValidationError'
 }
 
-var Validation = function(elem, option) {
+function Validation(elem, option) {
 	this.initialize(elem, option)
 }
-
 Validation.massValidate = function(validations) {
 	var returnValue = true
 	for (var i = 0, len = validations.length; i < len; ++i ) {
@@ -28,13 +32,12 @@ Validation.massValidate = function(validations) {
 	}
 	return returnValue
 }
-
 Validation.prototype = {
-	validClass: 'LV_valid',
-	invalidClass: 'LV_invalid',
-	messageClass: 'LV_validation_message',
-	validFieldClass: 'LV_valid_field',
-	invalidFieldClass: 'LV_invalid_field',
+	validClass: 'ZV_valid',
+	invalidClass: 'ZV_invalid',
+	messageClass: 'ZV_validation_msg',
+	validFieldClass: 'ZV_valid_field',
+	invalidFieldClass: 'ZV_invalid_field',
 	initialize: function(elem, option) {
 		var self = this
 		if (!elem) {
@@ -94,8 +97,8 @@ Validation.prototype = {
 						return self.oldOnClick.call(this, e)
 					}
 				// let it run into the next to add a change event too
-				case TYPE.SELECT:
-				case TYPE.FILE:
+				case TYPE.select:
+				case TYPE.file:
 					this.element.onchange = function(e) {
 						self.validate()
 						return self.oldOnChange.call(this, e)
@@ -129,8 +132,8 @@ Validation.prototype = {
 				case TYPE.checkbox:
 					this.element.onclick = this.oldOnClick
 				// let it run into the next to add a change event too
-				case TYPE.SELECT:
-				case TYPE.FILE:
+				case TYPE.select:
+				case TYPE.file:
 					this.element.onchange = this.oldOnChange
 					break;
 				default:
@@ -191,9 +194,9 @@ Validation.prototype = {
 			case (nn == 'INPUT' && nt == 'CHECKBOX'):
 				return TYPE.checkbox;
 			case (nn == 'INPUT' && nt == 'FILE'):
-				return TYPE.FILE;
+				return TYPE.file;
 			case (nn == 'SELECT'):
-				return TYPE.SELECT;
+				return TYPE.select;
 			case (nn == 'INPUT'):
 				throw new Error('Validation::getType - Cannot use Validation on an ' + nt.toLowerCase() + ' input!');
 			default:
@@ -226,7 +229,7 @@ Validation.prototype = {
 				break;
 		}
 		// select and checkbox elements vals are handled differently
-		var val = (this.elementType == TYPE.SELECT) ? 
+		var val = (this.elementType == TYPE.select) ? 
 					this.element.options[this.element.selectedIndex].value : this.element.value; 
 		if (validateFunc == Validate.acceptance) {
 			var msg = 'Validation::validateElement - Element to validate acceptance must be a checkbox!'
@@ -240,7 +243,7 @@ Validation.prototype = {
 		try {
 			validateFunc(val, validateOption)
 		} catch(error) {
-			if (error instanceof Validate.Error) {
+			if (error instanceof ZVError) {
 				if ( val !== '' || (val === '' && this.displayMessageWhenEmpty) ) {
 					this.validationFailed = true;
 					// Opera 10 adds stacktrace after newline
@@ -350,12 +353,10 @@ Validation.prototype = {
 	}
 }
 
-var ValidationForm = function(elem) {
+function ValidationForm(elem) {
 	this.initialize(elem)
 }
-
 ValidationForm.instances = {}
-
 ValidationForm.getInstance = function(elem) {
 	if (!elem) {
 		throw new Error('ValidationForm::getInstance - No element reference or id has been provided!')
@@ -370,7 +371,6 @@ ValidationForm.getInstance = function(elem) {
 	}
 	return ValidationForm.instances[el.id]
 }
-
 ValidationForm.prototype = {
 	beforeValidation: noop,
 	onValid: noop,
@@ -581,11 +581,7 @@ var Validate = {
 		return true
 	},
 	fail: function(errorMsg) {
-		throw new this.Error(errorMsg)
-	},
-	Error: function(errorMsg) {
-		this.message = errorMsg
-		this.name = 'ValidationError'
+		throw new ZVError(errorMsg)
 	}
 }
 
