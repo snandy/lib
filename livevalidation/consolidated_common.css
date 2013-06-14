@@ -81,8 +81,6 @@ code {
 
 /*********************************** forms *****************************************/
 
-label { font-weight: bold; }
-
 input, select {
   width:100px;
 }
@@ -90,7 +88,6 @@ input, select {
 input, textarea, select {
   border:1px solid #aaaaaa;
   padding:2px;
-  background:#ffffff url(../images/generic/inputBg.gif) top left no-repeat;
   margin-top:2px;
 }
 
