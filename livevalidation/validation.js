@@ -51,20 +51,20 @@ Validation.prototype = {
 		this.validMsg = option.validMsg || 'OK'
 		var node = option.insertAfterWhatNode || this.element
 		this.insertAfterWhatNode = node.nodeType ? node : $(node)
-		this.onlyOnBlur =	option.onlyOnBlur || false
+		this.onlyOnBlur = option.onlyOnBlur || false
 		this.wait = option.wait || 0
 		this.onlyOnSubmit = option.onlyOnSubmit || false
 		// hooks
 		this.beforeValidation = option.beforeValidation || noop
 		this.beforeValid = option.beforeValid || noop
 		this.onValid = option.onValid || function() {
-			this.insertMessage(this.createMessageSpan())
+			this.insertMessage(this.createMessage())
 			this.addFieldClass()
 		}
 		this.afterValid = option.afterValid || noop
 		this.beforeInvalid = option.beforeInvalid || noop
 		this.onInvalid = option.onInvalid || function() {
-			this.insertMessage(this.createMessageSpan())
+			this.insertMessage(this.createMessage())
 			this.addFieldClass()
 		}
 		this.afterInvalid = option.afterInvalid || noop
@@ -284,7 +284,7 @@ Validation.prototype = {
 		this.removeMessageAndFieldClass()
 		return this
 	},
-	createMessageSpan: function() {
+	createMessage: function() {
 		var span = doc.createElement('span')
 		var textNode = doc.createTextNode(this.message)
 		span.appendChild(textNode)
@@ -325,13 +325,13 @@ Validation.prototype = {
 		var el = this.insertAfterWhatNode
 		while (el.nextSibling) {
 			if (el.nextSibling.nodeType === 1) {
-				nextEl = el.nextSibling;
+				nextEl = el.nextSibling
 				break;
 			}
-			el = el.nextSibling;
+			el = el.nextSibling
 		}
 		if (nextEl && nextEl.className.indexOf(this.messageClass) != -1) {
-			this.insertAfterWhatNode.parentNode.removeChild(nextEl);
+			this.insertAfterWhatNode.parentNode.removeChild(nextEl)
 		}
 	},
 	removeFieldClass: function() {
