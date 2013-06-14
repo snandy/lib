@@ -7,16 +7,18 @@ function $(id) {
 	return typeof id === 'string' ? doc.getElementById(id) : id
 }
 
+var TYPE = {
+	textarea: 1,
+	text: 2,
+	password: 3,
+	checkbox: 4,
+	SELECT: 5,
+	FILE: 6	
+}
+
 var Validation = function(elem, option) {
 	this.initialize(elem, option)
 }
-
-Validation.TEXTAREA = 1
-Validation.TEXT     = 2
-Validation.PASSWORD = 3
-Validation.CHECKBOX = 4
-Validation.SELECT   = 5
-Validation.FILE     = 6
 
 Validation.massValidate = function(validations) {
 	var returnValue = true
@@ -74,27 +76,26 @@ Validation.prototype = {
 			this.formObj = ValidationForm.getInstance(this.form)
 			this.formObj.addField(this)
 		}
-		// events
 		// collect old events
-		this.oldOnFocus = this.element.onfocus || noop
-		this.oldOnBlur = this.element.onblur || noop
-		this.oldOnClick = this.element.onclick || noop
+		this.oldOnFocus  = this.element.onfocus || noop
+		this.oldOnBlur   = this.element.onblur || noop
+		this.oldOnClick  = this.element.onclick || noop
 		this.oldOnChange = this.element.onchange || noop
-		this.oldOnKeyup = this.element.onkeyup || noop
-		this.element.onfocus = function(e) { 
+		this.oldOnKeyup  = this.element.onkeyup || noop
+		this.element.onfocus = function(e) {
 			self.doOnFocus(e)
 			return self.oldOnFocus.call(this, e)
 		}
 		if (!this.onlyOnSubmit) {
 			switch (this.elementType) {
-				case Validation.CHECKBOX:
+				case TYPE.checkbox:
 					this.element.onclick = function(e) {
 						self.validate()
 						return self.oldOnClick.call(this, e)
 					}
 				// let it run into the next to add a change event too
-				case Validation.SELECT:
-				case Validation.FILE:
+				case TYPE.SELECT:
+				case TYPE.FILE:
 					this.element.onchange = function(e) {
 						self.validate()
 						return self.oldOnChange.call(this, e)
@@ -125,11 +126,11 @@ Validation.prototype = {
 		this.element.onfocus = this.oldOnFocus
 		if (!this.onlyOnSubmit) {
 			switch (this.elementType) {
-				case Validation.CHECKBOX:
+				case TYPE.checkbox:
 					this.element.onclick = this.oldOnClick
 				// let it run into the next to add a change event too
-				case Validation.SELECT:
-				case Validation.FILE:
+				case TYPE.SELECT:
+				case TYPE.FILE:
 					this.element.onchange = this.oldOnChange
 					break;
 				default:
@@ -182,17 +183,17 @@ Validation.prototype = {
 		var nt = this.element.type.toUpperCase()
 		switch (true) {
 			case (nn == 'TEXTAREA'):
-				return Validation.TEXTAREA;
+				return TYPE.textarea;
 			case (nn == 'INPUT' && nt == 'TEXT'):
-				return Validation.TEXT;
+				return TYPE.text;
 			case (nn == 'INPUT' && nt == 'PASSWORD'):
-				return Validation.PASSWORD;
+				return TYPE.password;
 			case (nn == 'INPUT' && nt == 'CHECKBOX'):
-				return Validation.CHECKBOX;
+				return TYPE.checkbox;
 			case (nn == 'INPUT' && nt == 'FILE'):
-				return Validation.FILE;
+				return TYPE.FILE;
 			case (nn == 'SELECT'):
-				return Validation.SELECT;
+				return TYPE.SELECT;
 			case (nn == 'INPUT'):
 				throw new Error('Validation::getType - Cannot use Validation on an ' + nt.toLowerCase() + ' input!');
 			default:
@@ -225,11 +226,11 @@ Validation.prototype = {
 				break;
 		}
 		// select and checkbox elements vals are handled differently
-		var val = (this.elementType == Validation.SELECT) ? 
+		var val = (this.elementType == TYPE.SELECT) ? 
 					this.element.options[this.element.selectedIndex].value : this.element.value; 
 		if (validateFunc == Validate.acceptance) {
 			var msg = 'Validation::validateElement - Element to validate acceptance must be a checkbox!'
-			if (this.elementType != Validation.CHECKBOX) {
+			if (this.elementType != TYPE.checkbox) {
 				throw new Error(msg);
 			}
 			val = this.element.checked;
@@ -294,7 +295,7 @@ Validation.prototype = {
 		this.removeMessage();
 		// dont insert anything if vaalidMesssage has been set to false or empty string
 		if (!this.validationFailed && !this.validMsg) return;
-		if ( (this.displayMessageWhenEmpty && (this.elementType == Validation.CHECKBOX || this.element.value == ''))
+		if ( (this.displayMessageWhenEmpty && (this.elementType == TYPE.checkbox || this.element.value == ''))
 			 || this.element.value != '' ) {
 			var className = this.validationFailed ? this.invalidClass : this.validClass;
 			elementToInsert.className += ' ' + this.messageClass + ' ' + className;
