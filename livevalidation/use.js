@@ -2,7 +2,7 @@
 var lv1 = new Validation('lv1');
 lv1.add(Validate.presence);
 
-var lv2 = new Validation('lv2');
+var lv2 = new Validation('lv2', {onlyOnBlur: true});
 lv2.add(Validate.numericality);
 
 var lv3 = new Validation('lv3');

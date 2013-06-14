@@ -7,47 +7,10 @@ function $(id) {
 	return typeof id === 'string' ? doc.getElementById(id) : id
 }
 
-/**
- *  validates a form field in real-time based on validations you assign to it
- *  @param element {mixed} - either a dom element reference or the string id of the element to validate
- *  @param option {Object} - general options, see below for details
- *
- *  option properties:
- *		validMessage {String} - the message to show when the field passes validation (set to '' or false to not insert any message)
- *							(DEFAULT: 'Thanks')
- *		beforeValidation {Function} - function to execute directly before validation is performed
- *							(DEFAULT: function(){})
- *		afterValidation {Function} - function to execute directly after validation is performed
- *							(DEFAULT: function(){})
- *		beforeValid {Function} - function to execute directly before the onValid function is executed
- *							(DEFAULT: function(){})
- *		onValid {Function}	- function to execute when field passes validation
- *							(DEFAULT: function(){ this.insertMessage(this.createMessageSpan()); this.addFieldClass(); } ) 
- *		afterValid {Function} - function to execute directly after the onValid function is executed
- *							(DEFAULT: function(){})
- *		beforeInvalid {Function} - function to execute directly before the onInvalid function is executed
- *							(DEFAULT: function(){})
- *		onInvalid {Function}  - function to execute when field fails validation
- *							(DEFAULT: function(){ this.insertMessage(this.createMessageSpan()); this.addFieldClass(); })
- *		aterInvalid {Function} - function to execute directly after the onInvalid function is executed
- *							(DEFAULT: function(){})
- *		insertAfterWhatNode {Int}   - position to insert default message
- *							(DEFAULT: the field that is being validated)  
- *		onlyOnBlur {Boolean} - whether you want it to validate as you type or only on blur
- *							(DEFAULT: false)
- *		wait {Integer} - the time you want it to pause from the last keystroke before it validates (ms)
- *							(DEFAULT: 0)
- *		onlyOnSubmit {Boolean} - whether should be validated only when the form it belongs to is submitted
- *							(DEFAULT: false)			
- */
-
-var Validation = function(element, option) {
-	this.initialize(element, option)
+var Validation = function(elem, option) {
+	this.initialize(elem, option)
 }
 
-Validation.VERSION = '1.4 standalone'
-
-/** element types constants ****/
 Validation.TEXTAREA = 1
 Validation.TEXT     = 2
 Validation.PASSWORD = 3
@@ -64,33 +27,28 @@ Validation.massValidate = function(validations) {
 	return returnValue
 }
 
-/****** prototype ******/
 Validation.prototype = {
 	validClass: 'LV_valid',
 	invalidClass: 'LV_invalid',
 	messageClass: 'LV_validation_message',
 	validFieldClass: 'LV_valid_field',
 	invalidFieldClass: 'LV_invalid_field',
-	/**
-	 * initialises all of the properties and events
-	 * @param - Same as constructor above
-	 */
-	initialize: function(element, option) {
+	initialize: function(elem, option) {
 		var self = this
-		if (!element) {
-			throw new Error('Validation::initialize - No element reference or element id has been provided!')
+		if (!elem) {
+			throw new Error('Validation::initialize - No element reference or id has been provided!')
 		}
-		this.element = element.nodeName ? element : $(element)
+		this.element = elem.nodeName ? elem : $(elem)
 		if (!this.element) {
-			throw new Error('Validation::initialize - No element with reference or id of ' + element + ' exists!')
+			throw new Error('Validation::initialize - No element with reference or id of ' + elem + ' exists!')
 		}
 		// default properties that could not be initialised above
 		this.validations = []
-		this.elementType = this.getElementType()
+		this.elementType = this.getType()
 		this.form = this.element.form
 		// options
 		var option = option || {}
-		this.validMessage = option.validMessage || 'Thanks'
+		this.validMsg = option.validMsg || 'OK'
 		var node = option.insertAfterWhatNode || this.element
 		this.insertAfterWhatNode = node.nodeType ? node : $(node)
 		this.onlyOnBlur =	option.onlyOnBlur || false
@@ -219,7 +177,7 @@ Validation.prototype = {
 		this.focused = true;
 		this.removeMessageAndFieldClass();
 	},
-	getElementType: function() {
+	getType: function() {
 		var nn = this.element.nodeName.toUpperCase()
 		var nt = this.element.type.toUpperCase()
 		switch (true) {
@@ -236,9 +194,9 @@ Validation.prototype = {
 			case (nn == 'SELECT'):
 				return Validation.SELECT;
 			case (nn == 'INPUT'):
-				throw new Error('Validation::getElementType - Cannot use Validation on an ' + nt.toLowerCase() + ' input!');
+				throw new Error('Validation::getType - Cannot use Validation on an ' + nt.toLowerCase() + ' input!');
 			default:
-				throw new Error('Validation::getElementType - Element must be an input, select, or textarea - ' + nn.toLowerCase() + ' was given!');
+				throw new Error('Validation::getType - Element must be an input, select, or textarea - ' + nn.toLowerCase() + ' was given!');
 		}
 	},
 	doValidations: function() {
@@ -249,7 +207,7 @@ Validation.prototype = {
 				return false
 			} 
 		}
-		this.message = this.validMessage
+		this.message = this.validMsg
 		return true
 	},
 	validateElement: function(validateFunc, validateOption) {
@@ -335,7 +293,7 @@ Validation.prototype = {
 	insertMessage: function(elementToInsert) {
 		this.removeMessage();
 		// dont insert anything if vaalidMesssage has been set to false or empty string
-		if (!this.validationFailed && !this.validMessage) return;
+		if (!this.validationFailed && !this.validMsg) return;
 		if ( (this.displayMessageWhenEmpty && (this.elementType == Validation.CHECKBOX || this.element.value == ''))
 			 || this.element.value != '' ) {
 			var className = this.validationFailed ? this.invalidClass : this.validClass;
@@ -391,19 +349,17 @@ Validation.prototype = {
 	}
 }
 
-/*************************************** ValidationForm class ****************************************/
-
-var ValidationForm = function(element) {
-	this.initialize(element)
+var ValidationForm = function(elem) {
+	this.initialize(elem)
 }
 
 ValidationForm.instances = {}
 
-ValidationForm.getInstance = function(element) {
-	if (!element) {
-		throw new Error('ValidationForm::getInstance - No element reference or element id has been provided!')
+ValidationForm.getInstance = function(elem) {
+	if (!elem) {
+		throw new Error('ValidationForm::getInstance - No element reference or id has been provided!')
 	}
-	var el = element.nodeName ? element : $(element)
+	var el = elem.nodeName ? elem : $(elem)
 	var rand = Math.random() * Math.random()
 	if (!el.id){
 		el.id = 'formId_' + rand.toString().replace(/\./, '') + new Date().valueOf()
@@ -419,9 +375,9 @@ ValidationForm.prototype = {
 	onValid: noop,
 	onInvalid: noop,
 	afterValidation: noop,
-	initialize: function(element) {
-		this.name = element.id;
-		this.element = element;
+	initialize: function(elem) {
+		this.name = elem.id;
+		this.element = elem;
 		this.fields = [];
 		// preserve the old onsubmit event
 		this.oldOnSubmit = this.element.onsubmit || noop;
