@@ -59,4 +59,13 @@ lv19.add( Validate.confirmation, { match: 'myPassword' } );
 var lv20 = new Validation('lv20');
 lv20.add( Validate.email );
 
+var lv21 = new Validation('lv21');
+function lowerCase(val, param) {
+    var reg = /[a-z]/g
+    if (reg.test(val)) {
+        return true
+    }
+    return false
+}
+lv21.add( Validate.custom, {against: lowerCase});
 

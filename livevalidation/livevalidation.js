@@ -903,7 +903,7 @@ var Validate = {
 	 *		args {Object} - an object of named arguments that will be passed to the custom function so are accessible through this object within it 
 	 *						(DEFAULT: {})
 	 */
-	Custom: function(val, option) {
+	custom: function(val, option) {
 		var option = option || {}
 		var against = option.against || function(){ return true }
 		var args = option.args || {}
