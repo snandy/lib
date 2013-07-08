@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+    <title>Matrix</title>
+    <meta charset="utf-8">
+	<style>
+
+	</style>
+</head>
+<body>
+    <script>
+        function format(date) {
+            var year = date.getFullYear()
+            var month = date.getMonth()
+            var day = date.getDate()
+            
+            month++
+            month = month<10 ? '0' + month : month
+            day = day<10 ? '0' + day : day
+            
+            return year + '-' + month + '-' + day
+        }
+        function group(photos) {
+            var result = {}
+            for (var i = 0; i<photos.length; i++) {
+                var photo = photos[i]
+                var date = format( new Date(photo.time) )
+                if (!result[date]) {
+                    result[date] = []
+                } else {
+                    result[date].push(photo)
+                }
+            }
+            return result
+        }
+    </script>
+</body>
+</html>
