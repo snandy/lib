@@ -565,7 +565,7 @@
       attrs = _.extend({}, this.attributes, attrs);
       var error = this.validationError = this.validate(attrs, options) || null;
       if (!error) return true;
-      this.trigger('invalid', this, error, _.extend(options || {}, {validationError: error}));
+      this.trigger('invalid', this, error, _.extend(options, {validationError: error}));
       return false;
     }
 
@@ -790,7 +790,7 @@
     // Get a model from the set by id.
     get: function(obj) {
       if (obj == null) return void 0;
-      return this._byId[obj.id != null ? obj.id : obj.cid || obj];
+      return this._byId[obj.id] || this._byId[obj.cid] || this._byId[obj];
     },
 
     // Get the model at the given index.
@@ -876,7 +876,7 @@
       if (!options.wait) this.add(model, options);
       var collection = this;
       var success = options.success;
-      options.success = function(resp) {
+      options.success = function(model, resp, options) {
         if (options.wait) collection.add(model, options);
         if (success) success(model, resp, options);
       };
@@ -913,11 +913,9 @@
       options || (options = {});
       options.collection = this;
       var model = new this.model(attrs, options);
-      if (!model._validate(attrs, options)) {
-        this.trigger('invalid', this, attrs, options);
-        return false;
-      }
-      return model;
+      if (!model.validationError) return model;
+      this.trigger('invalid', this, attrs, options);
+      return false;
     },
 
     // Internal method to sever a model's ties to a collection.
@@ -949,8 +947,8 @@
     'inject', 'reduceRight', 'foldr', 'find', 'detect', 'filter', 'select',
     'reject', 'every', 'all', 'some', 'any', 'include', 'contains', 'invoke',
     'max', 'min', 'toArray', 'size', 'first', 'head', 'take', 'initial', 'rest',
-    'tail', 'drop', 'last', 'without', 'indexOf', 'shuffle', 'lastIndexOf',
-    'isEmpty', 'chain'];
+    'tail', 'drop', 'last', 'without', 'difference', 'indexOf', 'shuffle',
+    'lastIndexOf', 'isEmpty', 'chain'];
 
   // Mix in each Underscore method as a proxy to `Collection#models`.
   _.each(methods, function(method) {
@@ -1013,7 +1011,7 @@
     tagName: 'div',
 
     // jQuery delegate for element lookup, scoped to DOM elements within the
-    // current view. This should be prefered to global lookups where possible.
+    // current view. This should be preferred to global lookups where possible.
     $: function(selector) {
       return this.$el.find(selector);
     },
@@ -1053,7 +1051,7 @@
     //
     //     {
     //       'mousedown .title':  'edit',
-    //       'click .button':     'save'
+    //       'click .button':     'save',
     //       'click .open':       function(e) { ... }
     //     }
     //
@@ -1278,7 +1276,7 @@
     _routeToRegExp: function(route) {
       route = route.replace(escapeRegExp, '\\$&')
                    .replace(optionalParam, '(?:$1)?')
-                   .replace(namedParam, function(match, optional){
+                   .replace(namedParam, function(match, optional) {
                      return optional ? match : '([^\/]+)';
                    })
                    .replace(splatParam, '(.*?)');
@@ -1352,7 +1350,7 @@
         if (this._hasPushState || !this._wantsHashChange || forcePushState) {
           fragment = this.location.pathname;
           var root = this.root.replace(trailingSlash, '');
-          if (!fragment.indexOf(root)) fragment = fragment.substr(root.length);
+          if (!fragment.indexOf(root)) fragment = fragment.slice(root.length);
         } else {
           fragment = this.getHash();
         }
@@ -1456,13 +1454,12 @@
     // returns `false`.
     loadUrl: function(fragmentOverride) {
       var fragment = this.fragment = this.getFragment(fragmentOverride);
-      var matched = _.any(this.handlers, function(handler) {
+      return _.any(this.handlers, function(handler) {
         if (handler.route.test(fragment)) {
           handler.callback(fragment);
           return true;
         }
       });
-      return matched;
     },
 
     // Save a fragment into the hash history, or replace the URL state if the
@@ -1474,11 +1471,16 @@
     // you wish to modify the current URL without adding an entry to the history.
     navigate: function(fragment, options) {
       if (!History.started) return false;
-      if (!options || options === true) options = {trigger: options};
+      if (!options || options === true) options = {trigger: !!options};
+
       fragment = this.getFragment(fragment || '');
       if (this.fragment === fragment) return;
       this.fragment = fragment;
+
       var url = this.root + fragment;
+
+      // Don't include a trailing slash on the root.
+      if (fragment === '' && url !== '/') url = url.slice(0, -1);
 
       // If pushState is available, we use it to set the fragment as a real URL.
       if (this._hasPushState) {

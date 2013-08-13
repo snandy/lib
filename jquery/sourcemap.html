@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    	<meta charset='utf-8' />
+    	<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    	<title>jQuery Dialog</title>
+    	<script src="jquery.min.js"></script>
+  	</head>
+	<body>
+		<abbr>xhr</abbr>
+		<input type="button" data-main="ss" value="会员登陆">
+		<p style="background: gold">ss</p>
+		<script id="tpl" type="text/template">
+			<div>
+				<p> 
+					<span>dd</span>
+					<a href="http://ss.com">ddd</a>
+				</p>
+			</div>
+		</script>
+<script>
+	var str = $('#tpl').html()
+	var rsingleTag = /^<(\w+)\s*\/?>(?:<\/\1>|)$/
+	// var parsed = rsingleTag.exec(str)
+	// $.parseHTML(str)
+
+</script>
+	</body>
+</html>
