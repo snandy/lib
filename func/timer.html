@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+ <head>
+	<title></title>
+	<meta charset="utf-8"/>
+	<style>
+        p {
+            height: 16px;
+            line-height: 16px;
+        }
+        img {
+            vertical-align: middle;
+            position: relative;
+            bottom: 2px;
+        }
+	</style>
+ </head>
+    <p>倒计时：<span></span><img src="imgs/miao.gif" height="16" width="18">秒</p>
+    <script>
+        function countdown(diff, callback) {
+            
+            var time1 = (new Date).getTime()
+
+            setInterval(function() {
+                var time2 = (new Date).getTime()
+                var ls = diff + time1 - time2
+                if (ls > 0) {
+                    // 计算天数
+                    var ld = parseInt(ls / 86400000)
+                    // 不足一天毫秒数
+                    ls = ls % 86400000;
+
+                    // 计算小时数
+                    var lh = parseInt(ls / 3600000)
+                    // 不足一小时的毫秒数
+                    ls = ls % 3600000;
+
+                    // 计算分钟数
+                    var lm = parseInt(ls / 60000)
+                    // 不足一分钟的毫秒数
+                    var ls = parseInt( Math.round(ls % 60000) / 1000 )
+                    
+                    callback(ld, lh, lm, ls)
+                } else {
+                    // 已倒计时完毕
+                }
+
+            }, 3000)
+        }
+
+        var span = document.getElementsByTagName('span')[0]
+
+        // 后台计算的毫秒数，即还剩下的倒计时时间
+        var diff = 58721000
+
+        countdown(diff, function(ld, lh, lm, ls) {
+            if (ld < 1) {
+                var html = lh + '小时' + lm + '分钟' + ls
+                span.innerHTML = html
+            } else if (ld >= 1 && ld <= 2) {
+                var html = ld + '天' + lh + '小时' + lm + '分钟'
+                span.innerHTML = html
+            } else {
+                var html = '3天以上'
+                span.innerHTML = html
+            }
+        })
+    </script>
+ </body>
+</html>
