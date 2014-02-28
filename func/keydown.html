@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+ <head>
+	<title>keydown keypress keyup</title>
+	<meta charset="utf-8">
+	<style>
+	</style>
+    <script type="text/javascript" src="js/z.js"></script>
+    <script type="text/javascript" src="../jquery/jquery-1.11.0.js"></script>
+ </head>
+    <p>
+        <input id="down">
+    </p>
+    <p>
+        <input id="press">
+    </p>
+    <p>
+        <input id="up">
+    </p>    
+    <script>
+
+    function isInArea(keyCode) {
+        // 数字
+        if (keyCode >= 48 && keyCode <= 57 ) return true
+        // 小数字键盘
+        if (keyCode >= 96 && keyCode <= 105) return true
+        // Backspace键
+        if (keyCode == 8) return true
+        return false
+    }    
+    // keydown
+    var input = Z('#down')[0]
+    // input.addEventListener('keydown', function(e) {
+    //     console.log(e.keyCode)
+    //     e.preventDefault();
+    //     e.stopPropagation(); 
+    // }, false)
+
+    // keypress
+    // Z('#press').on('keydown', {
+    //     stop: true,
+    //     handler: function(e) {
+    //         console.log(e.keyCode)
+    //         if ( !isInArea(e.keyCode) ) return false
+    //     }
+    // })
+
+    Z('#press').keydown(function(e) {
+        return false
+        console.log(e.keyCode)
+        if ( !isInArea(e.keyCode) ) return false
+    })
+
+    // Z('#press').keypress(function(e) {
+    //     console.log('press')
+    // })
+    // Z('#press').keyup(function(e) {
+    //     console.log('up')
+    // })
+
+    // keyup
+    // $('#up').keypress(function(e){
+    //     return false
+    // })
+
+    // for (var i=0; i<10; i++) {
+    //     if (i==3) break;
+    //     console.log(i)
+    // }
+    </script>
+ </body>
+</html>

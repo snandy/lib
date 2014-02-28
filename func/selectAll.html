@@ -23,6 +23,7 @@
 			p a {
 				margin: 0 15px 0 15px;
 			}
+
 		</style>
 		<script src="../jquery/jquery-1.9.1.js"></script>
 		<script src="js/selectAll.js"></script>
@@ -45,7 +46,18 @@
 		<div class="op">
 			<label><input type="checkbox">全选</label><a href="javascript://;">删除</a>
 		</div>
-		
+
+        <select class="skuId" name="">
+            <option value="">100元</option>
+            <option style="width:100px;" data-jdprice="" skuid="" value="">10元</option>
+            <option data-jdprice="" skuid="" value="">20元</option>
+            <option data-jdprice="" skuid="" value="">30元</option>
+            <option data-jdprice="" skuid="" value="">50元</option>
+            <option data-jdprice="" skuid="" value="">200元</option>
+            <option data-jdprice="" skuid="" value="">300元</option>
+            <option data-jdprice="" skuid="" value="">500元</option>
+        </select>
+
 		<script>
 			$.selectAll('.op input', '.list input', '.list p');
 		</script>
