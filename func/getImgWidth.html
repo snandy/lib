@@ -3,20 +3,10 @@
  <head>
 	<title></title>
 	<meta charset="utf-8"/>
-	<style>
-        p {
-            height: 16px;
-            line-height: 16px;
-        }
-        img {
-            vertical-align: middle;
-            position: relative;
-            bottom: 2px;
-        }
-	</style>
  </head>
-    <p>
+<body>
         <img id="img1" width="400" src="http://img11.360buyimg.com/da/g14/M07/01/0E/rBEhVlNhh8wIAAAAAADmFBLo1twAAM26gOmCgYAAOYs716.jpg">
+        <p id="p1">宽高</p>
 <script>
 function getImgNaturalDimensions(img) {
     var nWidth, nHeight
@@ -31,6 +21,8 @@ function getImgNaturalDimensions(img) {
     }
     return [nWidth, nHeight]
 }
+var arr = getImgNaturalDimensions(img1)
+p1.innerHTML = '原始宽高: [' + arr[0] + ', ' + arr[1] + ']'
 </script>
  </body>
 </html>
