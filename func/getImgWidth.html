@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+ <head>
+	<title></title>
+	<meta charset="utf-8"/>
+	<style>
+        p {
+            height: 16px;
+            line-height: 16px;
+        }
+        img {
+            vertical-align: middle;
+            position: relative;
+            bottom: 2px;
+        }
+	</style>
+ </head>
+    <p>
+        <img id="img1" width="400" src="http://img11.360buyimg.com/da/g14/M07/01/0E/rBEhVlNhh8wIAAAAAADmFBLo1twAAM26gOmCgYAAOYs716.jpg">
+<script>
+function getImgNaturalDimensions(img) {
+    var nWidth, nHeight
+    if (img.naturalWidth) { // 现代浏览器
+        nWidth = img.naturalWidth
+        nHeight = img.naturalHeight
+    } else { // IE6/7/8
+        var imgae = new Image()
+        image.src = img.src
+        naturalWidth = img.width
+        naturalHeight = img.height
+    }
+    return [nWidth, nHeight]
+}
+</script>
+ </body>
+</html>

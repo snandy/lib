@@ -33,34 +33,20 @@
 			    width: 500px;
 	    	}
 	 	</style>
-    	<script src="../jquery/jquery-1.9.1.js"></script>
     	<script src="underscore.js"></script>
     	<script src="backbone.js"></script>
   	</head>
 
 	<body>
 <script>
-	var obj = {}
-	obj = _.extend(obj, Backbone.Events)
-	function fn1() {
-		console.log(this)
-		console.log(arguments)
-	}
+var arr = ['a', 'b', 'c']
+_(arr).chain().map(function(it, i) {
+	// console.log(it)
+	return it+'1'
+}).each(function(it) {
+	console.log(it)
+})
 
-	function fn2() {
-		console.log(2)
-	}
-
-	function fn3() {
-		console.log(3)
-	}	
-
-	// obj.on({
-	// 	'a': fn1,
-	// 	'b': fn2
-	// }, fn3, window)
-
-	obj.on('a b', fn1, window)
 </script>
 	</body>
 </html>
