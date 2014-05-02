@@ -16,7 +16,7 @@ function getImgNaturalDimensions(img) {
     } else { // IE6/7/8
         var image = new Image()
         image.src = img.src
-        image.onlod = function() {
+        image.onload = function() {
             p1.innerHTML = '原始宽高: [' + image.width + ', ' + image.height + ']'
         }
         naturalWidth = image.clientWidth
