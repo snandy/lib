@@ -13,11 +13,13 @@ function getImgNaturalDimensions(img) {
     if (img.naturalWidth) { // 现代浏览器
         nWidth = img.naturalWidth
         nHeight = img.naturalHeight
+        update(nWidth, nHeight)
+
     } else { // IE6/7/8
         var image = new Image()
         image.src = img.src
-        image.onload = function() {
-            p1.innerHTML = '原始宽高: [' + image.width + ', ' + image.height + ']'
+        image.onreadystatechange = function() {
+            update(image.width, image.height)
         }
         naturalWidth = image.clientWidth
         naturalHeight = image.clientHeight
@@ -25,8 +27,12 @@ function getImgNaturalDimensions(img) {
     return [nWidth, nHeight]
 }
 
-var arr = getImgNaturalDimensions(img1)
-p1.innerHTML = '原始宽高: [' + arr[0] + ', ' + arr[1] + ']'
+function update(w, h) {
+    p1.innerHTML = '原始宽高: [' + w + ', ' + h + ']'
+}
+
+getImgNaturalDimensions(img1)
+
 </script>
  </body>
 </html>
