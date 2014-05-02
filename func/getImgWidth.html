@@ -16,8 +16,8 @@ function getImgNaturalDimensions(img) {
     } else { // IE6/7/8
         var image = new Image()
         image.src = img.src
-        naturalWidth = image.width
-        naturalHeight = image.height
+        naturalWidth = image.clientWidth
+        naturalHeight = image.clientHeight
     }
     return [nWidth, nHeight]
 }
