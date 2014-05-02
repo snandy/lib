@@ -14,10 +14,10 @@ function getImgNaturalDimensions(img) {
         nWidth = img.naturalWidth
         nHeight = img.naturalHeight
     } else { // IE6/7/8
-        var imgae = document.createElement('img')
+        var image = new Image()
         image.src = img.src
-        naturalWidth = img.width
-        naturalHeight = img.height
+        naturalWidth = image.width
+        naturalHeight = image.height
     }
     return [nWidth, nHeight]
 }
