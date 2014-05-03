@@ -5,7 +5,13 @@
 	<meta charset="utf-8"/>
  </head>
 <body>
-        <img id="img1" width="400" src="http://img11.360buyimg.com/da/g14/M07/01/0E/rBEhVlNhh8wIAAAAAADmFBLo1twAAM26gOmCgYAAOYs716.jpg">
+        <p><img id="img1" width="400" src="http://img11.360buyimg.com/da/g14/M07/01/0E/rBEhVlNhh8wIAAAAAADmFBLo1twAAM26gOmCgYAAOYs716.jpg">
+        </p>
+        <p>
+            <img id="img2" width="400" src="http://pic1.win4000.com/wallpaper/f/51c3bb99a21ea.jpg">
+            <span id="span2">图片加载中...</span>
+        </p>
+
         <p id="p1">宽高</p>
         <p id='p2'>是否支持complete属性：</p>
 <script>
@@ -20,7 +26,9 @@ function getImgNaturalDimensions(img) {
         var image = new Image()
         image.src = img.src
         image.onreadystatechange = function() {
-            update(image.width, image.height)
+            if (image.readyState == 'complete') {
+                update(image.width, image.height)    
+            }
         }
         naturalWidth = image.clientWidth
         naturalHeight = image.clientHeight
@@ -35,11 +43,27 @@ function update(w, h) {
 getImgNaturalDimensions(img1)
 
 var timer = setInterval(function() {
+    p2.innerHTML = img1.complete
     if (img1.complete) {
         p2.innerHTML = '该浏览器支持complete属性'
         clearInterval(timer)
     }
 }, 50)
+
+function imgLoad(img, callback) {
+    var timer = setInterval(function() {
+        if (img.complete) {
+            callback(img)
+            span2.innerHTML = '加载完毕'
+            clearInterval(timer)
+        } else {
+            span2.innerHTML('图片加载中...')
+        }
+    }, 50)
+}
+
+imgLoad(img2, function() {})
+
 
 </script>
  </body>
