@@ -50,10 +50,23 @@ function selectText(elem, start, end) {
 </script>  
 </HEAD>  
 
-<BODY>  
+<BODY> 
+<form action="http://www.so.com" method="get">
+<input type="text" name="uname"/>
+<input type="button" value="search"/>
+</form>
 <input type="text" value="snandy"/>
+<p><a href="javascript:;" onclick="jumpSina()">Sina</a></p>
+<p><a href="javascript:void 0;" onclick="jumpSohu()">Sohu</a></p>
+<p><a href="javascript:;" onclick="jumpSohu()">Sohu</a></p>
 <script>
 	selectText(document.getElementsByTagName('input')[0])
+    function jumpSina() {
+        location.href = 'http://www.sina.com.cn'
+    }
+    function jumpSohu() {
+        location.href = 'http://www.sohu.com'
+    }    
 </script>
 </BODY>  
 </HTML> 
