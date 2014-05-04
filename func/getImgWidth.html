@@ -54,13 +54,13 @@ function imgLoad(img, callback) {
     var timer = setInterval(function() {
         if (img.complete) {
             callback(img)
-            span2.innerHTML = '加载完毕'
             clearInterval(timer)
         }
     }, 50)
 }
-
-imgLoad(img2, function() {})
+imgLoad(img1, function() {
+    alert('加载完毕')
+})
 
 
 </script>
