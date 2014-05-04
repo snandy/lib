@@ -4,26 +4,30 @@
     	<meta charset='utf-8' />
     	<meta http-equiv="X-UA-Compatible" content="chrome=1" />
     	<title>jQuery Dialog</title>
-    	<script src="jquery-1.10.0.js"></script>
+    	<script src="jquery-1.11.0.js"></script>
   	</head>
 	<body>
 		<abbr>xhr</abbr>
 		<input type="button" data-main="ss" value="会员登陆">
 		<p style="background: gold">ss</p>
-		<script id="tpl" type="text/template">
-			<div>
-				<p> 
-					<span>dd</span>
-					<a href="http://ss.com">ddd</a>
-				</p>
-			</div>
-		</script>
+<select>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+</select>
 <script>
-	var str = $('#tpl').html()
-	var rsingleTag = /^<(\w+)\s*\/?>(?:<\/\1>|)$/
-	// var parsed = rsingleTag.exec(str)
-	// $.parseHTML(str)
-
+var sel = document.getElementsByTagName('select')[0]
+// alert(sel.options.length)
+while(sel.firstChild) {
+    sel.removeChild(sel.firstChild)
+}
+// sel.options.length = 0
+// var option = document.createElement('option')
+// option.innerHTML = '5'
+// sel.appendChild(option)
+// alert(sel.options)
+// alert(sel.options.length)
 </script>
 	</body>
 </html>
