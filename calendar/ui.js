@@ -1,6 +1,6 @@
 /*!
  * Z.js v0.1.0
- * @snandy 2014-05-31 08:20:33
+ * @snandy 2014-05-31 12:09:51
  *
  */
 /**
@@ -600,10 +600,8 @@ this.setPosi = function() {
 }
 
 this.onBodyClick = function(ev) {
-    console.log(ev.target)
     var target = Z(ev.target)
     var datePicker = target.closest('.o-datepicker')
-    console.log(datePicker[0])
     if (!datePicker.length && target[0] != this.input[0]) {
         this.remove()
     }

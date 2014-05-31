@@ -1,6 +1,6 @@
 /*!
  * Z.js v0.1.0
- * @snandy 2014-05-31 12:01:36
+ * @snandy 2014-05-31 12:09:51
  *
  */
 ~function(window, undefined) {
@@ -927,7 +927,6 @@ var matches = function() {
         // fall back to performing a selector:
         var match
         var parent = el.parentNode
-
         // 已经存在与DOM结构里的元素
         if (parent) {
             match = query(selector, parent)
