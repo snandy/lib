@@ -1,6 +1,6 @@
 /*!
  * Z.js v0.1.0
- * @snandy 2014-05-22 17:49:13
+ * @snandy 2014-05-31 08:20:33
  *
  */
 ~function(window, undefined) {
@@ -69,6 +69,17 @@ var support = function() {
         sliceOnNodeList = false
     }
 
+    var tableInnerHTML = true
+    var table = doc.createElement('table')
+    var tbody = doc.createElement('tbody')
+    table.appendChild(tbody)
+    var boo = true
+    try {
+        tbody.innerHTML = '<tr></tr>'
+    } catch(e) {
+        tableInnerHTML = false
+    }
+
     return {
         setAttr : setAttr,
         cssText : cssText,
@@ -76,8 +87,8 @@ var support = function() {
         classList : !!div.classList,
         cssFloat : !!a.style.cssFloat,
         getComputedStyle : getComputedStyle,
-        sliceOnNodeList: sliceOnNodeList
-
+        sliceOnNodeList: sliceOnNodeList,
+        tableInnerHTML: tableInnerHTML
     }
 }()
 // For IE9/Firefox/Safari/Chrome/Opera
@@ -905,14 +916,21 @@ var query = function() {
 
 var matches = function() {
     var tempParent = document.createElement('div')
+    var matchesSelector = tempParent.webkitMatchesSelector || tempParent.mozMatchesSelector 
+        || tempParent.oMatchesSelector || tempParent.msMatchesSelector || tempParent.matchesSelector    
     return function(el, selector) {
         if (!el || el.nodeType !== 1) return false
-        var matchesSelector = el.webkitMatchesSelector || el.mozMatchesSelector ||
-                              el.oMatchesSelector || el.matchesSelector
-        if (matchesSelector) return matchesSelector.call(el, selector)
+        if (matchesSelector) {
+            return matchesSelector.call(el, selector)    
+        }
+
         // fall back to performing a selector:
-        var match, parent = el.parentNode, temp = !parent
-        if (temp) (parent = tempParent).appendChild(el)
+        var match
+        var parent = el.parentNode
+        var temp = !parent
+        if (temp) {
+            (parent = tempParent).appendChild(el)   
+        }
         match = query(selector, parent)
         temp && tempParent.removeChild(el)
         return !!match.length
@@ -1205,6 +1223,7 @@ var ropa1 = /opacity=/i
 var ropa2 = /opacity=([^)]*)/i
 var rtagName = /<([\w:]+)/
 var rroot = /^(?:body|html)$/i
+var rtable = /^t(?:head|body|foot|r|d|h)$/i
 var cssWidth = ['Left', 'Right']
 var cssHeight = ['Top', 'Bottom']
 var displays = {}
@@ -1407,6 +1426,18 @@ function getWinWH(which) {
 }
 Z.winSize = getWinWH
 
+var table = ['<table>', '</table>']
+var thead = ['<tbody>', '</tbody>']
+var tr    = ['<tr>', '</tr>']
+var td    = ['<td>', '</td>']
+var wrapMap = {
+    thead: [ 1, table[0], table[1] ],
+    tr: [ 3, table[0] + thead[0], thead[1] + table[1] ],
+    td: [ 4, table[0] + thead[0] + tr[0], tr[1] + thead[1] + table[1] ]
+}
+wrapMap.tbody = wrapMap.tfoot = wrapMap.thead
+wrapMap.th = wrapMap.td
+
 function manipulationDOM(elem) {
     if (Z.isElement(elem)) {
         return [elem]
@@ -1414,17 +1445,35 @@ function manipulationDOM(elem) {
     if (Z.isZ(elem)) {
         return elem.toArray()
     }
-    var div, nodes = []
+    var div, tag, nodes = []
     if (Z.isString(elem)) {
         if (rtagName.test(elem)) {
+            tag = rtagName.exec(elem)[1].toLowerCase()
             div = doc.createElement('div')
-            div.innerHTML = elem
-            while (div.firstChild) {
-                nodes.push(div.firstChild)
-                div.removeChild(div.firstChild)
+
+            if (rtable.test(tag)) {
+                var map = wrapMap[tag]
+                var deps = map[0]
+                elem = map[1] + elem + map[2]
+                div.innerHTML = elem
+                while (deps--) {
+                    div = div.firstChild
+                }
+                while (div) {
+                    nodes.push(div)
+                    div = div.nextSibling
+                }
+                
+            } else {
+                div.innerHTML = elem
+                while (div.firstChild) {
+                    nodes.push(div.firstChild)
+                    div.removeChild(div.firstChild)
+                }         
             }
             div = null
             return nodes
+
         } else {
             return [doc.createTextNode(elem)]
         }
