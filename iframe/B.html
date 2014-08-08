@@ -6,11 +6,13 @@
   </head>
   <body>
     <script type="text/javascript">
-        var search = location.search.replace('?', '')
-        var height = search.split('=')[1]
-        var doc = parent.parent.document
-        var ifr = doc.getElementById('ifr')
-        ifr.style.height = height + 'px'
+        window.onload = function() {
+            var search = location.search.replace('?', '')
+            var height = search.split('=')[1]
+            var doc = parent.parent.document
+            var ifr = doc.getElementById('ifr')
+            ifr.style.height = height + 'px'
+        }
     </script>
   </body>
 </html>
