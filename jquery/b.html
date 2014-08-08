@@ -1,62 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
 	<style>
-		div {
-		  height: 50px; width: 50px;
-		  float: left; margin-right: 10px;
-		  display: none; background-color: #090;
-		}
 	</style>
+    <script src="jquery-1.6.4.js"></script>
 </head>
 <body>
- 
+
+<input type="text">
+
 <script>
-function matrix(n) {
-	var arr = Array(n);
-	while(n) {
-		arr[--n] = [];
-	}
-	return arr;
-}
-function spiralArray(n) {
-    var arr = matrix(n);
-    var x = 0,
-    	y = 0,
-        j = 0,
-        dx = 1, 
-        dy = 0,
-        total = n * n--;
-        
-    while (total >= 0) {
-        arr[y][x] = total--;
-        x += dx;
-        y += dy;
-        if (++j == n) {
-            if (dy < 0) {
-            	x++;
-            	y++;
-            	n -= 2;
-            }
-            j = dx;
-            dx = -dy;
-            dy = j;
-            j = 0;
-        }
-    }
-
-    for (var i=0; i<arr.length; i++) {
-    	arr[i].reverse()
-    }
-    return arr;
-}
- 
-// T E S T:
-arr = spiralArray(n = 4);
-for (y= 0; y < n; y++) {
-	console.log(arr[y].join(" "));
-}
-
+$('input').removeAttr('readonly')
 </script>
  
 </body>
