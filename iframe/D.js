@@ -3,6 +3,6 @@ window.onload = function() {
     var myifr = document.getElementById('myifr')
     if (myifr) {
         myifr.src = 'http://snandy.github.io/lib/iframe/B.html?height=' + height
-        console.log(height)        
+        console.log(height)      
     }
 };

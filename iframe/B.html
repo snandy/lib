@@ -7,11 +7,21 @@
   <body>
     <script type="text/javascript">
         window.onload = function() {
-            var search = location.search.replace('?', '')
-            var height = search.split('=')[1]
-            var doc = parent.parent.document
-            var ifr = doc.getElementById('ifr')
-            ifr.style.height = height + 'px'
+            var isSet = false
+            var inteval = setInteval(function() {
+                var search = location.search.replace('?', '')
+                if (isSet) return
+            
+                if (search) {
+                    var height = search.split('=')[1]
+                    var doc = parent.parent.document
+                    var ifr = doc.getElementById('ifr')
+                    ifr.style.height = height + 'px'
+                    isSet = true
+                }
+            }, 500)
+
+
         }
     </script>
   </body>
