@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>calendar.js</title>
+        <style type="text/css">
+            body {margin:0;padding:0;}
+            p {
+                text-align: center;
+            }
+            input {
+                height: 14px;
+                padding: 8px;
+                border: 1px solid #CCC;
+
+            }
+        </style>
+        <link rel="stylesheet" href="calendar.css">
+        <script src="z.src.js"></script>
+		<script src="ui.js"></script>
+	</head>
+	<body>
+        <p>
+            单月显示：<input id="date1" type="text" value="">
+        </p>
+        <p>
+            双月显示：<input id="date2" type="text" value="">
+        </p>
+	</body>
+    <script>
+        var calendar1 = Z.ui.Calendar('#date1', {
+            // startDate: '2014-05-04',
+            // endDate: '2014-06-09',
+            chosenDate: '2014-05-06'
+        })
+        var calendar2 = Z.ui.CalendarTwo('#date2', {
+            startDate: '2008-01-19', 
+            // endDate: '2014-4-15',
+            chosenDate: '2008-01-26'
+        })
+    </script>
+</html>

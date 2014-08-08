@@ -5,7 +5,7 @@
 		<title>Backbone.Router</title>
 		<style type="text/css">
 		</style>
-		<script src="../jquery/jquery-1.10.0.js"></script>
+		<script src="../jquery/jquery-1.11.1.js"></script>
 		<script src="underscore.js"></script>
 		<script src="backbone.js"></script>
 	</head>
@@ -15,18 +15,18 @@
 			var MyRouter = Backbone.Router.extend({
 				routes : {
 					"help" : "help",    // #help
-					"getA" : "getA"
+					"list" : "list"
 				},
 				help: function() {
-					console.log(3)
+					console.log('help')
 				},
-				getA: function() {
-					console.log('A')
+				list: function() {
+					console.log('list')
 				}
 			});
 			
 			var router = new MyRouter()
-			Backbone.history.start({pubState:true});
+			Backbone.history.start({pushState:true});
 		</script>
 	</body>
 </html>
