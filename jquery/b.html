@@ -11,53 +11,18 @@
 </head>
 <body>
  
-<script>
-function matrix(n) {
-	var arr = Array(n);
-	while(n) {
-		arr[--n] = [];
-	}
-	return arr;
-}
-function spiralArray(n) {
-    var arr = matrix(n);
-    var x = 0,
-    	y = 0,
-        j = 0,
-        dx = 1, 
-        dy = 0,
-        total = n * n--;
-        
-    while (total >= 0) {
-        arr[y][x] = total--;
-        x += dx;
-        y += dy;
-        if (++j == n) {
-            if (dy < 0) {
-            	x++;
-            	y++;
-            	n -= 2;
-            }
-            j = dx;
-            dx = -dy;
-            dy = j;
-            j = 0;
-        }
+<script id="myScript">
+    var name = 'John'
+    function func() {
+        alert(name)
     }
-
-    for (var i=0; i<arr.length; i++) {
-    	arr[i].reverse()
-    }
-    return arr;
-}
- 
-// T E S T:
-arr = spiralArray(n = 4);
-for (y= 0; y < n; y++) {
-	console.log(arr[y].join(" "));
-}
-
 </script>
  
+<script type="text/javascript">
+    function getScriptText(script) {
+        return script.text || script.textContent
+    }
+    alert(getScriptText(myScript))
+</script>
 </body>
 </html>
