@@ -1,10 +1,16 @@
+// 计算页面的实际高度，iframe自适应会用到
+function calcPageHeight(doc) {
+    var cHeight = Math.max(doc.body.clientHeight, doc.documentElement.clientHeight)
+    var sHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight)
+    var height  = Math.max(cHeight, sHeight)
+    return height
+}
 window.onload = function() {
     var doc = document
-    // var height = Math.max(document.documentElement.clientHeight, document.body.clientHeight)
-    var height = Math.max(doc.documentElement.clientHeight, doc.body.clientHeight, doc.documentElement.scrollHeight, doc.body.scrollHeight)
-    var myifr = document.getElementById('myifr')
+    var height = calcPageHeight(doc)
+    var myifr = doc.getElementById('myifr')
     if (myifr) {
         myifr.src = 'http://snandy.github.io/lib/iframe/B.html?height=' + height
-        console.log(doc.documentElement.scrollHeight)      
+        // console.log(doc.documentElement.scrollHeight)      
     }
 };
