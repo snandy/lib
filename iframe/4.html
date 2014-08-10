@@ -3,13 +3,15 @@
   <head>
     <meta charset="utf-8">
     <title>2.html</title>
+    <script type="text/javascript">
+    	document.domain = 'github.io'
+    </script>
   </head>
   <body>
 	 <p>这是一个ifrmae，嵌入在http://snandy.github.io/lib/iframe/1.html里 </p>
 	 <p>根据自身内容调整高度</p>
 	 <p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p>
 <script>
-	document.domain = 'github.io'
 	// 计算页面的实际高度，iframe自适应会用到
 	function calcPageHeight(doc) {
 	    var cHeight = Math.max(doc.body.clientHeight, doc.documentElement.clientHeight)
