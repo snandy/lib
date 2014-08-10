@@ -5,20 +5,21 @@
     <title>2.html</title>
   </head>
   <body>
-	 <p>高度很高的页面，但具体高度不确定，根据内容而定 </p>
-	 <p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p>
-	 <script>
-		// 计算页面的实际高度，iframe自适应会用到
-		function calcPageHeight(doc) {
-		    var cHeight = Math.max(doc.body.clientHeight, doc.documentElement.clientHeight)
-		    var sHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight)
-		    var height  = Math.max(cHeight, sHeight)
-		    return height
-		}
-	 	window.onload = function() {
-	 		var height = calcPageHeight(document)
-	        parent.document.getElementById('ifr').style.height = height + 'px' 		
-	 	}
-	 </script>
+	 <p>这是一个ifrmae，嵌入在http://snandy.github.io/lib/iframe/1.html里 </p>
+	 <p>根据自身内容调整高度</p>
+	 <p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p>
+<script>
+	// 计算页面的实际高度，iframe自适应会用到
+	function calcPageHeight(doc) {
+	    var cHeight = Math.max(doc.body.clientHeight, doc.documentElement.clientHeight)
+	    var sHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight)
+	    var height  = Math.max(cHeight, sHeight)
+	    return height
+	}
+	window.onload = function() {
+		var height = calcPageHeight(document)
+		parent.document.getElementById('ifr').style.height = height + 'px' 		
+	}
+</script>
   </body>
 </html>
