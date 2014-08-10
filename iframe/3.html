@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Lib</title>
+  </head>
+  <body>
+
+	 <p id="view"></p>
+	 <p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p>
+	 <p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p>
+	 <p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p>
+	 <script type="text/javascript">
+	 	var	view = document.getElementById('view')
+	 	function printHeight() {
+	 		var clientHeihgt = document.body.clientHeihgt || document.documentElement.clientHeight
+	 		var scrollHeight = document.body.scrollHeihgt || document.documentElement.scrollHeight
+
+	 		var str = 'clientHeihgt: ' + clientHeihgt + '<br>scrollHeight: ' + scrollHeight
+
+	 		view.innerHTML = str
+	 	}
+	 	printHeight()
+	 </script>
+  </body>
+</html>

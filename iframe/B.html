@@ -10,8 +10,10 @@
             var isSet = false
             var inteval = setInterval(function() {
                 var search = location.search.replace('?', '')
-                if (isSet) return
-            
+                if (isSet) {
+                    clearInteval(inteval)
+                    return   
+                }
                 if (search) {
                     var height = search.split('=')[1]
                     var doc = parent.parent.document
@@ -20,8 +22,6 @@
                     isSet = true
                 }
             }, 500)
-
-
         }
     </script>
   </body>
