@@ -3,23 +3,13 @@
   <head>
     <meta charset='utf-8' />
     <title>1.html</title>
+    <style type="text/css">
+    body{background:#f00;}
+    body, html, #ifm1{width:100%;height:100%;overflow:hidden;margin:0;}
+    #ifm1{width:100%;height:100%;overflow:hidden;margin:0;}
+    </style>
   </head>
   <body>
-	 <iframe id="ifr" src="2.html" frameborder="0" width="100%"></iframe>
-  <script type="text/javascript">
-    // 计算页面的实际高度，iframe自适应会用到
-    // function calcPageHeight(doc) {
-    //     var cHeight = Math.max(doc.body.clientHeight, doc.documentElement.clientHeight)
-    //     var sHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight)
-    //     var height  = Math.max(cHeight, sHeight)
-    //     return height
-    // }
-    // var ifr = document.getElementById('ifr')
-    // ifr.onload = function() {
-    //     var iDoc = ifr.contentDocument || ifr.document
-    //     var height = calcPageHeight(iDoc)
-    //     ifr.style.height = height + 'px'
-    // }
-  </script>
+    <iframe id="ifm1" src='http://www.csdn.net' frameborder='no' scrolling='auto'></iframe>
   </body>
 </html>
