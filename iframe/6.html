@@ -37,23 +37,28 @@
             return len
         }
 
-        function calcSameYear(year, month1, month2, date1, date2) {
+        function calcSingleYear(year, month1, month2, date1, date2, isMult) {
             var arr = []
             var len = getSize(month1, month2)
 
             // 日期的getMonth()从0开始，[0-11]
             month1++
 
-            for (var i = 0; i < len; i++) {
-                var str = year + '-' + month1 + '-'
-                if (i == 0) {
-                    arr[i] = str + date1
-                } else if (i == len-1) {
-                    arr[i] = str + date2
-                } else {
-                    arr[i] = str + '1'
+            if (len == 1 && !isMult) {
+                arr = [year + '-' + month1 + '-' + date1, year + '-' + month1 + '-' + date2]
+
+            } else {
+                for (var i = 0; i < len; i++) {
+                    var str = year + '-' + month1 + '-'
+                    if (i == len-1) {
+                        arr[i] = str + date2
+                    } else if (i == 0) {
+                        arr[i] = str + date1
+                    }  else {
+                        arr[i] = str + '1'
+                    }
+                    month1++
                 }
-                month1++
             }
             return arr
         }
@@ -64,23 +69,23 @@
             var month2 = 11
             var date1  = date
             var date2  = 1
-            return calcSameYear(year, month1, month2, date1, date2)
+            return calcSingleYear(year, month1, month2, date1, date2, true)
         }
 
         // 最后一年从year-1-1到截止月，如[2015-1-1, 2015-4-22]
         function calcLastYear(year, month, date) {
             var month1 = 0
             var month2 = month
-            var date1  = date
-            var date2  = months[month2]
-            return calcSameYear(year, month1, month2, date1, date2)
+            var date1  = 1
+            var date2  = date
+            return calcSingleYear(year, month1, month2, date1, date2, true)
         }
 
         // 计算完整年的
         // function twoConsecutive years
-        function calcWholeYear(year, size) {
+        function calcWholeYear(year, len) {
             var arr = []
-            for (var i = 0; i < size; i++) {
+            for (var i = 0; i < len; i++) {
                 for (var mon = 0; mon <= 11; mon++) {
                     arr.push( year + '-' + (mon+1) + '-1' )
                 }
@@ -96,7 +101,6 @@
             if (end.constructor != Date) {
                 end = toDate(end)
             }
-
             var year1  = start.getFullYear()
             var month1 = start.getMonth()
             var date1  = start.getDate()
@@ -106,10 +110,10 @@
 
             var diffYear = year2 - year1
 
-            if (diffYear == 0) { // 1年
-                return calcSameYear(year1, month1, month2, date1, date2)
+            if (diffYear == 0) { // 一年
+                return calcSingleYear(year1, month1, month2, date1, date2)
 
-            } else if (diffYear >= 1) { // 两年及以上
+            } else if (diffYear == 1) { // 两年及以上
                 var first = calcFirstYear(year1, month1, date1)
                 var last  = calcLastYear(year2, month2, date2)
                 return first.concat(last)
