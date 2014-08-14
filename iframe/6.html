@@ -63,7 +63,7 @@
             var month1 = month
             var month2 = 11
             var date1  = date
-            var date2  = 31
+            var date2  = 1
             return calcSameYear(year, month1, month2, date1, date2)
         }
 
@@ -71,7 +71,7 @@
         function calcLastYear(year, month, date) {
             var month1 = 0
             var month2 = month
-            var date1  = 1
+            var date1  = date
             var date2  = months[month2]
             return calcSameYear(year, month1, month2, date1, date2)
         }
@@ -109,7 +109,7 @@
             if (diffYear == 0) { // 1年
                 return calcSameYear(year1, month1, month2, date1, date2)
 
-            } else if (diffYear == 1) { // 两年
+            } else if (diffYear >= 1) { // 两年及以上
                 var first = calcFirstYear(year1, month1, date1)
                 var last  = calcLastYear(year2, month2, date2)
                 return first.concat(last)
