@@ -24,7 +24,7 @@
             return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
         }
 
-        function getMonthSize(m1, m2) {
+        function getSize(m1, m2) {
             var len = 0
             var diff = m2 - m1
             if (diff == 0) {
@@ -39,7 +39,7 @@
 
         function calcSameYear(year, month1, month2, date1, date2) {
             var arr = []
-            var len = getMonthSize(month1, month2)
+            var len = getSize(month1, month2)
 
             // 日期的getMonth()从0开始，[0-11]
             month1++
@@ -106,21 +106,23 @@
 
             var diffYear = year2 - year1
 
-
-            // 年相同
-            if (diffYear == 0) {
+            if (diffYear == 0) { // 1年
                 return calcSameYear(year1, month1, month2, date1, date2)
 
-            } else if (diffYear == 1) { // 连续两年
+            } else if (diffYear == 1) { // 两年
                 var first = calcFirstYear(year1, month1, date1)
                 var last  = calcLastYear(year2, month2, date2)
                 return first.concat(last)
-            } else {
-
+            } else { // 三年以上
+                // 第一年
+                var first = calcFirstYear(year1, month1, date1)
+                // 最后一年
+                var last  = calcLastYear(year2, month2, date2)
+                // 中间的都是完整的年
+                var size  = getSize(year1, year2) - 2
+                var middle = calcWholeYear(year1+1, size)
+                return first.concat(middle, last)
             }
-
-
-
 
         }
     </script>
