@@ -7,27 +7,15 @@
     <script src="jquery-1.6.4.js"></script>
 </head>
 <body>
-<<<<<<< HEAD
- 
-<script id="myScript">
-    var name = 'John'
-    function func() {
-        alert(name)
-    }
-=======
-
-<input type="text">
-
-<script>
-$('input').removeAttr('readonly')
->>>>>>> 9661beb354b459a1851508739d1c9f17d348d4a7
-</script>
  
 <script type="text/javascript">
-    function getScriptText(script) {
-        return script.text || script.textContent
-    }
-    alert(getScriptText(myScript))
+// window.onbeforeunload = function() {
+//     return 'sss'
+// }
+
+window.addEventListener('unload', function() {
+    console.log(3)
+})
 </script>
 </body>
 </html>
