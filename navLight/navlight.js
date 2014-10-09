@@ -45,52 +45,6 @@ $.throttle = function(func, wait) {
 }
 
 /*
- * 事件节流
- */
-$.debounce = function(func, wait, immediate) {
-    var timeout
-    return function() {
-        var context = this, args = arguments
-        later = function() {
-            timeout = null
-            if (!immediate) func.apply(context, args)
-        }
-        var callNow = immediate && !timeout
-        clearTimeout(timeout)
-        timeout = setTimeout(later, wait)
-        if (callNow) func.apply(context, args)
-    }
-}
-
-/*
- * 事件节流
- */
-$.throttle = function(func, wait) {
-    var context, args, timeout, throttling, more, result
-    var whenDone = $.debounce(function() {
-        more = throttling = false
-    }, wait)
-    return function() {
-        context = this, args = arguments
-        var later = function() {
-            timeout = null
-            if (more) func.apply(context, args)
-            whenDone()
-        }
-        if (!timeout) timeout = setTimeout(later, wait)
-        
-        if (throttling) {
-            more = true
-        } else {
-            result = func.apply(context, args)
-        }
-        whenDone()
-        throttling = true
-        return result
-    }
-}
-
-/*
  * 吸顶灯
  * option {
  *    fixCls: className，默认 “fixed”
@@ -135,9 +89,9 @@ $.fn.topSuction = function(option) {
 };
 
 /*
- * 导航高亮组件
+ * 导航/菜单高亮组件
  * option
- *   nav 导航选择器
+ *   nav 导航/菜单选择器
  *   content 内容模块选择器
  *   diffTop 距离顶部的误差值
  *   diffBottom 距离底部的误差值
@@ -162,14 +116,14 @@ $.fn.navLight = function(option, callback) {
         var top = $cont.offset().top
         var height = $cont.height()
         return {
-            area: [top-diffTop, top+diffBottom],
+            top: top-diffTop,
+            bottom: top+diffBottom,
             jq: $cont
         }
     })
 
     var $win = $(window)
     var $doc = $(document)
-    var currentCate = null
 
     var handler = $.throttle(function(e) {
         var dTop = $doc.scrollTop()
@@ -177,67 +131,8 @@ $.fn.navLight = function(option, callback) {
     }, 100)
     
     function highLight(docTop) {
-        contentPosi.each(function(idx, obj) {
-            var area = obj.area
-            if (area[0] < docTop && area[1] > docTop) {
-                $nav.removeClass(lightCls)
-                $nav.eq(idx).addClass(lightCls)
-                if (callback) {
-                    callback($nav, $content)
-                }
-            }
-        })
-    }
-
-    $win.scroll(handler)
-};
-
-/*
- * 导航高亮组件
- * option
- *   nav 导航选择器
- *   content 内容模块选择器
- *   diffTop 距离顶部的误差值
- *   diffBottom 距离底部的误差值
- *   lightCls 高亮的class
- * 
- */
-$.fn.navLight = function(option, callback) {
-    option = option || {}
-    var nav = option.nav || '[data-widget=nav]'
-    var content = option.content || '[data-widget=content]'
-    var diffTop = option.diffTop || 200
-    var diffBottom = option.diffBottom || 500
-    var lightCls = option.lightCls || 'curr'
-
-    var $self = $(this)
-    var $nav = $self.find(nav)
-    var $content = $self.find(content)
-
-    // 记录每个分类的位置
-    var contentPosi = $content.map(function(idx, elem) {
-        var $cont = $(elem)
-        var top = $cont.offset().top
-        var height = $cont.height()
-        return {
-            area: [top-diffTop, top+diffBottom],
-            jq: $cont
-        }
-    })
-
-    var $win = $(window)
-    var $doc = $(document)
-    var currentCate = null
-
-    var handler = $.throttle(function(e) {
-        var dTop = $doc.scrollTop()
-        highLight(dTop)
-    }, 100)
-    
-    function highLight(docTop) {
-        contentPosi.each(function(idx, obj) {
-            var area = obj.area
-            if (area[0] < docTop && area[1] > docTop) {
+        contentPosi.each(function(idx, posi) {
+            if (posi.top < docTop && posi.bottom > docTop) {
                 $nav.removeClass(lightCls)
                 $nav.eq(idx).addClass(lightCls)
                 if (callback) {
