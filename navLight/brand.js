@@ -47,7 +47,10 @@ if (jph.browser.ie6 || jph.browser.ie7) {
 
 // 分类浮层
 $content.find('.category').topSuction({fixCls: 'catefixed'})
-$content.navLight({lightCls: 'cate-hover'})
+$content.navLight({
+    open: true,
+    lightCls: 'cate-hover'
+})
 
 
 /**

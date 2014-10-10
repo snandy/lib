@@ -105,6 +105,7 @@ $.fn.navLight = function(option, callback) {
     var diffTop = option.diffTop || 200
     var diffBottom = option.diffBottom || 500
     var lightCls = option.lightCls || 'curr'
+    var open = option.open
 
     var $self = $(this)
     var $nav = $self.find(nav)
@@ -139,6 +140,18 @@ $.fn.navLight = function(option, callback) {
                     callback($nav, $content)
                 }
             }
+        })
+    }
+
+    if (open) {
+        $self.delegate(nav, 'click', function() {
+            var $na = $(this)
+            var idx = $nav.index($na)
+            var $cont = $content.eq(idx)
+            var top = $cont.offset().top
+            $('html,body').animate({
+                scrollTop: top-30 + 'px'
+            })
         })
     }
 
