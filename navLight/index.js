@@ -79,8 +79,31 @@ var $rootmenu = $('.rootmenu')
 /**
  * 各分类图片hover效果
  */
-$content.addHover('li.fore1,li.fore2')
-$content.addHover('li.fore3,li.fore4,li.fore5', 'current')
+// $content.addHover('li.fore1,li.fore2')
+// $content.addHover('li.fore3,li.fore4,li.fore5', 'current')
+
+
+$('[data-widget^="hover"]').each(function() {
+    var $elem = $(this)
+    var widget = $elem.attr('data-widget')
+    var arr = widget.split('|')
+    var act = arr[0]
+    var delegateSelector = arr[1]
+    var isSingle = arr.length === 1
+    var hoverClass = act === 'hover' ? act : act.split('.')[1]
+
+    if (isSingle) {
+        $elem.hover(function() {
+            $elem.toggleClass(hoverClass)
+        })
+    } else {
+        $elem.delegate(delegateSelector, 'hover', function() {
+            $(this).toggleClass(hoverClass)
+        })
+    }
+})
+
+
 
 
 var $narrowMenu = $('.narrow-menu')
