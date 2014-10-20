@@ -33,19 +33,35 @@
 			    width: 500px;
 	    	}
 	 	</style>
-    	<script src="underscore.js"></script>
+    	<script src="underscore-1.7.0.js"></script>
     	<script src="backbone.js"></script>
   	</head>
 
 	<body>
 <script>
-var arr = ['a', 'b', 'c']
-_(arr).chain().map(function(it, i) {
-	// console.log(it)
-	return it+'1'
-}).each(function(it) {
-	console.log(it)
-})
+var count = 0
+function f1() {
+	console.log(count++)
+}
+
+function debounce(func, wait) {
+    var canSwitch = true
+    return function() {
+    	console.log('a')
+        if (!canSwitch) return
+        console.log('b')
+        func()
+        canSwitch = false
+        setTimeout(function() {
+            canSwitch = true
+        }, wait)
+    }
+}
+var fn1 = _.throttle(f1, 5000, {trailing: false})
+var fn2 = _.debounce(f1, 2000)
+var fn3 = debounce(f1, 2000)
+
+setInterval(fn3, 200)
 
 </script>
 	</body>
