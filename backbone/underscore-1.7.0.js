@@ -772,13 +772,11 @@
     };
 
     return function() {
-      console.log('a')
       context = this;
       args = arguments;
       timestamp = _.now();
       var callNow = immediate && !timeout;
       if (!timeout) {
-        console.log('b')
         timeout = setTimeout(later, wait);
       }
       if (callNow) {

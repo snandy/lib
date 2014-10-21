@@ -41,7 +41,7 @@
 <script>
 var count = 0
 function f1() {
-	console.log(count++)
+	console.log('aaaaaaaabbbbbkkkkkkkkkk: ' + count++)
 }
 
 function debounce(func, wait) {
@@ -61,7 +61,7 @@ var fn1 = _.throttle(f1, 5000, {trailing: false})
 var fn2 = _.debounce(f1, 2000)
 var fn3 = debounce(f1, 2000)
 
-setInterval(fn3, 200)
+setInterval(fn2, 200)
 
 </script>
 	</body>
