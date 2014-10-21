@@ -48,21 +48,26 @@ $.fn.marquee = function(option, callback) {
     // some timer
     var mainTimer, subTimer
 
+    var $elem1 = $elem.first()
+    var $subElem1 = $subElem.first()
+    var height = $elem1.outerHeight()
+    var subElemWidth = $subElem1.outerWidth()
+    var subElemHeight = $subElem1.outerHeight()
+
     if (deriction == 'up' || deriction == 'down') {
-        var height = $elem.eq(0).outerHeight()
-        var step = s.step * $subElem.eq(0).outerHeight()
+        var step = s.step * subElemHeight
         $elem.css({
             width: s.width + 'px',
             overflow: 'hidden'
         })
     }
     if (deriction == 'left' || deriction == 'right') {
-        var width = $subElem.length * $subElem.eq(0).outerWidth()
+        var width = $subElem.length * subElemWidth
         $elem.css({
             width: width + 'px',
             overflow: 'hidden'
         })
-        var step = s.step * $subElem.eq(0).outerWidth()
+        var step = s.step * subElemWidth
     }
     var init = function() {
         var wrap = '<div style="position:relative;overflow:hidden;z-index:1;width:' + s.width + 'px;height:' + s.height + 'px;' + s.wrapstyle + '"></div>'
