@@ -7,9 +7,9 @@ $.fn.imgScroll = function(options, callback) {
     var defaults = {
         // 可见图片个数
         visible: 1,
-        // 按钮-下一张，默认为元素选择器字符串，也可以是jQuery对象
+        // 按钮-下一张，默认为选择器字符串，或者是jQuery对象
         next: '#next',
-        // 按钮-上一张，默认为元素选择器字符串，也可以是jQuery对象
+        // 按钮-上一张，默认为选择器字符串，或者是jQuery对象
         prev: '#prev',
         // 方向x,y
         direction: 'x',

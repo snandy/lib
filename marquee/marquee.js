@@ -1,14 +1,14 @@
 /*
  *  marquee
  */
-
-$.fn.marquee = function(option, callback) {
-    if (typeof option == 'function') {
-        callback = option
-        option = {}
+$.fn.marquee = function(options, callback) {
+    if (typeof options == 'function') {
+        callback = options
+        options = {}
     }
-    var s = $.extend({
-        deriction: 'up',
+
+    var defaults = {
+        direction: 'up',
         speed: 10,
         auto: false,
         width: null,
@@ -31,19 +31,25 @@ $.fn.marquee = function(option, callback) {
             object: null,
             clone: null
         }
-    }, option || {})
+    }
+
+    var settings = $.extend(defaults, options)
 
     // some alias
-    var deriction = s.deriction
+    var sDir  = settings.direction
+    var sPos  = settings.pos
+    var sWid  = settings.width
+    var sHei  = settings.height
+    var sAuto = settings.auto
 
     // DOM
-    var clone     = null
-    var $elem     = this.find(s.dom[0])
-    var $subElem  = this.find(s.dom[1])
-    var $front    = $(s._front)
-    var $back     = $(s._back)
-    var $stop     = $(s._stop)
-    var $continue = $(s._continue)
+    var $Clone    = null
+    var $elem     = this.find(settings.dom[0])
+    var $subElem  = this.find(settings.dom[1])
+    var $front    = $(settings._front)
+    var $back     = $(settings._back)
+    var $stop     = $(settings._stop)
+    var $continue = $(settings._continue)
 
     // some timer
     var mainTimer, subTimer
@@ -54,85 +60,86 @@ $.fn.marquee = function(option, callback) {
     var subElemWidth = $subElem1.outerWidth()
     var subElemHeight = $subElem1.outerHeight()
 
-    if (deriction == 'up' || deriction == 'down') {
-        var step = s.step * subElemHeight
+    if (sDir == 'up' || sDir == 'down') {
+        var step = settings.step * subElemHeight
         $elem.css({
-            width: s.width + 'px',
+            width: sWid + 'px',
             overflow: 'hidden'
         })
     }
-    if (deriction == 'left' || deriction == 'right') {
+    if (sDir == 'left' || sDir == 'right') {
         var width = $subElem.length * subElemWidth
         $elem.css({
             width: width + 'px',
             overflow: 'hidden'
         })
-        var step = s.step * subElemWidth
+        var step = settings.step * subElemWidth
     }
     var init = function() {
-        var wrap = '<div style="position:relative;overflow:hidden;z-index:1;width:' + s.width + 'px;height:' + s.height + 'px;' + s.wrapstyle + '"></div>'
+        var sty = 'position:relative;overflow:hidden;z-index:1;width:' + sWid + 'px;height:' + sHei + 'px;' + settings.wrapstyle
+        var wrap = '<div style="' + sty + '"></div>'
         $elem.css({
             position: 'absolute',
             left: 0,
             top: 0
         }).wrap(wrap)
-        s.pos.object = 0
-        clone = $elem.clone()
-        $elem.after(clone)
-        switch (deriction) {
+        sPos.object = 0
+        $Clone = $elem.clone()
+        $elem.after($Clone)
+        switch (sDir) {
             case 'up':
                 $elem.css({
                     marginLeft: 0,
                     marginTop: 0
                 });
-                clone.css({
+                $Clone.css({
                     marginLeft: 0,
                     marginTop: height + 'px'
                 });
-                s.pos.clone = height;
+                sPos.clone = height
                 break;
             case 'down':
                 $elem.css({
                     marginLeft: 0,
                     marginTop: 0
                 });
-                clone.css({
+                $Clone.css({
                     marginLeft: 0,
                     marginTop: -height + 'px'
                 });
-                s.pos.clone = -height;
+                sPos.clone = -height
                 break;
             case 'left':
                 $elem.css({
                     marginTop: 0,
                     marginLeft: 0
                 });
-                clone.css({
+                $Clone.css({
                     marginTop: 0,
                     marginLeft: width + 'px'
                 });
-                s.pos.clone = width;
+                sPos.clone = width;
                 break;
             case 'right':
                 $elem.css({
                     marginTop: 0,
                     marginLeft: 0
                 });
-                clone.css({
+                $Clone.css({
                     marginTop: 0,
                     marginLeft: -width + 'px'
                 });
-                s.pos.clone = -width;
+                sPos.clone = -width
                 break;
         }
-        if (s.auto) {
+        if (sAuto) {
             initMainTimer()
             $elem.hover(function() {
                 clear(mainTimer)
             }, function() {
                 initMainTimer()
             })
-            clone.hover(function() {
+            $Clone.hover(function() {
                 clear(mainTimer)
             }, function() {
                 initMainTimer()
@@ -141,30 +148,33 @@ $.fn.marquee = function(option, callback) {
         if (callback) {
             callback()
         };
-        if (s.control) {
+        if (settings.control) {
             initControls()
         }
     };
     var initMainTimer = function(delay) {
         clear(mainTimer)
-        s.stay = delay ? delay : s.stay
+        settings.stay = delay ? delay : settings.stay
         mainTimer = setInterval(function() {
             initSubTimer()
-        }, s.stay)
+        }, settings.stay)
     }
     var initSubTimer = function() {
         clear(subTimer)
         subTimer = setInterval(function() {
             roll()
-        }, s.delay)
+        }, settings.delay)
     }
     var clear = function(timer) {
         if (timer != null) {
             clearInterval(timer)
         }
     }
-    var disControl = function(A) {
-        if (A) {
+    var _parseInt = function(str) {
+        return parseInt(str, 10)
+    }
+    var disControl = function(boo) {
+        if (boo) {
             $front.unbind('click')
             $back.unbind('click')
             $stop.unbind('click')
@@ -172,29 +182,29 @@ $.fn.marquee = function(option, callback) {
         } else {
             initControls()
         }
-    };
+    }
     var initControls = function() {
         $front.click(function() {
-            $front.addClass(s.disabled);
+            $front.addClass(settings.disabled);
             disControl(true);
             clear(mainTimer);
-            s.convert = true;
-            s.btn = 'front';
+            settings.convert = true;
+            settings.btn = 'front';
             initSubTimer();
-            if (!s.auto) {
-                s.tag = true
+            if (!sAuto) {
+                settings.tag = true
             }
             convert()
         })
         $back.click(function() {
-            $back.addClass(s.disabled);
+            $back.addClass(settings.disabled);
             disControl(true);
             clear(mainTimer);
-            s.convert = true;
-            s.btn = 'back';
+            settings.convert = true;
+            settings.btn = 'back';
             initSubTimer();
-            if (!s.auto) {
-                s.tag = true
+            if (!sAuto) {
+                settings.tag = true
             }
             convert()
         })
@@ -206,87 +216,89 @@ $.fn.marquee = function(option, callback) {
         })
     }
     var convert = function() {
-        if (s.tag && s.convert) {
-            s.convert = false;
-            if (s.btn == 'front') {
-                if (deriction == 'down') {
-                    deriction = 'up'
+        if (settings.tag && settings.convert) {
+            settings.convert = false;
+            if (settings.btn == 'front') {
+                if (sDir == 'down') {
+                    sDir = 'up'
                 };
-                if (deriction == 'right') {
-                    deriction = 'left'
+                if (sDir == 'right') {
+                    sDir = 'left'
                 }
             };
-            if (s.btn == 'back') {
-                if (deriction == 'up') {
-                    deriction = 'down'
+            if (settings.btn == 'back') {
+                if (sDir == 'up') {
+                    sDir = 'down'
                 };
-                if (deriction == 'left') {
-                    deriction = 'right'
+                if (sDir == 'left') {
+                    sDir = 'right'
                 }
             };
-            if (s.auto) {
+            if (sAuto) {
                 initMainTimer()
             } else {
-                initMainTimer(4 * s.delay)
+                initMainTimer(4 * settings.delay)
             }
         }
     }
     var setPos = function(y1, y2, x) {
         if (x) {
             clear(subTimer);
-            s.pos.object = y1;
-            s.pos.clone = y2;
-            s.tag = true
+            sPos.object = y1;
+            sPos.clone = y2;
+            settings.tag = true
         } else {
-            s.tag = false
+            settings.tag = false
         }
-        if (s.tag) {
-            if (s.convert) {
+        if (settings.tag) {
+            if (settings.convert) {
                 convert()
             } else {
-                if (!s.auto) {
+                if (!sAuto) {
                     clear(mainTimer)
                 }
             }
         }
-        if (deriction == 'up' || deriction == 'down') {
+        if (sDir == 'up' || sDir == 'down') {
             $elem.css({
                 marginTop: y1 + 'px'
             });
-            clone.css({
+            $Clone.css({
                 marginTop: y2 + 'px'
             })
         }
-        if (deriction == 'left' || deriction == 'right') {
+        if (sDir == 'left' || sDir == 'right') {
             $elem.css({
                 marginLeft: y1 + 'px'
             });
-            clone.css({
+            $Clone.css({
                 marginLeft: y2 + 'px'
             })
         }
     }
     var roll = function() {
         var ul = $elem[0]
-        var cl = clone[0]
-        var y_object = (deriction == 'up' || deriction == 'down') ? parseInt(ul.style.marginTop) : parseInt(ul.style.marginLeft)
-        var y_clone = (deriction == 'up' || deriction == 'down') ? parseInt(cl.style.marginTop) : parseInt(cl.style.marginLeft)
-        var y_add = Math.max(Math.abs(y_object - s.pos.object), Math.abs(y_clone - s.pos.clone))
-        var y_ceil = Math.ceil((step - y_add) / s.speed)
-        switch (deriction) {
+        var cl = $Clone[0]
+        var ulSty = ul.style
+        var clSty = cl.style
+        var y_object = (sDir == 'up' || sDir == 'down') ? _parseInt(ulSty.marginTop) : _parseInt(ulSty.marginLeft)
+        var y_clone = (sDir == 'up' || sDir == 'down') ? _parseInt(clSty.marginTop) : _parseInt(clSty.marginLeft)
+        var y_add = Math.max(Math.abs(y_object - sPos.object), Math.abs(y_clone - sPos.clone))
+        var y_ceil = Math.ceil((step - y_add) / settings.speed)
+        switch (sDir) {
             case 'up':
                 if (y_add == step) {
                     setPos(y_object, y_clone, true);
-                    $front.removeClass(s.disabled);
+                    $front.removeClass(settings.disabled);
                     disControl(false)
                 } else {
                     if (y_object <= -height) {
                         y_object = y_clone + height;
-                        s.pos.object = y_object
+                        sPos.object = y_object
                     }
                     if (y_clone <= -height) {
                         y_clone = y_object + height;
-                        s.pos.clone = y_clone
+                        sPos.clone = y_clone
                     }
                     setPos((y_object - y_ceil), (y_clone - y_ceil))
                 };
@@ -294,16 +306,16 @@ $.fn.marquee = function(option, callback) {
             case 'down':
                 if (y_add == step) {
                     setPos(y_object, y_clone, true);
-                    $back.removeClass(s.disabled);
+                    $back.removeClass(settings.disabled);
                     disControl(false)
                 } else {
                     if (y_object >= height) {
                         y_object = y_clone - height;
-                        s.pos.object = y_object
+                        sPos.object = y_object
                     }
                     if (y_clone >= height) {
                         y_clone = y_object - height;
-                        s.pos.clone = y_clone
+                        sPos.clone = y_clone
                     }
                     setPos((y_object + y_ceil), (y_clone + y_ceil))
                 };
@@ -311,16 +323,16 @@ $.fn.marquee = function(option, callback) {
             case 'left':
                 if (y_add == step) {
                     setPos(y_object, y_clone, true);
-                    $front.removeClass(s.disabled);
+                    $front.removeClass(settings.disabled);
                     disControl(false)
                 } else {
                     if (y_object <= -width) {
                         y_object = y_clone + width;
-                        s.pos.object = y_object
+                        sPos.object = y_object
                     }
                     if (y_clone <= -width) {
                         y_clone = y_object + width;
-                        s.pos.clone = y_clone
+                        sPos.clone = y_clone
                     }
                     setPos((y_object - y_ceil), (y_clone - y_ceil))
                 };
@@ -328,29 +340,29 @@ $.fn.marquee = function(option, callback) {
             case 'right':
                 if (y_add == step) {
                     setPos(y_object, y_clone, true);
-                    $back.removeClass(s.disabled);
+                    $back.removeClass(settings.disabled);
                     disControl(false)
                 } else {
                     if (y_object >= width) {
                         y_object = y_clone - width;
-                        s.pos.object = y_object
+                        sPos.object = y_object
                     }
                     if (y_clone >= width) {
                         y_clone = y_object - width;
-                        s.pos.clone = y_clone
+                        sPos.clone = y_clone
                     }
                     setPos((y_object + y_ceil), (y_clone + y_ceil))
                 };
                 break
         }
     }
-    if (deriction == 'up' || deriction == 'down') {
-        if (height >= s.height && height >= s.step) {
+    if (sDir == 'up' || sDir == 'down') {
+        if (height >= sHei && height >= settings.step) {
             init()
         }
     }
-    if (deriction == 'left' || deriction == 'right') {
-        if (width >= s.width && width >= s.step) {
+    if (sDir == 'left' || sDir == 'right') {
+        if (width >= sWid && width >= settings.step) {
             init()
         }
     }
