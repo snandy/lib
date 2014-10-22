@@ -17,6 +17,8 @@ $.fn.imgScroll = function(options, callback) {
         speed: 300,
         // 每次滚动图片个数
         step: 1,
+        // 循环播放
+        loop: true,
         // 是否自动播放
         autoPlay: false,
         // 自动播放时间
@@ -122,11 +124,13 @@ $.fn.imgScroll = function(options, callback) {
             // 是否正在动画中
             // if ($ul.is(':animated')) return false
 
-            if (first && isPrev) {
-                current = total-1
-            }
-            if (last && !isPrev) {
-                current = 0;
+            if (settings.loop) {
+                if (first && isPrev) {
+                    current = total-1
+                }
+                if (last && !isPrev) {
+                    current = 0;
+                }
             }
 
             // 滚动下一帧位移量
@@ -153,6 +157,12 @@ $.fn.imgScroll = function(options, callback) {
                 // 显示导航数字
                 if (navItems) {
                     setCurrent(current)
+                }
+
+                // 轮播不循序且拖动到顶部会尾部时左右箭头自动隐藏
+                if (!settings.loop) {
+                    first ? $btnPrev.hide() : $btnPrev.show()
+                    last ? $btnNext.hide() : $btnNext.show()
                 }
 
                 // 每次可视区li的总集合
@@ -217,7 +227,7 @@ $.fn.imgScroll = function(options, callback) {
         }
 
         // 防止左右箭头点击太快
-        function throttle(func, wait) {
+        function debounce(func, wait) {
             var canSwitch = true
             return function() {
                 if (!canSwitch) return
@@ -230,18 +240,18 @@ $.fn.imgScroll = function(options, callback) {
         }
 
         function bindEvent() {
-            var prevHander = throttle(function() {
+            var prevHander = debounce(function() {
                 current--
                 switchTo(true)
             }, 500)
-            var nextHander = throttle(function() {
+            var nextHander = debounce(function() {
                 current++
                 switchTo(false)
             }, 500)
             $btnPrev.unbind('click').bind('click', prevHander)
             $btnNext.unbind('click').bind('click', nextHander)
 
-            if (settings.autoPlay) {
+            if (settings.loop && settings.autoPlay) {
                 $btnPrev.mouseover(function() {
                     stop()
                 }).mouseout(function() {
@@ -282,6 +292,9 @@ $.fn.imgScroll = function(options, callback) {
             bindEvent()
             if (navItems) {
                 addNavItem(navWrap, navClass)
+            }
+            if (!settings.loop) {
+                $btnPrev.hide()
             }
         } else {
             // 无法滚动
