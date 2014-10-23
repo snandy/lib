@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>D scroll.js</title>
+    <link rel="stylesheet" href="../tab/base.css"/>
+    <link rel="stylesheet" href="e.css"/>
+    <style>
+        #js_slider {
+            width: 620px;
+        }
+        #js_slider .slider-scroll {
+            width: 620px;
+        }
+    </style>
+    <script src="../jquery-1.11.0.js"></script>
+    <script src="carousel.js"></script>
+</head>
+<body>
+<div class="pos-rel" id="js_slider">
+    <div class="slider-scroll">
+        <div class="slider-main">
+            <div class="slider-main-img   JS_NTES_LOG_FE">
+                <a href="http://news.163.com/photoview/3R710001/76057.html">
+                    <img src="http://img2.cache.netease.com/cnews/2014/10/23/20141023105000dc399.jpg">
+                    <p class="pos-abs">《看客》第374期：赏金猎手</p></a>
+            </div>
+            <div class="slider-main-img  JS_NTES_LOG_FE">
+                <a href="http://news.163.com/photoview/00AP0001/76230.html">
+                    <img src="http://img5.cache.netease.com/cnews/2014/10/23/20141023104831dca91.jpg">
+                    <p class="pos-abs">广西恶势力团伙成员落网 指认现场引围观</p></a>
+            </div>
+            <div class="slider-main-img  JS_NTES_LOG_FE">
+                <a href="http://ent.163.com/photoview/54GS0003/542899.html">
+                    <img src="http://img3.cache.netease.com/ent/2014/10/23/20141023104235171e1.jpg">
+                    <p class="pos-abs">实拍90后网络女主播私生活</p></a>
+            </div>
+            <div class="slider-main-img  JS_NTES_LOG_FE">
+                <a href="http://sports.163.com/photoview/0B6P0005/122247.html">
+                    <img src="http://img4.cache.netease.com/sports/2014/10/23/201410230721130caa5.jpg">
+                    <p class="pos-abs">业余足坛血案:小球员被教练踹死 教练下跪</p></a>
+            </div>
+            <div class="slider-main-img  JS_NTES_LOG_FE">
+                <a href="http://club2011.auto.163.com/album/100013307007.html#p=1-1">
+                    <img src="http://img4.cache.netease.com/auto/2014/10/23/2014102309183579957.jpg">
+                    <p class="pos-abs">亮瞎眼! 真土豪改装出最豪华路虎SUV</p></a>
+            </div>
+            <div class="slider-main-img  JS_NTES_LOG_FE">
+                <a href="http://bj.house.163.com/photonew/4EBT0007/151678.html#p=A96L8BE24EBT0007">
+                    <img src="http://img2.cache.netease.com/house/2014/10/22/2014102221514247f07.jpg">
+                <p class="pos-abs">金域国际：IT公司环绕 热区域遇冷配套</p></a>
+            </div>
+        </div>
+    </div>
+    <div class="slider-ctrl">
+        &nbsp;
+        <span class="slider-ctrl-prev">&lt;</span>
+        <span class="slider-ctrl-con current current_static">1</span> <span class="slider-ctrl-con">2</span> <span
+            class="slider-ctrl-con">3</span> <span class="slider-ctrl-con">4</span> <span
+            class="slider-ctrl-con">5</span> <span class="slider-ctrl-con">6</span> <span
+            class="slider-ctrl-next">&gt;</span>
+        &nbsp;
+    </div>
+</div>
+</body>
+<script>
+    $('#js_slider').carousel({
+        visiable: 2,
+        step: 2,
+        next: '.next',
+        prev: '.prev'
+    })
+</script>
+</html>

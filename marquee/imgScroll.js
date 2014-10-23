@@ -22,7 +22,7 @@ $.fn.imgScroll = function(options, callback) {
         // 是否自动播放
         autoPlay: false,
         // 自动播放时间
-        autoPlayTime: 5000,
+        stay: 5000,
         // 无法(不足以)滚动时是否显示控制按钮
         showControl: false,
         // 每个滚动元素宽度，默认取li的outerWidth
@@ -219,7 +219,7 @@ $.fn.imgScroll = function(options, callback) {
             intervalTimer = setInterval(function() {
                 current++
                 switchTo(false)
-            }, settings.autoPlayTime)
+            }, settings.stay)
         }
 
         function stop() {
