@@ -7,23 +7,23 @@
     position: relative;
 }
 
-#js_slider .slider-scroll {
+#js_slider .slider-wraper {
     width: 310px;
     overflow: hidden;
 }
 
-#js_slider .slider-scroll {
+#js_slider .slider-wraper {
     overflow: hidden;
     height: 220px;
     position: relative;
 }
 
-.slider-scroll {
+.slider-wraper {
     width: 310px;
     overflow: hidden;
 }
 
-.slider-scroll .current {
+.slider-wraper .cur {
     display: block;
 }
 
@@ -66,13 +66,13 @@
     width: 310px;
 }
 
-.nav-wrap {
+.slider-nav-wrap {
     text-align: center;
     padding-top: 6px;
     height: 20px;
 }
 
-.nav-item {
+.slider-nav {
     display: inline-block;
     width: 24px;
     height: 20px;
@@ -83,16 +83,16 @@
     cursor: pointer;
 }
 
-.nav-wrap-b .nav-item {
+.nav-wrap-b .slider-nav {
     width: 30px;
     background-position: -32px -842px;
 }
 
-.nav-wrap .current_static {
+.slider-nav-wrap {
     background-position: -24px -762px;
 }
 
-.nav-wrap .current {
+.slider-nav-wrap .cur {
     background-position: -24px -762px;
     -moz-animation: a_slidercurrent 5s linear;
     -webkit-animation: a_slidercurrent 5s linear;
@@ -100,11 +100,11 @@
     animation: a_slidercurrent 5s linear;
 }
 
-.nav-wrap-b .current_static {
+.nav-wrap-b {
     background-position: -32px -822px;
 }
 
-.nav-wrap-b .current {
+.nav-wrap-b .cur {
     background-position: -32px -822px;
     -moz-animation: a_slidercurrent_b 5s linear;
     -webkit-animation: a_slidercurrent_b 5s linear;
@@ -112,7 +112,7 @@
     animation: a_slidercurrent_b 5s linear;
 }
 
-.nav-wrap-prev, .nav-wrap-next {
+.slider-btn-prev, .slider-btn-next {
     opacity: .5;
     position: absolute;
     z-index: 1;
@@ -123,25 +123,25 @@
     text-indent: -10em;
 }
 
-.nav-wrap-prev:hover, .nav-wrap-next:hover {
+.slider-btn-prev:hover, .slider-btn-next:hover {
     opacity: 1;
 }
 
-.nav-wrap-prev {
+.slider-btn-prev {
     background-position: 6px top;
     left: 0;
     top: 40%;
     margin-top: -15px;
 }
 
-.nav-wrap-next {
+.slider-btn-next {
     background-position: -6px -45px;
     right: 0;
     top: 40%;
     margin-top: -15px;
 }
 
-.nav-wrap-prev, .nav-wrap-next, .nav-item, .nav-wrap .current {
+.slider-btn-prev, .slider-btn-next, .slider-nav, .nav-wrap .cur {
     background-image: url(i/icon_v9.png);
     background-repeat: no-repeat;
 }
