@@ -6,7 +6,6 @@ $.fn.carousel = function(options, callback) {
     var defaults = {
         visible: 1,
         direction: 'left',
-        step: 1,
         loop: true,
         speed: 300,
         autoPlay: true,
@@ -17,6 +16,7 @@ $.fn.carousel = function(options, callback) {
         nav: '.slider-nav',
         navTpl: '<li></li>',
         navCls: 'slider-nav',
+        navEventType: 'click',
         navActiveCls: 'cur',
         btnPrev: '.slider-btn-prev',
         bntNext: '.slider-btn-next'
@@ -24,10 +24,10 @@ $.fn.carousel = function(options, callback) {
 
     var settings = $.extend(defaults, options)
 
-    function init($that) {
+    function bootstrap($that) {
         // some alias
         var visible = settings.visible
-        var step = settings.step
+        var autoPlay = settings.autoPlay
 
         // some dom
         var nav = settings.nav
@@ -39,33 +39,23 @@ $.fn.carousel = function(options, callback) {
         var $navWrap = $that.find(settings.navWrap)
         var $nav = $that.find(nav)
         var hasNav = $navWrap.length > 0
-        var navItemEvent = settings.navItemEvent
+        var navEventType = settings.navEventType
         var $btnPrev = $that.find(settings.btnPrev)
         var $bntNext = $that.find(settings.bntNext)
 
         // some timer
         var timer = null
-        var current = 1
-        var total = Math.ceil(($items.length - visible) / step) + 1 
+        var current = 0
+        var total = Math.floor( $items.length/visible )
+        // 单个元素的宽度(图片)
         var itemWidth = $items.outerWidth()
-
-        $wraper.width(itemWidth*settings.visible)
-        $items.slice(0, settings.step).each(function(i, el) {
-            $(el).css({
-                position: 'absolute',
-                top: '0px',
-                left: i * itemWidth + 'px'
-            }).addClass('cur')
-        })
-
-        if (hasNav) {
-            addNavItem()
-        }
+        // 一帧的宽度
+        var frameWidth = itemWidth * visible
         
         function addNavItem() {
             $navWrap = hasNav ? $navWrap : $('<ul class="' + navCls + '"></ul>')
             for (var i = 0; i < total; i++) {
-                var $el = $.isFunction(navTpl) ? navTpl(i) : $(navTpl).addClass(navCls).text(i+1)
+                var $el = $.isFunction(navTpl) ? navTpl(i) : $(navTpl).addClass(navCls).text(i+1).attr('data-i', i)
                 if (i === 0) {
                     $el.addClass(navActiveCls)
                 }
@@ -84,40 +74,34 @@ $.fn.carousel = function(options, callback) {
                 $nav.eq(i).addClass(navActiveCls)
             }
         }
-        function switchTo() {
-            var $will = $items.slice(step * current, step * (current+1))
-            if (current == total) {
-                $will = $items.slice(0, step)
-                $items.slice(step * (total-1), step*total).each(function(i, el) {
-                    $(el).css({
-                        left: i * itemWidth + 'px'
-                    })                    
-                })
-            }
-            $will.addClass('cur').show()
-            $will.each(function(i, el) {
-                var left = itemWidth * (step + i)
+
+        function goNext(idx) {
+            var currFrameIdx = visible*current
+            var nextFrameIdx = visible*idx            
+            var $curr = $items.slice(currFrameIdx, visible*(current+1))
+            var $next = $items.slice(nextFrameIdx, visible*(idx+1))
+
+            $next.show().addClass('cur')
+            $next.each(function(i, el) {
+                var left = itemWidth * (visible + i)
                 $(el).css({
                     position: 'absolute',
                     top: '0px',
                     left: left + 'px'
                 })
             })
-            $wraper.css({
-                width: (itemWidth * step * 2) + 'px'
-            }).animate({
-                left: (-itemWidth * step) + 'px'
+
+            
+            $wraper.animate({
+                left: -frameWidth + 'px'
             }, {
                 duration: settings.speed,
                 complete: function() {
                     $wraper.css({
-                        width: itemWidth * step +'px',
                         left: '0px'
                     })
-                    var $prev = $items.slice(step*(current-1), step*current)
-                    $prev.removeClass('cur')
-                    $prev.hide()
-                    $will.each(function(i, el) {
+                    $curr.hide().removeClass('cur')
+                    $next.each(function(i, el) {
                         var left = itemWidth * i
                         $(el).css({
                             left: left + 'px'
@@ -125,19 +109,71 @@ $.fn.carousel = function(options, callback) {
                     })
 
                     // 设置导航数字
-                    if (hasNav) setCurNav(current)
-
-                    current++
-                    if (current == total+1) {
+                    if (hasNav) setCurNav(idx)
+                    // 重置current
+                    if (idx == total) {
                         current = 1
+                    } else {
+                        current = idx
+                    }
+                }
+            })            
+        }
+
+        function goPrev(idx) {
+            var currFrameIdx = visible*current
+            var nextFrameIdx = visible*idx            
+            var $curr = $items.slice(currFrameIdx, visible*(current+1))
+            var $next = $items.slice(nextFrameIdx, visible*(idx+1))
+
+            $wraper.css({
+                left: -frameWidth+'px'
+            })
+            $curr.css({
+                left: frameWidth+'px'
+            })
+            $next.show().addClass('cur')
+            $next.each(function(i, el) {
+                var left = itemWidth * i
+                $(el).css({
+                    position: 'absolute',
+                    top: '0px',
+                    left: left + 'px'
+                })
+            })
+
+            $wraper.animate({
+                left: '0px'
+            }, {
+                duration: settings.speed,
+                complete: function() {
+                    $wraper.css({
+                        left: '0px'
+                    })
+                    $curr.hide().removeClass('cur')
+                    $next.each(function(i, el) {
+                        var left = itemWidth * i
+                        $(el).css({
+                            left: left + 'px'
+                        })
+                    })
+
+                    // 设置导航数字
+                    if (hasNav) setCurNav(idx)
+                    // 重置current
+                    if (idx == total) {
+                        current = 1
+                    } else {
+                        current = idx
                     }
                 }
             })
+
         }
 
         function play() {
             timer = setInterval(function() {
-                switchTo()
+                nextHander()
             }, settings.stay)
         }
 
@@ -145,36 +181,78 @@ $.fn.carousel = function(options, callback) {
             clearInterval(timer)
         }
 
-        function addEvent() {
-            $that
-                .mouseenter(function() {
-                    stop()
-                })
-                .mouseleave(function() {
-                    if (settings.autoPlay) {
-                        play()
-                    }
-                })
-                .delegate(settings.btnPrev, 'click', function() {
-                    current--
-                    switchTo()
-                })
-                .delegate(settings.bntNext, 'click', function() {
-                    current++
-                    switchTo()
-                })
+        // 防止左右箭头点击太快
+        function debounce(func, wait) {
+            var canSwitch = true
+            return function() {
+                if (!canSwitch) return
+                func.apply(this, arguments)
+                canSwitch = false
+                setTimeout(function() {
+                    canSwitch = true
+                }, wait)
+            }
         }
 
-        if (settings.autoPlay) {
-            play()
+        var prevHander = debounce(function() {
+            if (current == 0) {
+                goPrev(total-1)
+            } else {
+                goPrev(current-1)    
+            }
+        }, 400)
+
+        var nextHander = debounce(function() {
+            if (current == total-1) {
+                goNext(0)
+            } else {
+                goNext(current+1)    
+            }
+        }, 400)
+
+        var mouseenterHander = debounce(function() {
+            var i = $(this).attr('data-i') - 0
+            if (i == current) return
+            var isPrev = i < current ? true : false
+            isPrev ? goPrev(i) : goNext(i)
+        }, 400)
+
+        function addEvent() {
+            $that
+            .mouseenter(function() {
+                if (autoPlay) stop()    
+            })
+            .mouseleave(function() {
+                if (autoPlay) play()
+            })
+            .delegate(settings.btnPrev, 'click', prevHander)
+            .delegate(settings.bntNext, 'click', nextHander)
+            .delegate(nav, navEventType, mouseenterHander)
         }
-        
-        addEvent()
+
+        function init() {
+            $that.width(itemWidth*visible)
+            $wraper.width(itemWidth*visible*2)
+            $items.slice(0, visible).each(function(i, el) {
+                $(el).css({
+                    position: 'absolute',
+                    top: '0px',
+                    left: i * itemWidth + 'px'
+                }).addClass('cur')
+            })
+            //绑定事件
+            addEvent()
+            
+            if (hasNav) addNavItem()
+            if (autoPlay) play()
+        }
+        init()
     }
+
 
     return this.each(function() {
         var $that = $(this)
-        init($that)
+        bootstrap($that)
         if ($.isFunction(callback)) callback($that)
     })
 };

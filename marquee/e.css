@@ -59,8 +59,7 @@
     color: #fff;
 }
 
-#js_slider .slider-scroll-item {
-    float: left;
+#js_slider .slider-item {
     height: 100%;
     background: #fff;
     width: 310px;
