@@ -2,8 +2,7 @@
  * 滚动轮播插件
  * 
  */
-$.fn.imgScroll = function(options, callback) {
-    // 默认参数
+$.fn.imgScroll = function(option, callback) {
     var defaults = {
         // 可见图片个数
         visible: 1,
@@ -18,7 +17,7 @@ $.fn.imgScroll = function(options, callback) {
         // 循环播放
         loop: true,
         // 是否自动播放
-        autoPlay: false,
+        auto: false,
         // 自动播放时间
         stay: 5000,
         // 无法(不足以)滚动时是否显示控制按钮
@@ -35,12 +34,12 @@ $.fn.imgScroll = function(options, callback) {
         navItemActivedClass: 'cur',
         // 导航项目事件名称
         navItemEvent: 'click',
-
+        // 结束一帧时的回调
         end: function() {}
-    };
+    }
 
     // 继承 初始化参数 - 替代默认参数
-    var settings = $.extend(defaults, options)
+    var settings = $.extend(defaults, option)
 
     function init($that) {
         var $ul = $that.find('ul').eq(0)
@@ -68,7 +67,6 @@ $.fn.imgScroll = function(options, callback) {
                     
         var liWidth, liHeight
         var nextFrame, intervalTimer
-
 
         /*
          * 重置下样式
@@ -118,15 +116,12 @@ $.fn.imgScroll = function(options, callback) {
          * isPrev 是否向前滚动
          */
         function switchTo(isPrev) {
-            // 是否正在动画中
-            // if ($ul.is(':animated')) return false
-
             if (settings.loop) {
                 if (first && isPrev) {
                     current = total-1
                 }
                 if (last && !isPrev) {
-                    current = 0;
+                    current = 0
                 }
             }
 
@@ -162,17 +157,14 @@ $.fn.imgScroll = function(options, callback) {
                     last ? $btnNext.hide() : $btnNext.show()
                 }
 
-                // 每次可视区li的总集合
-                var allLi = $lis.slice(current * visible, current * visible + visible)
                 // 每次滚动到可视区li的集合
                 var viewLi = $lis.slice(current * visible, current * visible + visible)
-                // 每次滚动后回调参数
-
                 // current 当前滚动到第几页
                 // total 一共有多少页
-                // allLi 所有的
-                // viewLi可视区域内的滚动li jQuery对象集合
-                end.apply($that, [current, total, allLi, viewLi])
+                // allLi 所有的li
+                // viewLi可视区域内的滚动li
+                end.apply($that, [current, total, $lis, viewLi])
+                console.log(viewLi)
             }
 
             // 是否动画滚动
@@ -247,12 +239,12 @@ $.fn.imgScroll = function(options, callback) {
             $btnPrev.unbind('click').bind('click', prevHander)
             $btnNext.unbind('click').bind('click', nextHander)
 
-            if (settings.loop && settings.autoPlay) {
+            if (settings.loop && settings.auto) {
                 $btnPrev.mouseover(function() {
                     stop()
                 }).mouseout(function() {
                     play()
-                });
+                })
                 $btnNext.mouseover(function() {
                     stop() 
                 }).mouseout(function() {
