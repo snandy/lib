@@ -15,8 +15,6 @@ $.fn.imgScroll = function(options, callback) {
         direction: 'x',
         // 滚动速度
         speed: 300,
-        // 每次滚动图片个数
-        step: 1,
         // 循环播放
         loop: true,
         // 是否自动播放
@@ -53,10 +51,9 @@ $.fn.imgScroll = function(options, callback) {
         var $btnPrev = typeof settings.prev == 'string' ? $(settings.prev) : settings.prev
 
         var current = 0
-        var step = settings.step
         var visible = settings.visible
         var dir = settings.direction
-        var total = Math.ceil((len - visible) / step) + 1
+        var total = Math.ceil((len - visible) / visible) + 1
 
         var navItems = settings.navItems
         var navWrap = settings.navItmesWrap
@@ -114,7 +111,7 @@ $.fn.imgScroll = function(options, callback) {
         function reInitSettings() {
             len = settings.data.length
             $lis = $ul.children('li')
-            total = Math.ceil((len - visible) / step) + 1
+            total = Math.ceil((len - visible) / visible) + 1
         }
 
         /*
@@ -135,14 +132,14 @@ $.fn.imgScroll = function(options, callback) {
 
             // 滚动下一帧位移量
             nextFrame = dir == 'x' ? {
-                left: -current * step * liWidth
+                left: -current * visible * liWidth
             } : {
-                top: -current * step * liHeight
+                top: -current * visible * liHeight
             }
 
             // 滚动完成一帧回调
             function onEnd() {
-                if (len - current * step <= visible) {
+                if (len - current * visible <= visible) {
                     last = true
                 } else {
                     last = false
@@ -166,12 +163,11 @@ $.fn.imgScroll = function(options, callback) {
                 }
 
                 // 每次可视区li的总集合
-                var allLi = $lis.slice(current * step, current * step + visible)
+                var allLi = $lis.slice(current * visible, current * visible + visible)
                 // 每次滚动到可视区li的集合
-                var viewLi = $lis.slice(current * step + visible - step, current * step + visible)
+                var viewLi = $lis.slice(current * visible, current * visible + visible)
                 // 每次滚动后回调参数
 
-                
                 // current 当前滚动到第几页
                 // total 一共有多少页
                 // allLi 所有的
@@ -286,7 +282,7 @@ $.fn.imgScroll = function(options, callback) {
         }
 
         // 初始化滚动
-        if (len > visible && visible >= step) {
+        if (len > visible) {
             // 可以滚动
             resetStyles(dir)
             bindEvent()
