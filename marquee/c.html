@@ -2,11 +2,11 @@
 <html>
 	<head>
 		<meta charset="utf-8"/>
-		<title>C scroll.js</title>
+		<title>C slide</title>
         <link rel="stylesheet" href="../tab/base.css"/>
         <link rel="stylesheet" href="c.css"/>
 		<script src="../jquery-1.11.0.js"></script>
-		<script src="imgScroll.js"></script>
+		<script src="slide.js"></script>
 	</head>
 	<body>
         <div id="slide" class="m">
@@ -33,15 +33,15 @@
  	</body>
     <script>
         // 垂直滚动图
-        $('#slide').imgScroll({
+        $('#slide').slide({
             visible: 1,
             direction: 'y',
-            navItems: function(i) {
+            nav: function(i) {
                 return i+1
             },
-            navItemEvent: 'mouseenter',
-            navItmesWrap: '.slide-controls',
-            autoPlay: true
+            navEvent: 'mouseenter',
+            navWrap: '.slide-controls',
+            auto: true
         }, function() {
         })
     </script>

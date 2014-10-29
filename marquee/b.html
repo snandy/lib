@@ -2,11 +2,11 @@
 <html>
 	<head>
 		<meta charset="utf-8"/>
-		<title>B scroll.js</title>
+		<title>B slide</title>
         <link rel="stylesheet" href="../tab/base.css"/>
         <link rel="stylesheet" href="b.css"/>
 		<script src="../jquery-1.11.0.js"></script>
-		<script src="imgScroll.js"></script>
+		<script src="slide.js"></script>
 	</head>
 	<body>
         <div id="home_banner">
@@ -31,29 +31,23 @@
  	</body>
     <script>
         // 垂直滚动图
-        $('.scroll').imgScroll({
+        $('.scroll').slide({
             visible: 1,
             direction: 'y',
-            navItems: function(i) {
+            nav: function(i) {
                 var num = i+1
                 return '<i></i>' + '<img src="i/bcg' + num + '.png">'
             },
-            navItemEvent: 'mouseenter',
-            navItmesWrap: 'ul.thumbs',
-            autoPlay: true,
+            navEvent: 'mouseenter',
+            navWrap: 'ul.thumbs',
+            auto: true,
             end: function(i) {
-                $('#home_banner .cover').animate({
+                var $banner = $('#home_banner')
+                $banner.find('.cover').animate({
                     top: 55 * i + 'px'
                 }, 100)
             }
         }, function() {
-            var $banner = $('#home_banner')
-            $banner.find('ul.thumbs').delegate('li', 'mouseenter', function() {
-                var i = $(this).attr('data-i')
-                $banner.find('.cover').animate({
-                    top: 55 * i + 'px'
-                }, 100)
-            })
         })
     </script>
 </html>

@@ -2,14 +2,10 @@
  * 滚动轮播插件
  * 
  */
-$.fn.imgScroll = function(option, callback) {
+$.fn.slide = function(option, callback) {
     var defaults = {
         // 可见图片个数
         visible: 1,
-        // 按钮-下一张，默认为选择器字符串，或者是jQuery对象
-        next: '#next',
-        // 按钮-上一张，默认为选择器字符串，或者是jQuery对象
-        prev: '#prev',
         // 方向x,y
         direction: 'x',
         // 滚动速度
@@ -21,19 +17,23 @@ $.fn.imgScroll = function(option, callback) {
         // 自动播放时间
         stay: 5000,
         // 无法(不足以)滚动时是否显示控制按钮
-        showControl: false,
+        hideControl: false,
         // 每个滚动元素宽度，默认取li的outerWidth
         width: null,
         // 每个滚动元素宽度，默认取li的outerHeight
         height: null,
         // 是否显示滚动当前状态(1,2,3,4,...)
-        navItems: false,
+        nav: false,
         // 包围元素的class，默认为'scroll-nav-wrap'
-        navItmesWrap: 'nav-wrap',
+        navWrap: 'nav-wrap',
         // 当前项目高亮class
-        navItemActivedClass: 'cur',
+        navActivedCls: 'cur',
         // 导航项目事件名称
-        navItemEvent: 'click',
+        navEvent: 'click',
+        // 按钮-下一张，默认为选择器字符串，或者是jQuery对象
+        btnNext: '',
+        // 按钮-上一张，默认为选择器字符串，或者是jQuery对象
+        btnPrev: '',
         // 结束一帧时的回调
         end: function() {}
     }
@@ -41,25 +41,62 @@ $.fn.imgScroll = function(option, callback) {
     // 继承 初始化参数 - 替代默认参数
     var settings = $.extend(defaults, option)
 
+    /*
+     * 函数节流，控制间隔时间
+     */
+    function debounce(func, wait, immediate) {
+        var timeout, args, context, timestamp, result
+        var later = function() {
+            var last = $.now() - timestamp
+            if (last < wait && last > 0) {
+                timeout = setTimeout(later, wait - last)
+            } else {
+                timeout = null
+                if (!immediate) {
+                    result = func.apply(context, args)
+                    context = args = null
+                }
+            }
+        }
+        return function() {
+            context = this
+            args = arguments
+            timestamp = $.now()
+            var callNow = immediate && !timeout
+            if (!timeout) timeout = setTimeout(later, wait)
+            if (callNow) {
+                result = func.apply(context, args)
+                context = args = null
+            }
+            return result
+        }
+    }
+
     function init($that) {
+        // some alias
+        var btnPrev  = settings.btnPrev
+        var btnNext  = settings.btnNext
+        var nav = settings.nav
+        var navWrap  = settings.navWrap
+        var hideControl = settings.hideControl
+
         var $ul = $that.find('ul').eq(0)
         var $lis = $ul.children('li')
-        var len = $lis.length
+        var size = $lis.length
 
-        var $btnNext = typeof settings.next == 'string' ? $(settings.next) : settings.next
-        var $btnPrev = typeof settings.prev == 'string' ? $(settings.prev) : settings.prev
+        var $btnNext = typeof btnNext == 'string' ? $(btnNext) : btnNext
+        var $btnPrev = typeof btnPrev == 'string' ? $(btnPrev) : btnPrev
 
         var current = 0
         var visible = settings.visible
         var dir = settings.direction
-        var total = Math.ceil((len - visible) / visible) + 1
+        var total = Math.ceil((size - visible) / visible) + 1
 
-        var navItems = settings.navItems
-        var navWrap = settings.navItmesWrap
+
         var $navWrap = $(navWrap)
         var navHasWrap = $navWrap.length > 0
-        var navClass = settings.navItemActivedClass
-        var navEvent = settings.navItemEvent
+        var navClass = settings.navActivedCls
+        var navEvent = settings.navEvent
 
         var first = true
         var last = false
@@ -96,8 +133,8 @@ $.fn.imgScroll = function(option, callback) {
             // 重置滚动内容区元素样式
             $ul.css({
                 'position': 'absolute',
-                'width': dir == 'x' ? liWidth * len : liWidth,
-                'height': dir == 'x' ? liHeight : liHeight * len,
+                'width': dir == 'x' ? liWidth * size : liWidth,
+                'height': dir == 'x' ? liHeight : liHeight * size,
                 'top': 0,
                 'left': 0
             })
@@ -107,9 +144,9 @@ $.fn.imgScroll = function(option, callback) {
          * 重新初始化参数
          */
         function reInitSettings() {
-            len = settings.data.length
+            size = settings.data.length
             $lis = $ul.children('li')
-            total = Math.ceil((len - visible) / visible) + 1
+            total = Math.ceil((size - visible) / visible) + 1
         }
 
         /*
@@ -134,7 +171,7 @@ $.fn.imgScroll = function(option, callback) {
 
             // 滚动完成一帧回调
             function onEnd() {
-                if (len - current * visible <= visible) {
+                if (size - current * visible <= visible) {
                     last = true
                 } else {
                     last = false
@@ -147,8 +184,8 @@ $.fn.imgScroll = function(option, callback) {
                 }
 
                 // 显示导航数字
-                if (navItems) {
-                    setCurrent(current)
+                if (nav) {
+                    setCurrNav(current)
                 }
 
                 // 轮播不循序且拖动到顶部会尾部时左右箭头自动隐藏
@@ -163,8 +200,7 @@ $.fn.imgScroll = function(option, callback) {
                 // total 一共有多少页
                 // allLi 所有的li
                 // viewLi可视区域内的滚动li
-                end.apply($that, [current, total, $lis, viewLi])
-                console.log(viewLi)
+                end.apply($that, [current, total, viewLi])
             }
 
             // 是否动画滚动
@@ -177,15 +213,20 @@ $.fn.imgScroll = function(option, callback) {
         }
 
         /*
+         * 事件节流后的
+         */
+        var deSwitchTo = debounce(switchTo, 100)
+
+        /*
          * 显示数字分页1,2,3,4,5,6...
          * 数字导航外层div的class
          * 数字导航当前页高亮class
          */
-        function addNavItem(navWrap, active) {
+        function addNav(navWrap, active) {
             var $navPage = navHasWrap ? $navWrap : $('<div class="' + navWrap + '"></div>')
             for (var i = 0; i < total; i++) {
                 var $li = $('<li>').attr('data-i', i)
-                $.isFunction(navItems) ? $li.append(navItems(i)) : $li.text(i+1)
+                $.isFunction(nav) ? $li.append(nav(i)) : $li.text(i+1)
                 if (i === 0) {
                     $li.addClass(active)
                 }
@@ -197,8 +238,8 @@ $.fn.imgScroll = function(option, callback) {
         }
 
         // 设置当前状态的数字导航与分页
-        function setCurrent(i) {
-            if (navItems) {
+        function setCurrNav(i) {
+            if (nav) {
                 $navWrap.find('li').removeClass(navClass).eq(i).addClass(navClass)
             }
         }
@@ -214,30 +255,20 @@ $.fn.imgScroll = function(option, callback) {
             clearInterval(intervalTimer)
         }
 
-        // 防止左右箭头点击太快
-        function debounce(func, wait) {
-            var canSwitch = true
-            return function() {
-                if (!canSwitch) return
-                func()
-                canSwitch = false
-                setTimeout(function() {
-                    canSwitch = true
-                }, wait)
-            }
-        }
-
         function bindEvent() {
+            // 左右按钮
             var prevHander = debounce(function() {
                 current--
                 switchTo(true)
-            }, 500)
+            }, 200)
             var nextHander = debounce(function() {
                 current++
                 switchTo(false)
-            }, 500)
-            $btnPrev.unbind('click').bind('click', prevHander)
-            $btnNext.unbind('click').bind('click', nextHander)
+            }, 200)            
+            if (!hideControl) {
+                $btnPrev.unbind('click').bind('click', prevHander)
+                $btnNext.unbind('click').bind('click', nextHander)
+            }
 
             if (settings.loop && settings.auto) {
                 $btnPrev.mouseover(function() {
@@ -258,12 +289,12 @@ $.fn.imgScroll = function(option, callback) {
                 play()
             }
 
-            if (navItems && navEvent) {                
+            if (nav && navEvent) {                
                 $navWrap.delegate('li', navEvent, function() {
                     var idx = $(this).attr('data-i')
                     var isPrev = idx < current ? true : false
                     current = idx
-                    switchTo(isPrev)
+                    deSwitchTo(isPrev)
                 })
                 $navWrap.mouseover(function() {
                     stop()
@@ -273,24 +304,28 @@ $.fn.imgScroll = function(option, callback) {
             } 
         }
 
+        function hideButton() {
+            $btnNext.add($btnPrev).hide()
+        }
+
         // 初始化滚动
-        if (len > visible) {
+        if (total > 1) {
             // 可以滚动
             resetStyles(dir)
             bindEvent()
-            if (navItems) {
-                addNavItem(navWrap, navClass)
+            if (nav) {
+                addNav(navWrap, navClass)
             }
             if (!settings.loop) {
                 $btnPrev.hide()
             }
         } else {
             // 无法滚动
-            if (settings.showControl) {
-                $btnNext.add($btnPrev).show()
-            } else {
-                $btnNext.add($btnPrev).hide()
-            }
+            hideButton()
+        }
+
+        if (hideControl) {
+            hideButton()
         }
     }
 

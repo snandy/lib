@@ -2,11 +2,11 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>D scroll.js</title>
+    <title>D slide</title>
     <link rel="stylesheet" href="../tab/base.css"/>
     <link rel="stylesheet" href="d.css"/>
     <script src="../jquery-1.11.0.js"></script>
-    <script src="imgScroll.js"></script>
+    <script src="slide.js"></script>
 </head>
 <body>
 <div id="fol-produce" class="mod-main">
@@ -156,11 +156,11 @@
 </div>
 </body>
 <script>
-    $('.slider-show').imgScroll({
+    $('.slider-show').slide({
         visible: 5,
         loop: false,
-        next: '.next',
-        prev: '.prev'
+        btnNext: '.next',
+        btnPrev: '.prev'
     })
 </script>
 </html>
