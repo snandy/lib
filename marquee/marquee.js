@@ -2,11 +2,7 @@
  *  marquee
  */
 $.fn.marquee = function(options, callback) {
-    if (typeof options == 'function') {
-        callback = options
-        options = {}
-    }
-
+    
     var defaults = {
         direction: 'up',
         speed: 10,
