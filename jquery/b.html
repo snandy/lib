@@ -47,14 +47,44 @@
 	    // 	return res
 	    // }
 
-	    function rgbToHex(r, g, b) {
-		    return "#" + (16777216 | b | (g << 8) | (r << 16)).toString(16).slice(1);
+	    function rgbToHex(str) {
+			var arr = str.match(/\d+/g)
+			if (!arr) return ''
+			var red   = arr[0]
+			var green = arr[1]
+			var black = arr[2]
+		    return "#" + (16777216 | black | (green << 8) | (red << 16)).toString(16).slice(1)
 		}
 
-		var rgb = 'rgb(255,0,0)'
-		var arr = rgb.match(/\d+/g)
-		var res = rgbToHex(arr[0], arr[1], arr[2])
-		console.log(res)
+function parseURL(url) {
+    var a =  document.createElement('a')
+    a.href = url
+    return {
+        source: url,
+        protocol: a.protocol.replace(':',''),
+        host: a.hostname,
+        port: a.port,
+        query: a.search,
+        params: (function(){
+            var ret = {}
+            var seg = a.search.replace(/^\?/,'').split('&')
+            var len = seg.length
+            var s
+            for (var i = 0; i < len; i++) {
+                if (!seg[i]) continue 
+                s = seg[i].split('=')
+                ret[s[0]] = s[1]
+            }
+            return ret
+        })(),
+        file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
+        hash: a.hash.replace('#',''),
+        path: a.pathname.replace(/^([^\/])/,'/$1'),
+        relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
+        segments: a.pathname.replace(/^\//,'').split('/')
+    }
+}
+
 
 	</script>
 </body>
