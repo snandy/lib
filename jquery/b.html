@@ -2,13 +2,90 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <script src="jquery-1.11.1.js"></script>
+    <link href="b.css" rel="stylesheet" type="text/css" />
+    <style>
+    	div {border: 1px solid gray;width:300px;margin:10px;}
+    	p {margin:10px;}
+    	#d2 {color: #F00;}
+    </style>
+    <script src="jquery-1.6.4.js"></script>
 </head>
 <body>
-	<div></div>
+	<div id="d1" style="color:yellow;">style属性里的color</div>
+	<div id="d2">style标签里的color</div>
+	<div id="d3">写在样式文件里的color</div>
+	<p id="output1"></p>
+	<p id="output2"></p>
+	<p id="output3"></p>
 	<script>
-	    var $a = $('<a href="javascript;">').text('sina')
-	    $('div').append($a)
+
+		var c1 = $('#d1').css('color')
+		var c2 = $('#d2').css('color')
+		var c3 = $('#d3').css('color')
+
+	    output1.innerHTML = c1
+	    output2.innerHTML = c2
+	    output3.innerHTML = c3
+
+
+	    // 方式1
+	    function decToHex(num) {
+	    	return num.toString(16)
+	    }
+
+	    output1.style.color = 'rgb(255,255,0)'
+	    // $(output1).css({color: c1})
+	    // $(output2).css({color: c2})
+	    // $(output3).css({color: c3})
+
+	    // http://stackoverflow.com/questions/1573053/javascript-function-to-convert-color-names-to-hex-codes/17284440#17284440
+	    // function decToHex(num) {
+	    // 	var hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
+	    // 	var res = ''
+	    // 	res += Math.floor(num/16)
+	    // 	res += hex[num%16]
+	    // 	return res
+	    // }
+
+	    function rgbToHex(str) {
+			var arr = str.match(/\d+/g)
+			if (!arr) return ''
+			var red   = arr[0]
+			var green = arr[1]
+			var black = arr[2]
+		    return "#" + (16777216 | black | (green << 8) | (red << 16)).toString(16).slice(1)
+		}
+
+function parseURL(url) {
+    var a =  document.createElement('a')
+    a.href = url
+    return {
+        source: url,
+        protocol: a.protocol.replace(':',''),
+        host: a.hostname,
+        port: a.port,
+        query: a.search,
+        params: (function(){
+            var ret = {}
+            var seg = a.search.replace(/^\?/,'').split('&')
+            var len = seg.length
+            var s
+            for (var i = 0; i < len; i++) {
+                if (!seg[i]) continue 
+                s = seg[i].split('=')
+                ret[s[0]] = s[1]
+            }
+            return ret
+        })(),
+        file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
+        hash: a.hash.replace('#',''),
+        path: a.pathname.replace(/^([^\/])/,'/$1'),
+        relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
+        segments: a.pathname.replace(/^\//,'').split('/')
+    }
+}
+
+
 	</script>
 </body>
 </html>

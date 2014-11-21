@@ -760,7 +760,6 @@
 
     var later = function() {
       var last = _.now() - timestamp;
-
       if (last < wait && last > 0) {
         timeout = setTimeout(later, wait - last);
       } else {
@@ -773,11 +772,15 @@
     };
 
     return function() {
+      console.log('a')
       context = this;
       args = arguments;
       timestamp = _.now();
       var callNow = immediate && !timeout;
-      if (!timeout) timeout = setTimeout(later, wait);
+      if (!timeout) {
+        console.log('b')
+        timeout = setTimeout(later, wait);
+      }
       if (callNow) {
         result = func.apply(context, args);
         context = args = null;

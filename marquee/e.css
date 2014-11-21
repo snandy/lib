@@ -1,0 +1,130 @@
+#js_slider {
+    width: 310px;
+    height: 265px;
+    overflow: hidden;
+    z-index: 1;
+    margin: 10px auto;
+    position: relative;
+}
+
+#js_slider .slider-wraper {
+    width: 310px;
+    overflow: hidden;
+}
+
+#js_slider .slider-wraper {
+    overflow: hidden;
+    height: 220px;
+    position: relative;
+}
+
+.slider-wraper {
+    width: 310px;
+    overflow: hidden;
+}
+
+.slider-wraper .cur {
+    display: block;
+}
+
+.slider-scroll-img {
+    display: none;
+    float: left;
+    position: relative;
+    z-index: 1;
+    height: 100%;
+}
+.slider-scroll-img p {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    text-indent: 9px;
+    font-size: 14px;
+    font-weight: bold;
+    top: 180px;
+    left: 0;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.7);
+    background: #000\9;
+    position: absolute;
+}
+.slider-scroll-img a, .slider-scroll-img a:visited {
+    color: #ececec;
+    text-decoration: none;
+}
+
+.slider-scroll-img a:hover {
+    color: #fff;
+}
+
+#js_slider .slider-item {
+    height: 100%;
+    background: #fff;
+    width: 310px;
+}
+
+.slider-nav-wrap {
+    width: 158px;
+    margin: 0 auto;
+    padding-top: 6px;
+    height: 20px;
+}
+
+.slider-nav {
+    width: 24px;
+    height: 20px;
+    margin: 0 1px;
+    float: left;
+    background-position: -24px -782px;
+    text-indent: -10em;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.slider-nav-wrap {
+    background-position: -24px -762px;
+}
+
+.slider-nav-wrap .cur {
+    background-position: -24px -762px;
+    -moz-animation: a_slidercurrent 5s linear;
+    -webkit-animation: a_slidercurrent 5s linear;
+    -o-animation: a_slidercurrent 5s linear;
+    animation: a_slidercurrent 5s linear;
+}
+.nav-wrap-b .cur {
+    background-position: -32px -822px;
+    -moz-animation: a_slidercurrent_b 5s linear;
+    -webkit-animation: a_slidercurrent_b 5s linear;
+    -o-animation: a_slidercurrent_b 5s linear;
+    animation: a_slidercurrent_b 5s linear;
+}
+.slider-btn-prev, .slider-btn-next {
+    opacity: .5;
+    position: absolute;
+    z-index: 1;
+    overflow: hidden;
+    width: 30px;
+    height: 35px;
+    cursor: pointer;
+    text-indent: -10em;
+}
+.slider-btn-prev:hover, .slider-btn-next:hover {
+    opacity: 1;
+}
+.slider-btn-prev {
+    background-position: 6px top;
+    left: 0;
+    top: 40%;
+    margin-top: -15px;
+}
+.slider-btn-next {
+    background-position: -6px -45px;
+    right: 0;
+    top: 40%;
+    margin-top: -15px;
+}
+.slider-btn-prev, .slider-btn-next, .slider-nav, .nav-wrap .cur {
+    background-image: url(i/icon_v9.png);
+    background-repeat: no-repeat;
+}
