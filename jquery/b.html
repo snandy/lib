@@ -1,4 +1,4 @@
-<!DOCTYPE html>  
+<!doctype html>  
 <html>  
 <head>
     <meta charset="utf-8">
@@ -8,29 +8,6 @@
 <body>  
     <input id="txt" type="text" value="snandy"/>
     <script>
-/*
- * 设置输入域(input/textarea)光标的位置
- */
-function setCursorPosition(elem, index) {
-    var val = elem.value
-    var len = val.length
-
-    // 超过文本长度直接返回
-    if (len < index) return
-    setTimeout(function() {
-        elem.focus()
-        if (elem.setSelectionRange) { // 标准浏览器
-            elem.setSelectionRange(index, index)    
-        } else { // IE9-
-            var range = elem.createTextRange()
-            range.moveStart("character", -len)
-            range.moveEnd("character", -len)
-            range.moveStart("character", index)
-            range.moveEnd("character", 0)
-            range.select()
-        }
-    }, 10)
-}
 
 $.fn.setCursorPosition = function(option) {
     var settings = $.extends({
@@ -41,8 +18,13 @@ $.fn.setCursorPosition = function(option) {
         var val   = elem.value
         var len   = val.length
         var index = settings.index
+
+        // 非input和textarea直接返回
+        var $elem = $(elem)
+        if (!$elem.is('input') || !$elem.is('textarea')) return 
         // 超过文本长度直接返回
         if (len < index) return
+
         setTimeout(function() {
             elem.focus()
             if (elem.setSelectionRange) { // 标准浏览器
