@@ -1,9 +1,13 @@
 <!DOCTYPE HTML>  
 <HTML>  
-<HEAD>  
+<HEAD>
+<META charset="utf-8">
 <TITLE>text select</TITLE>  
-<script>
+</HEAD>  
 
+<BODY>  
+<input id="txt" type="text" value="snandy"/>
+<script>
 function selectText(elem, start, end) {
 	//a是起始位置，b是终点位置
 	var start = parseInt(start, 10)
@@ -46,14 +50,7 @@ function selectText(elem, start, end) {
 		}
 	}
 }
-
-</script>  
-</HEAD>  
-
-<BODY>  
-<input type="text" value="snandy"/>
-<script>
-	selectText(document.getElementsByTagName('input')[0])
+selectText(txt)
 </script>
 </BODY>  
 </HTML> 
