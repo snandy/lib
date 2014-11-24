@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Placeholder click event</title>
+    <link rel="stylesheet" type="text/css" href="../base.css"/>
+    <style>
+        p {width:300px;margin:20px auto;}
+        input, textarea {
+        	font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<p>
+    获取焦点时默认文本消失(focus)：<br><input data-ui="u-placeholder|用户名">
+</p>
+<p>
+    输入时默认文本消失(keydown)：<br><input data-ui="u-placeholder|用户名|keydown">
+</p>
+<p>
+    输入时默认文本消失(keydown)：<textarea data-ui="u-placeholder|补充说明|keydown"></textarea>
+</p>
+<p>
+    浏览器原生placeholder：<br><input placeholder="输入手机号"/>
+</p>
+<script src="../jquery-1.6.4.js"></script>
+<script src="../../dest/popui.js"></script>
+</body>
+</html>

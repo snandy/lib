@@ -6,28 +6,47 @@
     <link rel="stylesheet" href="../base.css"/>
     <link rel="stylesheet" href="a.css"/>
 	<script src="../jquery-1.6.4.js"></script>
-	<!-- <script src="../../popui.js"></script> -->
+	<!-- <script src="../../dest/popui.js"></script> -->
 </head>
 <body>
 <div class="m980 t30">
-	<div class="pop-ui" data-ui="u-select|select">
+	<div class="pop-ui" data-ui="u-select">
 		<select>
 			<option value="test">test</option>
 			<option value="test1">test1</option>
+			<option value="bb">bbbb</option>
 		</select>
-		<var><i></i><em data-ui="select-h">test</em></var>
+		<var><i></i><em data-ui="select-selected">test</em></var>
 	</div>
-	<div class="pop-ui" data-ui="u-select|select">
+	<div class="pop-ui" data-ui="u-select|select|em|true|three">
+		<select>
+			<option value="one">第一个</option>
+			<option value="two">第二个</option>
+			<option value="three">第三个</option>
+		</select>
+		<var><i></i><em data-ui="select-selected"></em></var>
+	</div>
+	<div class="pop-ui" id="div1" data-ui="u-select">
 		<select>
 			<option value="测试">测试</option>
-			<option value="菜单">菜单</option><option value="靓现">靓现</option>
+			<option value="菜单">菜单</option><option value="ttt">靓现</option>
 		</select>
-		<var><i></i><em data-ui="select-h">靓现</em></var>
+		<var><i></i><em data-ui="select-selected">测试</em></var>
 	</div>
 </div>
-<input type="button" value="test" id="tbbb">
+<input type="button" value="修改value 值" id="tbbb">
 <!-- <script charset="utf-8" src="http://trip.jd.com/html/data.js"></script> -->
 <script src="../../src/util.js"></script>
 <script src="../../src/select.js"></script>
+<script>
+$('#tbbb').click(function(){
+    $('#div1').sel({changeOption:true,value:'ttt'})
+})
+$('#div1').sel(
+	{changeOption:true,value:'ttt'}
+).bind('switch', function(){
+	console.log('接下来你要做什么33')
+})
+</script>
 </body>
 </html>

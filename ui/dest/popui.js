@@ -1,6 +1,6 @@
 /*!
- * ui.js v0.1.0
- * JDC-FE POP team 2014-11-13 11:40:02
+ * popui v0.1.0
+ * JDC-FE POP team 2014-11-24 17:43:35
  */
 ~function(win, $) {
 
@@ -9,14 +9,38 @@ var doc = win.document
 var body = doc.body
 var docElem = doc.documentElement
 
-if ($.browser) {
-    var ver = /\d/.exec($.browser.version)[0]
-    if ($.browser.msie && ver) {
-        $['ie'+ ver] = true
+
+var browser = function(ua) {
+    var b = {
+        sogou: /se/.test(ua),
+        opera: /opera/.test(ua),
+        chrome: /chrome/.test(ua),
+        firefox: /firefox/.test(ua),
+        maxthon: /maxthon/.test(ua),
+        tt: /TencentTraveler/.test(ua),
+        ie: /msie/.test(ua) && !/opera/.test(ua),
+        safari: /webkit/.test(ua) && !/chrome/.test(ua)
     }
-} else {
-    throw new Error('Your jQuery does\"t has $.browser.')
-}
+    var mark = ''
+    for (var i in b) {
+        if (b[i]) {
+            mark = 'safari' == i ? 'version' : i
+            break
+        }
+    }
+    var reg = RegExp('(?:' + mark + ')[\\/: ]([\\d.]+)')
+    b.version = mark && reg.test(ua) ? RegExp.$1 : '0'
+
+    var iv = parseInt(b.version, 10)
+    for (var i = 6; i < 11; i++) {
+        b['ie'+i] = iv === i
+    }
+    
+    return b
+}(navigator.userAgent.toLowerCase());
+
+$.extend($, browser)
+
 
 /*
  * 函数节流，控制间隔时间
@@ -152,6 +176,41 @@ $.uiParse = function(action) {
 };
 
 }(window, window.jQuery);
+/*
+ * 设置输入域(input/textarea)光标的位置
+ * @param {Number} index
+ */
+$.fn.setCursorPosition = function(option) {
+    var settings = $.extend({
+        index: 0
+    }, option)
+    return this.each(function() {
+        var elem  = this
+        var val   = elem.value
+        var len   = val.length
+        var index = settings.index
+
+        // 非input和textarea直接返回
+        var $elem = $(elem)
+        if (!$elem.is('input,textarea')) return
+        // 超过文本长度直接返回
+        if (len < index) return
+
+        setTimeout(function() {
+            elem.focus()
+            if (elem.setSelectionRange) { // 标准浏览器
+                elem.setSelectionRange(index, index)    
+            } else { // IE9-
+                var range = elem.createTextRange()
+                range.moveStart("character", -len)
+                range.moveEnd("character", -len)
+                range.moveStart("character", index)
+                range.moveEnd("character", 0)
+                range.select()
+            }
+        }, 10)
+    })
+};
 /**
  * 模态弹框
  *
@@ -320,7 +379,7 @@ $.fn.focusPic = function(option, callback) {
         var $bgImg = $elem.find('[data-ui=focus-bg]')
         $elem.tab(option,callback)
         if ($bgImg.length) {
-            $elem.bind('change', function(e, i) {
+            $elem.bind('switch', function(e, i) {
                 $bgImg.hide()
                 $bgImg.eq(i).show()
             })            
@@ -381,13 +440,13 @@ $(function() {
  *      <li data-ui="u-hover">
  *
  *  2. 应用在li上，hover的class改为curr
- *      <li data-ui="u-hover.curr"> 
+ *      <li data-ui="u-hover|&|curr"> 
  *
  *  3. 通过ul代理应用在li上，class为默认"hover"
- *      <ul data-ui="hover|li">
+ *      <ul data-ui="u-hover|li">
  *
  *  4. 通过ul代理应用在li上，class改为"curr"
- *      <ul data-ui="u-hover.curr|li">
+ *      <ul data-ui="u-hover|li|curr">
  */
 $(function() {
     $('[data-ui^="u-hover"]').each(function() {
@@ -403,12 +462,16 @@ $(function() {
 
         // 给子元素添加hover事件 
         if (isDelegate) {
-            $elem.delegate(delegateSelector, 'hover', function() {
-                $(this).toggleClass(curCls)
-            })            
+            $elem.delegate(delegateSelector, 'mouseenter', function() {
+                $(this).addClass(curCls)
+            }).delegate(delegateSelector, 'mouseleave', function() {
+                $(this).removeClass(curCls)
+            })
         } else { // 自身添加hover事件 
-            $elem.hover(function() {
-                $elem.toggleClass(curCls)
+            $elem.mouseenter(function() {
+                $elem.addClass(curCls)
+            }).mouseleave(function() {
+                $elem.removeClass(curCls)
             })
         }
     })
@@ -1240,35 +1303,235 @@ $(function() {
 
 
 }();
+/**
+ * PlaceHolder组件
+ * $(input).focusPic({
+ *   word:     // @string 提示文本
+ *   color:    // @string 文本颜色
+ *   evtType:  // @string focus|keydown 触发placeholder的事件类型
+ *   zIndex:   // 模拟placeholder的zIndex
+ *   diffPaddingLeft: 距离左侧的left，光标位置可调，默认取输入域的paddingLeft+3
+ * })
+ *
+ * NOTE：
+ *   evtType默认是focus，即鼠标点击到输入域时默认文本消失，keydown则模拟HTML5 placeholder属性在Firefox/Chrome里的特征，光标定位到输入域后键盘输入时默认文本才消失。
+ *   此外，对于HTML5 placeholder属性，IE10+和Firefox/Chrome/Safari的表现形式也不一致，因此内部实现不采用原生placeholder属性
+ */
+
+~function() {
+	
+$.fn.placeholder = function(option, callback) {
+	var settings = $.extend({
+		word: '',
+		color: '#999',
+		evtType: 'focus',
+		zIndex: 20,
+		diffPaddingLeft: 3
+	}, option)
+
+	function bootstrap($that) {
+		// some alias 
+		var word    = settings.word
+		var color   = settings.color
+		var evtType = settings.evtType
+		var zIndex  = settings.zIndex
+		var diffPaddingLeft = settings.diffPaddingLeft
+
+		// default css
+		var offset = $that.offset()
+		var top    = offset.top
+		var left   = offset.left
+		var width       = $that.outerWidth()
+		var height      = $that.outerHeight()
+		var fontSize    = $that.css('font-size')
+		var fontFamily  = $that.css('font-family')
+		var paddingLeft = $that.css('padding-left')
+
+		// process
+		paddingLeft = parseInt(paddingLeft, 10) + diffPaddingLeft
+
+		// redner 
+		var $placeholder = $('<span>')
+		$placeholder.css({
+			position: 'absolute',
+			zIndex: '20',
+			top: top,
+			left: left,
+			color: color,
+			width: (width - paddingLeft) + 'px',
+			height: height + 'px',
+			fontSize: fontSize,
+			paddingLeft: paddingLeft + 'px',
+			fontFamily: fontFamily
+		}).text(word).hide()
+
+		// textarea 不加line-heihgt属性
+		if ($that.is('input')) {
+			$placeholder.css({
+				lineHeight: height + 'px'
+			})
+		}
+		$placeholder.appendTo(document.body)
+
+		// 内容为空时才显示，比如刷新页面输入域已经填入了内容时
+		var val = $that.val()
+		if (val == '') {
+			$placeholder.show()
+		}
+
+        function hideAndFocus() {
+            $placeholder.hide()
+            $that[0].focus()
+        }
+		function asFocus() {
+			$placeholder.click(hideAndFocus)
+            // IE有些bug，原本不用加此句
+            $that.click(hideAndFocus)
+			$that.blur(function() {
+				var txt = $that.val()
+				if (txt == '') {
+					$placeholder.show()
+				}
+			})
+		}
+		function asKeydown() {
+			$placeholder.click(function() {
+				$that[0].focus()
+			})
+		}
+
+		if (evtType == 'focus') {
+			asFocus()
+		} else if (evtType == 'keydown') {
+			asKeydown()
+		}
+
+		$that.keyup(function() {
+			var txt = $that.val()
+			if (txt == '') {
+				$placeholder.show()
+			} else {
+				$placeholder.hide()
+			}
+		})
+	}
+
+	return this.each(function() {
+		var $elem = $(this)
+		bootstrap($elem)
+		if ($.isFunction(callback)) callback($elem)
+	})
+}	
+
+
 /*
- * 项目中使用select 各浏览器，各系统都不统一，为了保证统一展示，现把此效果写在pop共用js
- * 组件中，主要分三部分，一个父级，一个select 和一个显示标签，使用中如果要修改select显示值
- * 只需修改 显示标签值就可以。
- * 示例：
- * 1、在select 父级增加属性: data-ui="u-select|select"
- * <div data-ui="u-select|select">
- * 2、给显示的标签增加属性：data-ui="select-h"
- * <em data-ui="select-h">test</em>
+ * 自动初始化，配置参数按照使用频率先后排序，即最经常使用的在前，不经常使用的往后，使用默认参数替代
+ * 
+ * 格式：data-ui="u-placeholder|word|evtType|color
+ * 示例：data-ui="u-placeholder|默认文字
+ *
  */
 $(function() {
-    $('[data-ui^="u-select"]').each(function() {
-        var $elem = $(this);
-        var arr = $.uiParse($elem.attr('data-ui'));
-        // 选中select
-        var delegateSelector = arr[0];
-        // 获取select 
-        var option = $elem.find(delegateSelector);
-        var h = $elem.find('[data-ui="select-h"]');
-        // 给sleect 增加change 事件
-        $elem.delegate(delegateSelector,'change',function(){
-            h.html(option.children('option:selected').text())
-        })
-        // 通过鼠标放上去改变select 值  程序只需修改 显示em 值
-        $elem.delegate(delegateSelector,'mouseenter',function(){
-            $elem.find(option).val(h.html())
+    $('[data-ui^="u-placeholder"]').each(function() {
+        var $elem   = $(this)
+        var arr = $.uiParse($elem.attr('data-ui'))
+        // 文本
+        var word = arr[0]
+        // 事件
+        var evtType = arr[1]
+        // 文本颜色
+        var color = arr[2]
+        // create
+        $elem.placeholder({
+        	word: word,
+            color: color,
+            evtType: evtType
         })
     })
 })
+
+}();
+~function() {
+$.fn.sel = function(option, callback) {
+    var settings = $.extend({
+        select: 'select',
+        selected: '[data-ui="select-selected"]',
+        changeOption: false,
+        value:''
+    }, option)
+
+    function bootstrap($that) {
+        // some alias
+        var selected = settings.selected;
+        var select = settings.select;
+        var changeOption = option.changeOption;
+        var value = option.value;
+
+        var display = $that.find(selected);
+        var selector = $that.find(select);
+
+        $that.find(select)[0].onchange = function(ev){
+            var text = selector.children('option:selected').text();
+            display.html(text);
+            $that.trigger('switch', [text]);
+        }
+        if(changeOption){
+            selector.val(value)
+            display.html(selector.children('option:selected').text());
+        }
+    }
+
+    // 实例化每个对象
+    return this.each(function() {
+        var $elem = $(this)
+        bootstrap($elem)
+        if ($.isFunction(callback)) callback($elem)
+    })
+}
+ /*
+    此组件为了所有浏览器显示select 统一表现，正常配置就可以正常使用，如需特殊操作select
+    需调用方法
+    结构/示例：
+    <div data-ui="u-select" id="test">
+        <select>
+            <option>1</option>
+        </select>
+        <span data-ui="select-selected">1</span>
+    </div>
+    div 为parent 
+    select 为正常 select 
+    span 为正常显示即优化展示的文本标签
+    参数为四
+    selected：data-ui="select-selected"
+    select：select 标签 
+    后两个参数为操作其他标签修改select 时所用
+    changeOption：false 默认为false ture 即为要通过其他操作修改select 配合value 使用
+    value:'' 默认为空，结合changeOption 使用，
+    如：
+    $(body).click(function(){
+        $('#test').sel({changeOption:true,value:'ttt'})
+    })
+    格式：data-ui="u-select|select|span|false|value"
+    示例：data-ui="u-select" data-ui="select-selected"
+ */
+$(function() {
+    $('[data-ui^="u-select"]').each(function() {
+        var $elem = $(this)
+        var arr = $.uiParse($elem.attr('data-ui'));
+        var delegateSelector = arr[0];
+        var selected = arr[1];
+        var isChange = arr[2] || false;
+        var value = arr[3] || '';
+        $elem.sel({
+            select: delegateSelector,
+            selected: selected,
+            changeOption: isChange,
+            value:value
+        })
+    })
+})
+}();
+
 /**
  * 滚动轮播插件
  * $(x).slide({
@@ -1424,7 +1687,7 @@ $.fn.slide = function(option, callback) {
             }
 
             // event
-            $that.trigger('change', current)
+            $that.trigger('switch', current)
         }
 
         function goRB() {
@@ -1637,18 +1900,30 @@ $(function() {
  */
 ~function() {
 
-$.fn.topSuction = function(option, callback) {
+$.fn.suction = function(option, callback) {
     option = option || {}
-    var fixCls = option.fixCls || 'fixed'
+
+    var settings = $.extend({
+        pos: 'top',
+        fixCls: 'fixed'
+    }, option)
 
     // some alias
+    var pos = settings.pos
+    var fixCls = settings.fixCls
+
+    // DOM
     var $win = $(window)
     var $doc = $(document)
 
-    function init($that) {
-        var offset = $that.offset()
-        var fTop   = offset.top
-        var fLeft  = offset.left
+
+    function bootstrap($that) {
+        var offset     = $that.offset()
+        var elTop      = offset.top
+        var elLeft     = offset.left
+        var elHeight   = $that.height()
+        var winHeight  = $win.height()
+        var handler    = null
 
         // 暂存
         $that.data('def', offset)
@@ -1656,22 +1931,42 @@ $.fn.topSuction = function(option, callback) {
             $that.data('def', $that.offset())
         })
 
-        var handler = $.throttle(function() {
-            var dTop = $doc.scrollTop()
-            if (fTop < dTop) {
-                $that.addClass(fixCls)
-                $that.trigger('fixed', [fTop])
+
+        var handler = function() {
+            var fn = null
+            if (pos == 'top') {
+                fn = function() {
+                    var docTop = $doc.scrollTop()
+                    if (elTop < docTop) {
+                        $that.addClass(fixCls)
+                        $that.trigger('fixed', [elTop])
+                    } else {
+                        $that.removeClass(fixCls)
+                        $that.trigger('unfixed', [elTop])
+                    }
+                }
             } else {
-                $that.removeClass(fixCls)
-                $that.trigger('unfixed', [fTop])
+                fn = function() {
+                    var docTop = $doc.scrollTop()
+                    if (elTop < winHeight + docTop - elHeight) {
+                        $that.removeClass(fixCls)
+                    } else {
+                        
+                        $that.addClass(fixCls)
+                    }
+                }
             }
-        }, 50)
+
+            return $.throttle(fn, 50)
+        }()
+
+        
         $win.scroll(handler)
     }
 
     return this.each(function() {
         var $elem = $(this)
-        init($elem)
+        bootstrap($elem)
         if ($.isFunction(callback)) callback($elem)        
     })
 };
@@ -1689,272 +1984,17 @@ $(function() {
     $('[data-ui^="u-suction"]').each(function() {
         var $elem = $(this)
         var arr = $.uiParse($elem.attr('data-ui'))
+        
+        // option
         var fixCls = arr[0]
-        $elem.topSuction({
-            fixCls: fixCls
+        var pos    = arr[1]
+        $elem.suction({
+            fixCls: fixCls,
+            pos: pos
         })
-    })
-});
-
-
-}();
-/**
-
-*/
-~function() {
-    $.fn.suggest = function(option, callback) {    
-        var settings = $.extend({
-            source: [],
-            delay: 0,
-            url:'',
-            errorbd:'error-bd',
-            dataName:'retMessage',
-            keyName:'keyWord',
-            resultsClass: 'suggest_results',
-            selectClass: 'suggest_over',
-            onSelect: false,
-            keyUpCallback:null
-    }, option)
-
-    function bootstrap($that) {
-        // some alias
-        var input = $that;
-        var source = settings.source;
-        var resultsClass = settings.resultsClass;
-        var selectClass = settings.selectClass;
-        var delay = settings.delay;
-        var url = settings.url;
-        var keyName = settings.keyName;
-        var dataName = settings.dataName;
-        var onSelect = settings.onSelect;
-        var errorbd = settings.errorbd;
-        var keyUpCallback = settings.keyUpCallback;
-
-        var timeout = null;
-        var prevLength = 0;
-        var cache = {};
-        var cacheSize = 0;
-        var $results = $('.'+resultsClass);
-        var $input = $(input).attr('autocomplete', 'off');
-        var $currentResult = null;
-        function delHtmlTag(str) {
-            return str.replace(/<[^>]+>/g, '');
-        }
-        // 设置位置
-        function setPosition() {
-            var offset = $input.offset();
-            $results.css({
-                top: (offset.top + $input.outerHeight()) + 'px',
-                left: offset.left + 'px'
-            })
-        }
-        $(window).load(setPosition).resize(setPosition);
-        $input.blur(function() {
-            setTimeout(function() { $results.hide() }, 200)
-        })
-        try {
-            $results.bgiframe();
-        } catch(e) { }
-        function showSuggest(){
-            $results.show();
-            setPosition();
-            var q = $.trim($input.val());
-            var param = {}
-            param[keyName] = q
-            if (url) {
-                if (cache[q]) {
-                    displayItems(q)
-                } else {
-                    $.getJSON(url, param, function(data) {
-                        source = data[dataName]
-                        if (source) {
-                            displayItems(q)
-                        }
-                        cache[q] = source
-                    })
-                }
-
-            } else {
-                displayItems(q)    
-            }
-        }
-        function getCityInfo(key, source) {
-            var value
-            $.each(source, function(i, val) {
-                if (val[0] == key || val[1] == key || val[2] == key || val[3] == key) {
-                    value = val;
-                    return false;
-                }
-            })
-            return value;
-        }
-        $input.bind('keyup',processKey)
-        var reg1 = /27$|38$|40$/;
-        var reg2 = /^13$|^9$/;
-        function processKey(e) {
-            $input.removeClass(errorbd);
-            var val = $input.val();
-            var keyCode = e.keyCode;
-            if ((reg1.test(keyCode) && $results.is(':visible')) || (reg2.test(keyCode) && getCurrentResult())) {
-                e.preventDefault()
-                e.stopPropagation()
-                switch(e.keyCode) {
-                    case 38: // up
-                        prevResult();
-                        break;
-                    case 40: // down
-                        nextResult();
-                        break;
-                    case 13: // return
-                        selectCurrentResult();
-                        break;
-                    case 27: // escape
-                        $results.hide();
-                        break;
-                }
-            } else {
-                if (timeout) {
-                    clearTimeout(timeout)
-                }
-                timeout = setTimeout(showSuggest, delay)
-                prevLength = val.length;
-            }
-            if (keyUpCallback) {
-                keyUpCallback(val)
-            }
-        }
-
-        function displayItems(item) {
-            var items = delHtmlTag(item)
-            var html = '';
-            if (url && cache[item]) {
-                source = cache[item];
-            }
-            if (items == '') {
-                $results.hide()
-            } else {
-                var j = 0;
-                var tempCitys = [];
-                if (source.constructor == Array) {
-                    for (var i = 0; i < source.length; i++) {
-                        var reg = new RegExp('^' + items + '.*$', 'im')
-                        if (reg.test(source[i][0]) || reg.test(source[i][1]) || reg.test(source[i][2]) || reg.test(source[i][3])) {
-                            if (j >= 10) break;
-                            tempCitys[j] = source[i][1];
-                            j++;
-                        }
-                    }
-                    tempCitys.sort();
-                }
-                for (var k = 0; k < tempCitys.length; k++) {
-                    var cityInfo = getCityInfo(tempCitys[k], source)
-                    html += '<li rel="' + cityInfo[0] + '"><a href="#' + i + '"><span>' + cityInfo[2].toLowerCase() + '</span>' + cityInfo[1] + '</a></li>';
-                }
-                if (html == '') {
-                    if(items.length>20){
-                        suggest_tip = '<div class="suggest_result_null">请重新输入</div>';
-                        $input.val('');
-                        $input.removeClass(errorbd);
-                    }else {
-                        suggest_tip = '<div class="suggest_result_null">对不起，找不到：' + items + '</div>';
-                        $input.addClass(errorbd);
-                    }
-                } else {
-                    suggest_tip = '<div class="suggest_result_tip">' + items + '，按拼音排序</div>';
-                    $input.removeClass('error-bd');
-                }
-                html = suggest_tip + '<ul>' + html + '</ul>';
-            }
-            $results.html(html).show().css({
-                width: $input.outerWidth()*2-50+'px'
-            })
-            $results.children('ul').children('li:first-child').addClass(selectClass)
-            $results.children('ul').children('li').mouseover(function() {
-                $results.children('ul').children('li').removeClass(selectClass)
-                $(this).addClass(selectClass)
-            }).click(function(e) {
-                e.preventDefault()
-                e.stopPropagation()
-                selectCurrentResult()
-            })
-            if (items == '') {
-               $results.hide()
-            }
-        }
-        function getCurrentResult() {
-            if (!$results.is(':visible')) return false;
-            $currentResult = $results.find('li.' + selectClass);
-            if (!$currentResult.length) {
-                $currentResult = false
-            }
-            return $currentResult
-        }
-        function selectCurrentResult() {
-            $currentResult = getCurrentResult()
-            if ($currentResult) {
-                $input.val($currentResult.find('a').html().replace(/<span>.+?<\/span>/i, ''))
-                $results.hide()
-                if (onSelect) {
-                    onSelect.call($input, $input.val(), $currentResult)
-                }
-            }
-        }
-        function nextResult() {
-            $currentResult = getCurrentResult();
-            if ($currentResult) {
-                $currentResult.removeClass(selectClass).next().addClass(selectClass);
-            } else {
-                $results.find('li:first-child').addClass(selectClass)
-            }
-        }
-        function prevResult() {
-            $currentResult = getCurrentResult()
-            if ($currentResult) {
-                $currentResult.removeClass(selectClass).prev().addClass(selectClass);
-            } else {
-                $results.find('li:last-child').addClass(selectClass);
-            }
-        }
-    }
-    // 实例化每个对象
-    return this.each(function() {
-        var $elem = $(this)
-        bootstrap($elem)
-        if ($.isFunction(callback)) callback($elem)
-    })
-}
-/*
- * 
- * 格式：data-ui="u-suggest|dujiaAllCity|API"
- * 示例：data-ui="u-suggest|dujiaAllCity|a.json"
- *  
- */
-$(function() {
-    if($('[data-ui^="u-suggest"]')){
-        $('<div class="suggest_results"></div>').appendTo('body');
-    }
-    $('[data-ui^="u-suggest"]').each(function() {
-        var $elem = $(this);
-        var arr = $.uiParse($elem.attr('data-ui'))
-        var cityInfo = arr[0];
-        var api = arr[1];
-        if(api){
-            $elem.suggest({
-                url:api
-            })
-        }else {
-            if (window.dataObj && window.dataObj[cityInfo]) {
-                $elem.suggest({
-                    source: window.dataObj[cityInfo],
-                    keyUpCallback:function(val){
-                    },
-                    onSelect:function(val){
-                    }
-                })
-            }
-        }
     })
 })
+
 
 }();
 /**
@@ -2050,12 +2090,12 @@ $.fn.tab = function(option, callback) {
                     left: $arrow.outerWidth() * i + 'px'
                 }, 300)
             }
-            // change
+            // switch
             current = i
             $prevNav = $curNav
             $prevContent = $curCont
             // observe
-            $that.trigger('change', [i, $curNav, $curCont])
+            $that.trigger('switch', [i, $curNav, $curCont])
         }
 
         // 自动切换

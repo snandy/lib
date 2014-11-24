@@ -1,0 +1,154 @@
+﻿/*竞彩足球添加“胆”勾选框*/
+.cp-spf .col-home-team, .cp-spf .col-away-team, .cp-zjqs .col-home-team, .cp-zjqs .col-away-team, .cp-bf .col-home-team, .cp-bf .col-away-team, .cp-bqc .col-home-team, .cp-bqc .col-away-team{
+    width: 85px;
+}
+
+.cp-hhgg .col-date{
+    width: 80px;
+}
+
+.cp-hhgg .col-home-team, .cp-hhgg .col-away-team{
+    width: 75px;    
+}
+
+.cp-table-hd th{
+    width: 30px;    
+}
+
+.cp-table-hd .col-content {
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+}
+
+.cp-hhgg .col-title, .cp-hhgg .col-sub, .cp-hhgg .col-title, .cp-hhgg .col-sub li{
+    line-height: 17px;
+    height: 17px;    
+}
+
+.cp-hhgg .col-bet-spf{
+    width: 165px;    
+}
+
+.cp-hhgg .col-bet-rqspf{
+    width: 220px;    
+}
+
+.cp-hhgg thead li{
+    height: 17px !important; 
+    line-height: 17px !important;   
+}
+
+.cp-hhgg tbody ul{
+    *margin-right: -1px;    
+}
+
+.cp-hhgg tbody li{
+    height: 32px !important; 
+    line-height: 32px !important;   
+}
+
+.cp-hhgg li.item{
+    width: 54px !important;    
+}
+
+.cp-hhgg tbody li.item{
+    width: 55px !important;    
+}
+
+.cp-hhgg .col-bet-zjq, .cp-hhgg .col-bet-bf, .cp-hhgg .col-bet-bqc{
+    width: 53px;
+}
+
+.cp-hhgg .col-bet-bqc{
+    border-right: 0 !important;    
+}
+
+.cp-hhgg .col-bet-zjq .btn-gray, .cp-hhgg .col-bet-bf .btn-gray, .cp-hhgg .col-bet-bqc .btn-gray, .bqc-tr .cp-border-white, .bf-tr .cp-border-white, .zjq-tr .cp-border-white{
+    width: 51px;    
+}
+
+.cp-hhgg .col-num, .cp-spf .col-num, .cp-rqspf .col-num, .cp-zjqs .col-num, .cp-bf .col-num, .cp-bqc .col-num{
+    width: 65px;    
+}
+
+.cp-rqspf .col-bet-ratio-f{
+    width: 78px;    
+}
+
+.cp-rqspf .col-all{
+    width: 30px;
+}
+
+.cp-spf .col-bet-ratio-s, .cp-spf .col-bet-ratio-p, .cp-spf .col-bet-ratio-f{
+    width: 73px;    
+}
+
+.cp-rqspf .col-bet-ratio-s, .cp-rqspf .col-bet-ratio-p, .cp-rqspf .col-bet-ratio-f{
+    width: 71px;    
+}
+
+.cp-rqspf .col-bet-s, .cp-rqspf .col-bet-p, .cp-rqspf .col-bet-f, .cp-spf .col-bet-s, .cp-spf .col-bet-p, .cp-spf .col-bet-f{
+    width: 70px;    
+}
+
+.cp-hhgg .cp-table-data .col-sub-s, .cp-hhgg .cp-table-data .col-sub-p {
+    width: 45px;
+}
+
+.cp-hhgg .cp-table-hd .col-sub-rq, .cp-hhgg .cp-table-hd .col-sub-s, .cp-hhgg .cp-table-hd .col-sub-p{
+    width: 46px;    
+}
+
+.cp-hhgg .cp-table-data .col-sub-s, .cp-hhgg .cp-table-data .col-sub-p{
+    width: 47px;    
+}
+
+.cp-hhgg .cp-table-hd .col-sub-f{
+    width: 41px;    
+}
+
+.cp-hhgg .cp-table-data .col-sub-rq{
+    width: 42px;    
+}
+
+.cp-spf .col-bet-ratio{
+    width: 160px;    
+    *width: 190px;
+}
+
+.cp-rqspf .col-bet-ratio{
+    width: 160px;
+}
+
+.cp-table{
+    *border: 1px solid #dddddd;
+}
+
+.cp-table td, .cp-table th{
+    *border-top: 1px solid #dddddd;    
+    *border-bottom: 1px solid #dddddd;
+}
+
+.cp-table-data .cp-label {
+    display: inline;
+}
+
+.cp-table-division .time-line .fold-off, .cp-table-division .time-line .fold-on{
+    *vertical-align: middle;    
+}
+
+.cp-rqspf .col-home-team, .cp-rqspf .col-away-team, .cp-spf .col-home-team, .cp-spf .col-away-team{
+    *width: 100px;
+}
+
+.cp-rqspf .col-num, .cp-spf .col-num{
+    *width: 80px;
+}
+
+.cp-rqspf .col-trend, .cp-rqspf .col-adjust, .cp-spf .col-trend,{
+    *width: 45px;
+}
+/*修正Chrome下http://caipiao.jd.com/lottery_zqhhgg.html页面开赛时间hover后折行的问题*/
+.cp-select-time .cp-select-content .time-list .item{
+    width:70px !important;
+}
