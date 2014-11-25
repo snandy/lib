@@ -1,3 +1,58 @@
+
+~function() {
+
+$.uiParse = function(action) {
+    var arr = action.split('|').slice(1)
+    var len = arr.length
+    var res = [], exs
+    var boo = /^(true|false)$/
+    for (var i = 0; i < len; i++) {
+        var item = arr[i]
+        if (item == '&') {
+            item = undefined
+        } else if (exs = item.match(boo)) {
+            item = exs[0] == 'true' ? true : false
+        }
+        res[i] = item
+    }
+    return res
+};    
+/*
+ * 设置输入域(input/textarea)光标的位置
+ * @param {Number} index
+ */
+$.fn.setCursorPosition = function(option) {
+    var settings = $.extend({
+        index: 0
+    }, option)
+    return this.each(function() {
+        var elem  = this
+        var val   = elem.value
+        var len   = val.length
+        var index = settings.index
+
+        // 非input和textarea直接返回
+        var $elem = $(elem)
+        if (!$elem.is('input,textarea')) return
+        // 超过文本长度直接返回
+        if (len < index) return
+
+        setTimeout(function() {
+            elem.focus()
+            if (elem.setSelectionRange) { // 标准浏览器
+                elem.setSelectionRange(index, index)    
+            } else { // IE9-
+                var range = elem.createTextRange()
+                range.moveStart("character", -len)
+                range.moveEnd("character", -len)
+                range.moveStart("character", index)
+                range.moveEnd("character", 0)
+                range.select()
+            }
+        }, 10)
+    })
+};
+
 /**
  * PlaceHolder组件
  * $(input).focusPic({
@@ -10,7 +65,6 @@
  *   evtType默认是focus，即鼠标点击到输入域时默认文本消失，keydown则模拟HTML5 placeholder属性在Firefox/Chrome里的特征，光标定位到输入域后键盘输入时默认文本才消失。
  *   此外，对于HTML5 placeholder属性，IE10+和Firefox/Chrome/Safari的表现形式也不一致，因此内部实现不采用原生placeholder属性
  */
-~function() {
 $.fn.placeholder = function(option, callback) {
 	var settings = $.extend({
 		word: '',
@@ -46,15 +100,13 @@ $.fn.placeholder = function(option, callback) {
 				var txt = $that.val()
 				if (txt == word) {
 					switchStatus(true)
-				} else {
-					switchStatus(false)
 				}
 			}).bind('blur', function() {
 				var txt = $that.val()
 				if (txt == '') {
 					switchStatus(false)
 				}
-			})			
+			})
 		}
 		function asKeydown() {
             $that.bind('focus', function() {
@@ -64,19 +116,6 @@ $.fn.placeholder = function(option, callback) {
 	            	setTimeout(function() {
 	            		// 光标定位到首位
 	                    $that.setCursorPosition({index: 0})
-	                    // keydown事件里处理placeholder
-                        $that.keydown(function() {
-                        	var val = $that.val()
-                        	if (val == word) {
-                        		switchStatus(true)
-                        	}
-                        }).keyup(function() {
-                        	var val = $that.val()
-                        	if (val == '') {
-                        		switchStatus(false)
-                        		$that.setCursorPosition({index: 0})
-                        	}
-                        })
 	                }, 10)                	
                 }
             })
@@ -87,6 +126,20 @@ $.fn.placeholder = function(option, callback) {
 		} else if (evtType == 'keydown') {
 			asKeydown()
 		}
+
+        // keydown事件里处理placeholder
+        $that.keydown(function() {
+            var val = $that.val()
+            if (val == word) {
+                switchStatus(true)
+            }
+        }).keyup(function() {
+            var val = $that.val()
+            if (val == '') {
+                switchStatus(false)
+                $that.setCursorPosition({index: 0})
+            }
+        })
 	}
 
 	return this.each(function() {
