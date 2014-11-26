@@ -1,6 +1,6 @@
 /*!
  * popui v0.1.0
- * JDC-FE POP team 2014-11-24 17:43:35
+ * JDC-FE POP team 2014-11-26 13:44:53
  */
 ~function(win, $) {
 
@@ -1338,9 +1338,6 @@ $.fn.placeholder = function(option, callback) {
 		var diffPaddingLeft = settings.diffPaddingLeft
 
 		// default css
-		var offset = $that.offset()
-		var top    = offset.top
-		var left   = offset.left
 		var width       = $that.outerWidth()
 		var height      = $that.outerHeight()
 		var fontSize    = $that.css('font-size')
@@ -1351,12 +1348,10 @@ $.fn.placeholder = function(option, callback) {
 		paddingLeft = parseInt(paddingLeft, 10) + diffPaddingLeft
 
 		// redner 
-		var $placeholder = $('<span>')
+		var $placeholder = $('<span class="placeholder">')
 		$placeholder.css({
 			position: 'absolute',
 			zIndex: '20',
-			top: top,
-			left: left,
 			color: color,
 			width: (width - paddingLeft) + 'px',
 			height: height + 'px',
@@ -1364,6 +1359,9 @@ $.fn.placeholder = function(option, callback) {
 			paddingLeft: paddingLeft + 'px',
 			fontFamily: fontFamily
 		}).text(word).hide()
+
+		// 位置调整 
+		move()
 
 		// textarea 不加line-heihgt属性
 		if ($that.is('input')) {
@@ -1375,7 +1373,7 @@ $.fn.placeholder = function(option, callback) {
 
 		// 内容为空时才显示，比如刷新页面输入域已经填入了内容时
 		var val = $that.val()
-		if (val == '') {
+		if ( val == '' && $that.is(':visible') ) {
 			$placeholder.show()
 		}
 
@@ -1383,8 +1381,23 @@ $.fn.placeholder = function(option, callback) {
             $placeholder.hide()
             $that[0].focus()
         }
+        function move() {
+            var offset = $that.offset()
+            var top    = offset.top
+            var left   = offset.left
+            $placeholder.css({
+                top: top,
+                left: left
+            })
+        }
 		function asFocus() {
-			$placeholder.click(hideAndFocus)
+			$placeholder.click(function() {
+				hideAndFocus()
+				// 盖住后无法触发input的click事件，需要模拟点击下
+                setTimeout(function(){
+                    $that.click()
+                }, 100)
+			})
             // IE有些bug，原本不用加此句
             $that.click(hideAndFocus)
 			$that.blur(function() {
@@ -1414,6 +1427,16 @@ $.fn.placeholder = function(option, callback) {
 				$placeholder.hide()
 			}
 		})
+
+        // 窗口缩放时处理
+        $(window).resize(function() {
+        	move()
+        })
+
+        // cache
+        $that.data('el', $placeholder)
+        $that.data('move', move)
+
 	}
 
 	return this.each(function() {
@@ -2184,3 +2207,62 @@ $(function() {
 })
 
 }();
+~function($) {
+
+$(function() {
+    var doc   = document
+    var docEl = doc.documentElement
+    var body  = doc.body
+    var $win  = $(window)
+    var $body = $(body)
+    var hasSidebar = $body.is('[sidebar]')
+    var $topPanel  = $('<div id="toppanel" class="w ld">')
+    var $sidePanel = $('<div id="sidepanel" class="hide">')
+    var $idea      = $('<a href="http://surveys.jd.com/index.php?r=survey/index/sid/82224/lang/zh-Hans" target="_blank" class="research"><b></b>意见反馈</a>')
+    var $back      = $('<a href="javascript:;" class="gotop" title="使用快捷键T也可返回顶部哦！"><b></b>返回顶部</a>')
+
+    if (!hasSidebar) return
+
+    // append
+    $sidePanel.append($idea)
+    $sidePanel.append($back)
+    $topPanel.append($sidePanel)
+    $body.append($topPanel)
+
+    // set style
+    function setStyle() {
+        var width = pageConfig.compatible ? 1210 : 990
+        var right = (docEl.clientWidth-width)/2-26 + 'px'
+        if (screen.width >= 1210) {
+            if ($.ie6) {
+                right = '-26px'
+            }
+            $sidePanel.css({
+                right: right
+            })
+        }        
+    }
+
+    // event
+    $back.click(function() {
+        $('html,body').animate({
+            scrollTop: '0px'
+        }, 350)
+    })
+    $win.scroll(function() {
+        var top = body.scrollTop || docEl.scrollTop
+        if (top == 0) {
+            $sidePanel.hide()
+        } else {
+            $sidePanel.show()
+        }
+    })
+    $win.resize(function(){
+        setStyle()
+    })
+
+    // initialize
+    setStyle()
+})
+
+}(jQuery);
