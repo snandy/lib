@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'/>
+    <title>DOMSubtreeModified.html</title>
+  </head>
+  <body>
+        <h1>DOMSubtreeModified Test</h1>
+        <div id="container">
+        </div>
+
+
+<script type="text/javascript">
+container.addEventListener('DOMSubtreeModified', function(ev) {
+    console.log(ev)
+}, false)
+
+setTimeout(function() {
+    document.getElementById('container').innerHTML = '<p>ppp</p>'
+}, 2000)
+</script>
+  </body>
+</html>
