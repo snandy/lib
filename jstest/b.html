@@ -1,28 +1,40 @@
 <!DOCTYPE HTML>
- <html>
- <head>
- <meta charset="utf-8">
- <title>html5 图片上传预览</title>
-    <style>
-        .container {
-            position:relative;
-            width:700px;
-            height:200px;
-            border:1px solid red;
-        }
-        .sub {
-            position:absolute;
-            left:50px;
-            right:50px;
-            background: gray;
-        }
-    </style>
- </head>
- <body>
+<html>
+<head>
+<meta charset="utf-8">
+<title>html5 图片上传预览</title>
+<script type="text/javascript" src="artTemplate.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+var support = (function() {
+    var div = document.createElement('div'),
+        vendors = 'Khtml Ms O Moz Webkit'.split(' '),
+        len = vendors.length;
 
-<div class="container">
-    <div class="sub">自适应宽度的段落</div>
-</div>
+    return function(prop) {
+        if ( prop in div.style ) 
+            return true;
 
- </body>
- </html>
+        prop = prop.replace(/^[a-z]/, function(val) {
+            return val.toUpperCase();
+        });
+        while (len--) {
+            if ( vendors[len] + prop in div.style ) {
+                // browser supports box-shadow. Do what you need.
+                // Or use a bang (!) to test if the browser doesn't.
+                return true;
+            } 
+            console.log(len);
+        }
+        return false;
+    };
+})();
+
+// 是否支持css3动画
+supportAnim = support('animation');
+supportAnim = support('transition');
+</script>
+</script>
+</body>
+</html>
