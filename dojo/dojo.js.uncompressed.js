@@ -102,7 +102,7 @@
 
 		forEach = function(vector, callback){
 			if(vector){
-				for(var i = 0; vector[i];){
+				for(var i = 0; i < vector.length;){
 					callback(vector[i++]);
 				}
 			}
@@ -181,6 +181,36 @@
 		rhinoDojoConfig(defaultConfig, baseUrl, rhinoArgs);
 	}
 
+	has.add("host-webworker", ((typeof WorkerGlobalScope !== 'undefined') && (self instanceof WorkerGlobalScope)));
+	if(has("host-webworker")){
+		mix(defaultConfig.hasCache, {
+			"host-browser": 0,
+			"dom": 0,
+			"dojo-dom-ready-api": 0,
+			"dojo-sniff": 0,
+			"dojo-inject-api": 1,
+			"host-webworker": 1
+		});
+
+		defaultConfig.loaderPatch = {
+			injectUrl: function(url, callback){
+				// TODO:
+				//		This is not async, nor can it be in Webworkers.  It could be made better by passing
+				//		the entire require array into importScripts at.  This way the scripts are loaded in
+				//		async mode; even if the callbacks are ran in sync.  It is not a major issue as webworkers
+				//		tend to be long running where initial startup is not a major factor.
+
+				try{
+					importScripts(url);
+					callback();
+				}catch(e){
+					console.info("failed to load resource (" + url + ")");
+					console.error(e);
+				}
+			}
+		};
+	}
+
 	// userConfig has tests override defaultConfig has tests; do this after the environment detection because
 	// the environment detection usually sets some has feature values in the hasCache.
 	for(var p in userConfig.has){
@@ -250,7 +280,7 @@
 			};
 		};
 
-		if( 1 ){
+		if( 1  || has("host-webworker")){
 			// in legacy sync mode, the loader needs a minimal XHR library
 
 			var locationProtocol = location.protocol,
@@ -329,7 +359,7 @@
 
 	req.eval =
 		function(text, hint){
-			return eval_(text + "\r\n////@ sourceURL=" + hint);
+			return eval_(text + "\r\n//# sourceURL=" + hint);
 		};
 
 	//
@@ -472,7 +502,7 @@
 					}else if(p=="*now"){
 						now = item;
 					}else if(p!="*noref"){
-						m = getModuleInfo(p, referenceModule);
+						m = getModuleInfo(p, referenceModule, true);
 						cache[m.mid] = cache[urlKeyPrefix + m.url] = item;
 					}
 				}
@@ -592,7 +622,7 @@
 
 				// for each packagePath found in any packagePaths config item, augment the packageConfig
 				// packagePaths is deprecated; remove in 2.0
-				for(baseUrl in config.packagePaths){
+				for(var baseUrl in config.packagePaths){
 					forEach(config.packagePaths[baseUrl], function(packageInfo){
 						var location = baseUrl + "/" + packageInfo;
 						if(isString(packageInfo)){
@@ -1017,8 +1047,8 @@
 			return makeModuleInfo(pid, mid, pack, compactPath(url));
 		},
 
-		getModuleInfo = function(mid, referenceModule){
-			return getModuleInfo_(mid, referenceModule, packs, modules, req.baseUrl, mapProgs, pathsMapProg, aliases);
+		getModuleInfo = function(mid, referenceModule, fromPendingCache){
+			return getModuleInfo_(mid, referenceModule, packs, modules, req.baseUrl, fromPendingCache ? [] : mapProgs, fromPendingCache ? [] : pathsMapProg, fromPendingCache ? [] : aliases);
 		},
 
 		resolvePluginResourceId = function(plugin, prid, referenceModule){
@@ -1307,7 +1337,7 @@
 			has.add("dojo-loader-eval-hint-url", 1);
 		}
 
-		var fixupUrl= function(url){
+		var fixupUrl= typeof userConfig.fixupUrl == "function" ? userConfig.fixupUrl : function(url){
 				url += ""; // make sure url is a Javascript string (some paths may be a Java string)
 				return url + (cacheBust ? ((/\?/.test(url) ? "&" : "?") + cacheBust) : "");
 			},
@@ -1619,7 +1649,7 @@
 		startTimer = function(){
 			clearTimer();
 			if(req.waitms){
-				timerId = window.setTimeout(function(){
+				timerId = global.setTimeout(function(){
 					clearTimer();
 					signal(error, makeError("timeout", waiting));
 				}, req.waitms);
@@ -1972,7 +2002,7 @@ define([
 	var defId = has('config-requestProvider'),
 		platformId;
 
-	if( 1 ){
+	if( 1  || has('host-webworker')){
 		platformId = './xhr';
 	}else if( 0 ){
 		platformId = './node';
@@ -2262,6 +2292,12 @@ define(["./kernel", "./config", /*===== "./declare", =====*/ "./lang", "../Event
 			_t._fire("onStop", [_t.curve.getValue(_t._getStep())]);
 			_t._active = _t._paused = false;
 			return _t; // Animation
+		},
+
+		destroy: function(){
+			// summary:
+			//		cleanup the animation
+			this.stop();
 		},
 
 		status: function(){
@@ -2913,7 +2949,7 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 			// summary:
 			//		get the root bundle which instructs which other bundles are required to construct the localized bundle
 			require([bundlePathAndName], function(root){
-				var current = lang.clone(root.root),
+				var current = lang.clone(root.root || root.ROOT),// 1.6 built bundle defined ROOT
 					availableLocales = getAvailableLocales(!root._v1x && root, locale, bundlePath, bundleName);
 				require(availableLocales, function(){
 					for (var i = 1; i<availableLocales.length; i++){
@@ -3091,7 +3127,7 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 				bundleName = match[5] || match[4],
 				bundlePathAndName = bundlePath + bundleName,
 				localeSpecified = (match[5] && match[4]),
-				targetLocale =	localeSpecified || dojo.locale,
+				targetLocale =	localeSpecified || dojo.locale || "",
 				loadTarget = bundlePathAndName + "/" + targetLocale,
 				loadList = localeSpecified ? [targetLocale] : getLocalesToLoad(targetLocale),
 				remaining = loadList.length,
@@ -3169,26 +3205,109 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 					func("ROOT");
 				}
 
-				function preload(locale){
-					locale = normalizeLocale(locale);
-					forEachLocale(locale, function(loc){
-						if(array.indexOf(localesGenerated, loc)>=0){
-							var mid = bundlePrefix.replace(/\./g, "/")+"_"+loc;
-							preloading++;
-							doRequire(mid, function(rollup){
-								for(var p in rollup){
-									cache[require.toAbsMid(p) + "/" + loc] = rollup[p];
-								}
-								--preloading;
-								while(!preloading && preloadWaitQueue.length){
-									load.apply(null, preloadWaitQueue.shift());
-								}
-							});
-							return true;
+					function preloadingAddLock(){
+						preloading++;
+					}
+
+					function preloadingRelLock(){
+						--preloading;
+						while(!preloading && preloadWaitQueue.length){
+							load.apply(null, preloadWaitQueue.shift());
 						}
-						return false;
-					});
-				}
+					}
+
+					function cacheId(path, name, loc, require){
+						// path is assumed to have a trailing "/"
+						return require.toAbsMid(path + name + "/" + loc)
+					}
+
+					function preload(locale){
+						locale = normalizeLocale(locale);
+						forEachLocale(locale, function(loc){
+							if(array.indexOf(localesGenerated, loc) >= 0){
+								var mid = bundlePrefix.replace(/\./g, "/") + "_" + loc;
+								preloadingAddLock();
+								doRequire(mid, function(rollup){
+									for(var p in rollup){
+										var bundle = rollup[p],
+											match = p.match(/(.+)\/([^\/]+)$/),
+											bundleName, bundlePath;
+											
+											// If there is no match, the bundle is not a regular bundle from an AMD layer.
+											if (!match){continue;}
+
+											bundleName = match[2];
+											bundlePath = match[1] + "/";
+
+										// backcompat
+										bundle._localized = bundle._localized || {};
+
+										var localized;
+										if(loc === "ROOT"){
+											var root = localized = bundle._localized;
+											delete bundle._localized;
+											root.root = bundle;
+											cache[require.toAbsMid(p)] = root;
+										}else{
+											localized = bundle._localized;
+											cache[cacheId(bundlePath, bundleName, loc, require)] = bundle;
+										}
+
+										if(loc !== locale){
+											// capture some locale variables
+											function improveBundle(bundlePath, bundleName, bundle, localized){
+												// locale was not flattened and we've fallen back to a less-specific locale that was flattened
+												// for example, we had a flattened 'fr', a 'fr-ca' is available for at least this bundle, and
+												// locale==='fr-ca'; therefore, we must improve the bundle as retrieved from the rollup by
+												// manually loading the fr-ca version of the bundle and mixing this into the already-retrieved 'fr'
+												// version of the bundle.
+												//
+												// Remember, different bundles may have different sets of locales available.
+												//
+												// we are really falling back on the regular algorithm here, but--hopefully--starting with most
+												// of the required bundles already on board as given by the rollup and we need to "manually" load
+												// only one locale from a few bundles...or even better...we won't find anything better to load.
+												// This algorithm ensures there is nothing better to load even when we can only load a less-specific rollup.
+												//
+												// note: this feature is only available in async mode
+
+												// inspect the loaded bundle that came from the rollup to see if something better is available
+												// for any bundle in a rollup, more-specific available locales are given at localized.
+												var requiredBundles = [],
+													cacheIds = [];
+												forEachLocale(locale, function(loc){
+													if(localized[loc]){
+														requiredBundles.push(require.toAbsMid(bundlePath + loc + "/" + bundleName));
+														cacheIds.push(cacheId(bundlePath, bundleName, loc, require));
+													}
+												});
+
+												if(requiredBundles.length){
+													preloadingAddLock();
+													contextRequire(requiredBundles, function(){
+														for(var i = 0; i < requiredBundles.length; i++){
+															bundle = lang.mixin(lang.clone(bundle), arguments[i]);
+															cache[cacheIds[i]] = bundle;
+														}
+														// this is the best possible (maybe a perfect match, maybe not), accept it
+														cache[cacheId(bundlePath, bundleName, locale, require)] = lang.clone(bundle);
+														preloadingRelLock();
+													});
+												}else{
+													// this is the best possible (definitely not a perfect match), accept it
+													cache[cacheId(bundlePath, bundleName, locale, require)] = bundle;
+												}
+											}
+											improveBundle(bundlePath, bundleName, bundle, localized);
+										}
+									}
+									preloadingRelLock();
+								});
+								return true;
+							}
+							return false;
+						});
+					}
 
 				preload();
 				array.forEach(dojo.config.extraLocale, preload);
@@ -3893,6 +4012,7 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 
 		// create dojo, dijit, and dojox
 		// FIXME: in 2.0 remove dijit, dojox being created by dojo
+		global = (function () { return this; })(),
 		dijit = {},
 		dojox = {},
 		dojo = {
@@ -3901,7 +4021,7 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 
 			// notice dojo takes ownership of the value of the config module
 			config:config,
-			global:this,
+			global:global,
 			dijit:dijit,
 			dojox:dojox
 		};
@@ -3950,7 +4070,7 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 		item = scopeMap[p];
 		item[1]._scopeName = item[0];
 		if(!config.noGlobals){
-			this[item[0]] = item[1];
+			global[item[0]] = item[1];
 		}
 	}
 	dojo.scopeMap = scopeMap;
@@ -3962,7 +4082,7 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 	dojo.isAsync = ! 1  || require.async;
 	dojo.locale = config.locale;
 
-	var rev = "$Rev: 31379 $".match(/\d+/);
+	var rev = "$Rev: f4fef70 $".match(/[0-9a-f]{7,}/);
 	dojo.version = {
 		// summary:
 		//		Version number of the Dojo Toolkit
@@ -3973,10 +4093,10 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 		//		- minor: Integer: Minor version. If total version is "1.2.0beta1", will be 2
 		//		- patch: Integer: Patch version. If total version is "1.2.0beta1", will be 0
 		//		- flag: String: Descriptor flag. If total version is "1.2.0beta1", will be "beta1"
-		//		- revision: Number: The SVN rev from which dojo was pulled
+		//		- revision: Number: The Git rev from which dojo was pulled
 
-		major: 1, minor: 9, patch: 0, flag: "",
-		revision: rev ? +rev[0] : NaN,
+		major: 1, minor: 10, patch: 4, flag: "",
+		revision: rev ? rev[0] : NaN,
 		toString: function(){
 			var v = dojo.version;
 			return v.major + "." + v.minor + "." + v.patch + v.flag + " (" + v.revision + ")";	// String
@@ -4047,7 +4167,7 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 				(function(){
 					var tcn = tn + "";
 					console[tcn] = ('log' in console) ? function(){
-						var a = Array.apply({}, arguments);
+						var a = Array.prototype.slice.call(arguments);
 						a.unshift(tcn + ":");
 						console["log"](a.join(" "));
 					} : function(){};
@@ -4146,7 +4266,7 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 			//	|	dojo.body().appendChild(img);
 			// example:
 			//		you may de-reference as far as you like down the package
-			//		hierarchy.  This is sometimes handy to avoid lenghty relative
+			//		hierarchy.  This is sometimes handy to avoid lengthy relative
 			//		urls or for building portable sub-packages. In this example,
 			//		the `acme.widget` and `acme.util` directories may be located
 			//		under different roots (see `dojo.registerModulePath`) but the
@@ -4682,7 +4802,7 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 
 	var magicGuard = function(a){
 		// summary:
-		//		the guard function for dojo.attr() and dojo.style()
+		//		the guard function for dojo/dom-attr() and dojo/dom-style()
 		return a.length == 1 && (typeof a[0] == "string"); // inline'd type check
 	};
 
@@ -4694,7 +4814,7 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			p.removeChild(node);
 		}
 	};
-	// FIXME: should we move orphan() to dojo.html?
+	// FIXME: should we move orphan() to dojo/_base/html?
 
 	var NodeList = query.NodeList,
 		awc = NodeList._adaptWithCondition,
@@ -4718,12 +4838,12 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			// description:
 			//		If content is an object, it can have special properties "template" and
 			//		"parse". If "template" is defined, then the template value is run through
-			//		dojo.string.substitute (if dojo/string.substitute() has been dojo.required elsewhere),
+			//		dojo/string.substitute (if dojo/string.substitute() has been required elsewhere),
 			//		or if templateFunc is a function on the content, that function will be used to
 			//		transform the template into a final string to be used for for passing to dojo/dom-construct.toDom().
 			//		If content.parse is true, then it is remembered for later, for when the content
 			//		nodes are inserted into the DOM. At that point, the nodes will be parsed for widgets
-			//		(if dojo.parser has been dojo.required elsewhere).
+			//		(if dojo/parser has been required elsewhere).
 
 			//Wanted to just use a DocumentFragment, but for the array/NodeList
 			//case that meant using cloneNode, but we may not want that.
@@ -4820,7 +4940,7 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 		position: function(){
 			// summary:
 			//		Returns border-box objects (x/y/w/h) of all elements in a node list
-			//		as an Array (*not* a NodeList). Acts like `dojo.position`, though
+			//		as an Array (*not* a NodeList). Acts like `dojo/dom-geometry-position`, though
 			//		assumes the node passed is each node in this list.
 
 			return dojo.map(this, dojo.position); // Array
@@ -4832,7 +4952,7 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 		attr: function(property, value){
 			// summary:
 			//		gets or sets the DOM attribute for every element in the
-			//		NodeList. See also `dojo.attr`
+			//		NodeList. See also `dojo/dom-attr`
 			// property: String
 			//		the attribute to get/set
 			// value: String?
@@ -4842,14 +4962,20 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//		If a value is passed, the return is this NodeList
 			// example:
 			//		Make all nodes with a particular class focusable:
-			//	|	dojo.query(".focusable").attr("tabIndex", -1);
+			//	|	require(["dojo/query", "dojo/NodeList-dom"], function(query){
+			//	|		query(".focusable").attr("tabIndex", -1);
+			//	|	});
 			// example:
 			//		Disable a group of buttons:
-			//	|	dojo.query("button.group").attr("disabled", true);
+			//	|	require(["dojo/query", "dojo/NodeList-dom"], function(query){
+			//	|		query("button.group").attr("disabled", true);
+			//	|	});
 			// example:
 			//		innerHTML can be assigned or retrieved as well:
 			//	|	// get the innerHTML (as an array) for each list item
-			//	|	var ih = dojo.query("li.replaceable").attr("innerHTML");
+			//	|	require(["dojo/query", "dojo/NodeList-dom"], function(query){
+			//	|		var ih = query("li.replaceable").attr("innerHTML");
+			//	|	});
 			return; // dojo/NodeList|Array
 		},
 		=====*/
@@ -4975,7 +5101,7 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 		place: function(/*String||Node*/ queryOrNode, /*String*/ position){
 			// summary:
 			//		places elements of this node list relative to the first element matched
-			//		by queryOrNode. Returns the original NodeList. See: `dojo.place`
+			//		by queryOrNode. Returns the original NodeList. See: `dojo/dom-construct.place`
 			// queryOrNode:
 			//		may be a string representing any valid CSS3 selector or a DOM node.
 			//		In the selector case, only the first matching element will be used
@@ -5046,10 +5172,13 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//	|		<p>great comedians may not be funny <span>in person</span></p>
 			//	|	</div>
 			//		If we are presented with the following definition for a NodeList:
-			//	|	var l = new NodeList(dojo.byId("foo"), dojo.byId("bar"));
+			//	|	require(["dojo/dom", "dojo/query", "dojo/NodeList-dom"
+			//	|	], function(dom, query){
+			//	|		var l = new NodeList(dom.byId("foo"), dom.byId("bar"));
 			//		it's possible to find all span elements under paragraphs
 			//		contained by these elements with this sub-query:
-			//	|	var spans = l.query("p span");
+			//	|		var spans = l.query("p span");
+			//	|	});
 
 			// FIXME: probably slow
 			if(!queryStr){ return this; }
@@ -5075,14 +5204,19 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//		If a string, a CSS rule like ".thinger" or "div > span".
 			// example:
 			//		"regular" JS filter syntax as exposed in dojo.filter:
-			//		|	dojo.query("*").filter(function(item){
-			//		|		// highlight every paragraph
-			//		|		return (item.nodeName == "p");
-			//		|	}).style("backgroundColor", "yellow");
+			//	|	require(["dojo/query", "dojo/NodeList-dom"
+			//	|	], function(query){
+			//	|		query("*").filter(function(item){
+			//	|			// highlight every paragraph
+			//	|			return (item.nodeName == "p");
+			//	|		}).style("backgroundColor", "yellow");
+			//	|	});
 			// example:
-			//		the same filtering using a CSS selector
-			//		|	dojo.query("*").filter("p").styles("backgroundColor", "yellow");
-
+			//	the same filtering using a CSS selector
+			//	|	require(["dojo/query", "dojo/NodeList-dom"
+			//	|	], function(query){
+			//	|		query("*").filter("p").styles("backgroundColor", "yellow");
+			//	|	});
 			var a = arguments, items = this, start = 0;
 			if(typeof filter == "string"){ // inline'd type check
 				items = query._filterResult(this, a[0]);
@@ -5138,35 +5272,50 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//		or an offset in the childNodes property
 			// example:
 			//		appends content to the end if the position is omitted
-			//	|	dojo.query("h3 > p").addContent("hey there!");
+			//	|	require(["dojo/query", "dojo/NodeList-dom"
+			//	|	], function(query){
+			//	|		query("h3 > p").addContent("hey there!");
+			//	|	});
 			// example:
 			//		add something to the front of each element that has a
 			//		"thinger" property:
-			//	|	dojo.query("[thinger]").addContent("...", "first");
+			//	|	require(["dojo/query", "dojo/NodeList-dom"
+			//	|	], function(query){
+			//	|		query("[thinger]").addContent("...", "first");
+			//	|	});
 			// example:
 			//		adds a header before each element of the list
-			//	|	dojo.query(".note").addContent("<h4>NOTE:</h4>", "before");
+			//	|	require(["dojo/query", "dojo/NodeList-dom"
+			//	|	], function(query){
+			//	|		query(".note").addContent("<h4>NOTE:</h4>", "before");
+			//	|	});
 			// example:
 			//		add a clone of a DOM node to the end of every element in
 			//		the list, removing it from its existing parent.
-			//	|	dojo.query(".note").addContent(dojo.byId("foo"));
+			//	|	require(["dojo/dom", "dojo/query", "dojo/NodeList-dom"
+			//	|	], function(dom, query){
+			//	|		query(".note").addContent(dom.byId("foo"));
+			//	|	});
 			// example:
 			//		Append nodes from a templatized string.
-			// |	dojo.require("dojo.string");
-			// |	dojo.query(".note").addContent({
-			// |		template: '<b>${id}: </b><span>${name}</span>',
-			// |		id: "user332",
-			// |		name: "Mr. Anderson"
-			// |	});
+			//	|	require(["dojo/string", "dojo/query", "dojo/NodeList-dom"
+			//	|	], function(string, query){
+			//	|		query(".note").addContent({
+			//	|			template: '<b>${id}: </b><span>${name}</span>',
+			//	|			id: "user332",
+			//	|			name: "Mr. Anderson"
+			//	|		});
+			//	|	});
 			// example:
 			//		Append nodes from a templatized string that also has widgets parsed.
-			// |	dojo.require("dojo.string");
-			// |	dojo.require("dojo.parser");
-			// |	var notes = dojo.query(".note").addContent({
-			// |		template: '<button dojoType="dijit/form/Button">${text}</button>',
-			// |		parse: true,
-			// |		text: "Send"
-			// |	});
+			//	|	require(["dojo/string", "dojo/parser", "dojo/query", "dojo/NodeList-dom"
+			//	|	], function(string, parser, query){
+			//	|		var notes = query(".note").addContent({
+			//	|			template: '<button dojoType="dijit/form/Button">${text}</button>',
+			//	|			parse: true,
+			//	|			text: "Send"
+			//	|		});
+			//	|	});
 			content = this._normalize(content, this[0]);
 			for(var i = 0, node; (node = this[i]); i++){
 				if(content.length){
@@ -5243,7 +5392,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 	var adaptAsMap = function(f, o){
 		// summary:
 		//		adapts a single node function to be used in the map-type
-		//		actions. The return is a new array of values, as via `dojo.map`
+		//		actions. The return is a new array of values, as via `dojo/_base/array.map`
 		// f: Function
 		//		a function to adapt
 		// o: Object?
@@ -5290,78 +5439,62 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 		//		Array-like object which adds syntactic
 		//		sugar for chaining, common iteration operations, animation, and
 		//		node manipulation. NodeLists are most often returned as the
-		//		result of dojo.query() calls.
+		//		result of dojo/query() calls.
 		// description:
 		//		NodeList instances provide many utilities that reflect
 		//		core Dojo APIs for Array iteration and manipulation, DOM
 		//		manipulation, and event handling. Instead of needing to dig up
-		//		functions in the dojo.* namespace, NodeLists generally make the
+		//		functions in the dojo package, NodeLists generally make the
 		//		full power of Dojo available for DOM manipulation tasks in a
 		//		simple, chainable way.
 		// example:
 		//		create a node list from a node
-		//		|	new query.NodeList(dojo.byId("foo"));
+		//		|	require(["dojo/query", "dojo/dom"
+		//		|	], function(query, dom){
+		//		|		query.NodeList(dom.byId("foo"));
+		//		|	});
 		// example:
 		//		get a NodeList from a CSS query and iterate on it
-		//		|	var l = dojo.query(".thinger");
-		//		|	l.forEach(function(node, index, nodeList){
-		//		|		console.log(index, node.innerHTML);
+		//		|	require(["dojo/on", "dojo/dom"
+		//		|	], function(on, dom){
+		//		|		var l = query(".thinger");
+		//		|		l.forEach(function(node, index, nodeList){
+		//		|			console.log(index, node.innerHTML);
+		//		|		});
 		//		|	});
 		// example:
 		//		use native and Dojo-provided array methods to manipulate a
 		//		NodeList without needing to use dojo.* functions explicitly:
-		//		|	var l = dojo.query(".thinger");
-		//		|	// since NodeLists are real arrays, they have a length
-		//		|	// property that is both readable and writable and
-		//		|	// push/pop/shift/unshift methods
-		//		|	console.log(l.length);
-		//		|	l.push(dojo.create("span"));
+		//		|	require(["dojo/query", "dojo/dom-construct", "dojo/dom"
+		//		|	], function(query, domConstruct, dom){
+		//		|		var l = query(".thinger");
+		//		|		// since NodeLists are real arrays, they have a length
+		//		|		// property that is both readable and writable and
+		//		|		// push/pop/shift/unshift methods
+		//		|		console.log(l.length);
+		//		|		l.push(domConstruct.create("span"));
 		//		|
-		//		|	// dojo's normalized array methods work too:
-		//		|	console.log( l.indexOf(dojo.byId("foo")) );
-		//		|	// ...including the special "function as string" shorthand
-		//		|	console.log( l.every("item.nodeType == 1") );
+		//		|		// dojo's normalized array methods work too:
+		//		|		console.log( l.indexOf(dom.byId("foo")) );
+		//		|		// ...including the special "function as string" shorthand
+		//		|		console.log( l.every("item.nodeType == 1") );
 		//		|
-		//		|	// NodeLists can be [..] indexed, or you can use the at()
-		//		|	// function to get specific items wrapped in a new NodeList:
-		//		|	var node = l[3]; // the 4th element
-		//		|	var newList = l.at(1, 3); // the 2nd and 4th elements
-		// example:
-		//		the style functions you expect are all there too:
-		//		|	// style() as a getter...
-		//		|	var borders = dojo.query(".thinger").style("border");
-		//		|	// ...and as a setter:
-		//		|	dojo.query(".thinger").style("border", "1px solid black");
-		//		|	// class manipulation
-		//		|	dojo.query("li:nth-child(even)").addClass("even");
-		//		|	// even getting the coordinates of all the items
-		//		|	var coords = dojo.query(".thinger").coords();
-		// example:
-		//		DOM manipulation functions from the dojo.* namespace area also available:
-		//		|	// remove all of the elements in the list from their
-		//		|	// parents (akin to "deleting" them from the document)
-		//		|	dojo.query(".thinger").orphan();
-		//		|	// place all elements in the list at the front of #foo
-		//		|	dojo.query(".thinger").place("foo", "first");
-		// example:
-		//		Event handling couldn't be easier. `dojo.connect` is mapped in,
-		//		and shortcut handlers are provided for most DOM events:
-		//		|	// like dojo.connect(), but with implicit scope
-		//		|	dojo.query("li").connect("onclick", console, "log");
-		//		|
-		//		|	// many common event handlers are already available directly:
-		//		|	dojo.query("li").onclick(console, "log");
-		//		|	var toggleHovered = dojo.hitch(dojo, "toggleClass", "hovered");
-		//		|	dojo.query("p")
-		//		|		.onmouseenter(toggleHovered)
-		//		|		.onmouseleave(toggleHovered);
+		//		|		// NodeLists can be [..] indexed, or you can use the at()
+		//		|		// function to get specific items wrapped in a new NodeList:
+		//		|		var node = l[3]; // the 4th element
+		//		|		var newList = l.at(1, 3); // the 2nd and 4th elements
+		//		|	});
 		// example:
 		//		chainability is a key advantage of NodeLists:
-		//		|	dojo.query(".thinger")
-		//		|		.onclick(function(e){ /* ... */ })
-		//		|		.at(1, 3, 8) // get a subset
-		//		|			.style("padding", "5px")
-		//		|			.forEach(console.log);
+		//		|	require(["dojo/query", "dojo/NodeList-dom"
+		//		|	], function(query){
+		//		|		query(".thinger")
+		//		|			.onclick(function(e){ /* ... */ })
+		//		|			.at(1, 3, 8) // get a subset
+		//		|				.style("padding", "5px")
+		//		|				.forEach(console.log);
+		//		|	});
+
 		var isNew = this instanceof nl && has("array-extensible");
 		if(typeof array == "number"){
 			array = Array(array);
@@ -5437,20 +5570,22 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			// example:
 			//		How to make a `dojo/NodeList` method that only returns the third node in
 			//		the dojo/NodeList but allows access to the original NodeList by using this._stash:
-			//	|	dojo.extend(NodeList, {
-			//	|		third: function(){
-			//	|			var newNodeList = NodeList(this[2]);
-			//	|			return newNodeList._stash(this);
-			//	|		}
+			//	|	require(["dojo/query", "dojo/_base/lang", "dojo/NodeList", "dojo/NodeList-dom"
+			//	|	], function(query, lang){
+			//	|		lang.extend(NodeList, {
+			//	|			third: function(){
+			//	|				var newNodeList = NodeList(this[2]);
+			//	|				return newNodeList._stash(this);
+			//	|			}
+			//	|		});
+			//	|		// then see how _stash applies a sub-list, to be .end()'ed out of
+			//	|		query(".foo")
+			//	|			.third()
+			//	|				.addClass("thirdFoo")
+			//	|			.end()
+			//	|			// access to the orig .foo list
+			//	|			.removeClass("foo")
 			//	|	});
-			//	|	// then see how _stash applies a sub-list, to be .end()'ed out of
-			//	|	dojo.query(".foo")
-			//	|		.third()
-			//	|			.addClass("thirdFoo")
-			//	|		.end()
-			//	|		// access to the orig .foo list
-			//	|		.removeClass("foo")
-			//	|
 			//
 			this._parent = parent;
 			return this; // dojo/NodeList
@@ -5459,13 +5594,18 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 		on: function(eventName, listener){
 			// summary:
 			//		Listen for events on the nodes in the NodeList. Basic usage is:
-			//		| query(".my-class").on("click", listener);
-			//		This supports event delegation by using selectors as the first argument with the event names as
-			//		pseudo selectors. For example:
-			//		| dojo.query("#my-list").on("li:click", listener);
-			//		This will listen for click events within `<li>` elements that are inside the `#my-list` element.
-			//		Because on supports CSS selector syntax, we can use comma-delimited events as well:
-			//		| dojo.query("#my-list").on("li button:mouseover, li:click", listener);
+			//
+			// example:
+			//		|	require(["dojo/query"
+			//		|	], function(query){
+			//		|		query(".my-class").on("click", listener);
+			//			This supports event delegation by using selectors as the first argument with the event names as
+			//			pseudo selectors. For example:
+			//		| 		query("#my-list").on("li:click", listener);
+			//			This will listen for click events within `<li>` elements that are inside the `#my-list` element.
+			//			Because on supports CSS selector syntax, we can use comma-delimited events as well:
+			//		| 		query("#my-list").on("li button:mouseover, li:click", listener);
+			//		|	});
 			var handles = this.map(function(node){
 				return on(node, eventName, listener); // TODO: apply to the NodeList so the same selector engine is used for matches
 			});
@@ -5485,13 +5625,16 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//		Returns the `NodeList` that generated the current `NodeList`. If there
 			//		is no parent NodeList, an empty NodeList is returned.
 			// example:
-			//	|	dojo.query("a")
-			//	|		.filter(".disabled")
-			//	|			// operate on the anchors that only have a disabled class
-			//	|			.style("color", "grey")
-			//	|		.end()
-			//	|		// jump back to the list of anchors
-			//	|		.style(...)
+			//	|	require(["dojo/query", "dojo/NodeList-dom"
+			//	|	], function(query){
+			//	|		query("a")
+			//	|			.filter(".disabled")
+			//	|				// operate on the anchors that only have a disabled class
+			//	|				.style("color", "grey")
+			//	|			.end()
+			//	|			// jump back to the list of anchors
+			//	|			.style(...)
+			//	|	});
 			//
 			if(this._parent){
 				return this._parent;
@@ -5518,7 +5661,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//		Returns a new NodeList, maintaining this one in place
 			// description:
 			//		This method behaves exactly like the Array.slice method
-			//		with the caveat that it returns a dojo/NodeList and not a
+			//		with the caveat that it returns a `dojo/NodeList` and not a
 			//		raw Array. For more details, see Mozilla's [slice
 			//		documentation](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/slice)
 			// begin: Integer
@@ -5540,7 +5683,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//		at an offset, optionally deleting elements
 			// description:
 			//		This method behaves exactly like the Array.splice method
-			//		with the caveat that it returns a dojo/NodeList and not a
+			//		with the caveat that it returns a `dojo/NodeList` and not a
 			//		raw Array. For more details, see Mozilla's [splice
 			//		documentation](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/splice)
 			//		For backwards compatibility, calling .end() on the spliced NodeList
@@ -5562,7 +5705,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 
 		indexOf: function(value, fromIndex){
 			// summary:
-			//		see dojo.indexOf(). The primary difference is that the acted-on
+			//		see `dojo/_base/array.indexOf()`. The primary difference is that the acted-on
 			//		array is implicitly this NodeList
 			// value: Object
 			//		The value to search for.
@@ -5579,7 +5722,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 
 		lastIndexOf: function(value, fromIndex){
 			// summary:
-			//		see dojo.lastIndexOf(). The primary difference is that the
+			//		see `dojo/_base/array.lastIndexOf()`. The primary difference is that the
 			//		acted-on array is implicitly this NodeList
 			// description:
 			//		For more details on the behavior of lastIndexOf, see
@@ -5596,10 +5739,10 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 
 		every: function(callback, thisObject){
 			// summary:
-			//		see `dojo.every()` and the [Array.every
+			//		see `dojo/_base/array.every()` and the [Array.every
 			//		docs](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/every).
 			//		Takes the same structure of arguments and returns as
-			//		dojo.every() with the caveat that the passed array is
+			//		dojo/_base/array.every() with the caveat that the passed array is
 			//		implicitly this NodeList
 			// callback: Function
 			//		the callback
@@ -5611,8 +5754,8 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 		some: function(callback, thisObject){
 			// summary:
 			//		Takes the same structure of arguments and returns as
-			//		`dojo.some()` with the caveat that the passed array is
-			//		implicitly this NodeList.  See `dojo.some()` and Mozilla's
+			//		`dojo/_base/array.some()` with the caveat that the passed array is
+			//		implicitly this NodeList.  See `dojo/_base/array.some()` and Mozilla's
 			//		[Array.some
 			//		documentation](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some).
 			// callback: Function
@@ -5655,7 +5798,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 
 		map: function(/*Function*/ func, /*Function?*/ obj){
 			// summary:
-			//		see dojo.map(). The primary difference is that the acted-on
+			//		see `dojo/_base/array.map()`. The primary difference is that the acted-on
 			//		array is implicitly this NodeList and the return is a
 			//		NodeList (a subclass of Array)
 			return this._wrap(array.map(this, func, obj), this); // dojo/NodeList
@@ -5663,7 +5806,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 
 		forEach: function(callback, thisObj){
 			// summary:
-			//		see `dojo.forEach()`. The primary difference is that the acted-on
+			//		see `dojo/_base/array.forEach()`. The primary difference is that the acted-on
 			//		array is implicitly this NodeList. If you want the option to break out
 			//		of the forEach loop, use every() or some() instead.
 			forEach(this, callback, thisObj);
@@ -5673,20 +5816,26 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 		filter: function(/*String|Function*/ filter){
 			// summary:
 			//		"masks" the built-in javascript filter() method (supported
-			//		in Dojo via `dojo.filter`) to support passing a simple
+			//		in Dojo via `dojo/_base/array.filter`) to support passing a simple
 			//		string filter in addition to supporting filtering function
 			//		objects.
 			// filter:
 			//		If a string, a CSS rule like ".thinger" or "div > span".
 			// example:
-			//		"regular" JS filter syntax as exposed in dojo.filter:
-			//		|	dojo.query("*").filter(function(item){
-			//		|		// highlight every paragraph
-			//		|		return (item.nodeName == "p");
-			//		|	}).style("backgroundColor", "yellow");
+			//		"regular" JS filter syntax as exposed in `dojo/_base/array.filter`:
+			//		|	require(["dojo/query", "dojo/NodeList-dom"
+			//		|	], function(query){
+			//		|		query("*").filter(function(item){
+			//		|			// highlight every paragraph
+			//		|			return (item.nodeName == "p");
+			//		|		}).style("backgroundColor", "yellow");
+			//		|	});
 			// example:
 			//		the same filtering using a CSS selector
-			//		|	dojo.query("*").filter("p").styles("backgroundColor", "yellow");
+			//		|	require(["dojo/query", "dojo/NodeList-dom"
+			//		|	], function(query){
+			//		|		query("*").filter("p").styles("backgroundColor", "yellow");
+			//		|	});
 
 			var a = arguments, items = this, start = 0;
 			if(typeof filter == "string"){ // inline'd type check
@@ -5726,18 +5875,27 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//
 			// example:
 			//	Shorten the list to the first, second, and third elements
-			//	|	query("a").at(0, 1, 2).forEach(fn);
+			//	|	require(["dojo/query"
+			//	|	], function(query){
+			//	|		query("a").at(0, 1, 2).forEach(fn);
+			//	|	});
 			//
 			// example:
 			//	Retrieve the first and last elements of a unordered list:
-			//	|	query("ul > li").at(0, -1).forEach(cb);
+			//	|	require(["dojo/query"
+			//	|	], function(query){
+			//	|		query("ul > li").at(0, -1).forEach(cb);
+			//	|	});
 			//
 			// example:
 			//	Do something for the first element only, but end() out back to
 			//	the original list and continue chaining:
-			//	|	query("a").at(0).onclick(fn).end().forEach(function(n){
-			//	|		console.log(n); // all anchors on the page.
+			//	|	require(["dojo/query"
+			//	|	], function(query){
+			//	|		query("a").at(0).onclick(fn).end().forEach(function(n){
+			//	|			console.log(n); // all anchors on the page.
 			//	|	})
+			//	|	});
 
 			var t = new this._NodeListCtor(0);
 			forEach(arguments, function(i){
@@ -5804,22 +5962,20 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 		// example:
 		//		add an onclick handler to every submit button in the document
 		//		which causes the form to be sent via Ajax instead:
-		//	|	require(["dojo/query"], function(query){
+		//	|	require(["dojo/query", "dojo/request", "dojo/dom-form", "dojo/dom-construct", "dojo/dom-style"
+		//	|	], function(query, request, domForm, domConstruct, domStyle){
 		//	|		query("input[type='submit']").on("click", function(e){
-		//	|			dojo.stopEvent(e); // prevent sending the form
+		//	|			e.preventDefault(); // prevent sending the form
 		//	|			var btn = e.target;
-		//	|			dojo.xhrPost({
-		//	|				form: btn.form,
-		//	|				load: function(data){
-		//	|					// replace the form with the response
-		//	|					var div = dojo.doc.createElement("div");
-		//	|					dojo.place(div, btn.form, "after");
-		//	|					div.innerHTML = data;
-		//	|					dojo.style(btn.form, "display", "none");
-		//	|				}
+		//	|			request.post("http://example.com/", {
+		//	|				data: domForm.toObject(btn.form)
+		//	|			}).then(function(response){
+		//	|				// replace the form with the response
+		//	|				domConstruct.create(div, {innerHTML: response}, btn.form, "after");
+		//	|				domStyle.set(btn.form, "display", "none");
 		//	|			});
 		//	|		});
-		// |	});
+		//	|	});
 		//
 		// description:
 		//		dojo/query is responsible for loading the appropriate query engine and wrapping
@@ -5921,7 +6077,7 @@ define(["require", "module"], function(require, module){
 				window.location == location && window.document == document,
 
 			// has API variables
-			global = this,
+			global = (function () { return this; })(),
 			doc = isBrowser && document,
 			element = doc && doc.createElement("DiV"),
 			cache = (module.config && module.config()) || {};
@@ -5985,6 +6141,8 @@ define(["require", "module"], function(require, module){
 		// has as it would have otherwise been initialized by the dojo loader; use has.add to the builder
 		// can optimize these away iff desired
 		 1 || has.add("host-browser", isBrowser);
+		 0 && has.add("host-node", (typeof process == "object" && process.versions && process.versions.node && process.versions.v8));
+		 0 && has.add("host-rhino", (typeof load == "function" && (typeof Packages == "function" || typeof Packages == "object")));
 		 1 || has.add("dom", isBrowser);
 		 1 || has.add("dojo-dom-ready-api", 1);
 		 1 || has.add("dojo-sniff", 1);
@@ -5993,7 +6151,19 @@ define(["require", "module"], function(require, module){
 	if( 1 ){
 		// Common application level tests
 		has.add("dom-addeventlistener", !!document.addEventListener);
-		has.add("touch", "ontouchstart" in document || window.navigator.msMaxTouchPoints > 0);
+
+		// Do the device and browser have touch capability?
+		has.add("touch", "ontouchstart" in document
+			|| ("onpointerdown" in document && navigator.maxTouchPoints > 0)
+			|| window.navigator.msMaxTouchPoints);
+
+		// Touch events support
+		has.add("touch-events", "ontouchstart" in document);
+
+		// Pointer Events support
+		has.add("pointer-events", "onpointerdown" in document);
+		has.add("MSPointer", "msMaxTouchPoints" in navigator); //IE10 (+IE11 preview)
+
 		// I don't know if any of these tests are really correct, just a rough guess
 		has.add("device-width", screen.availWidth || innerWidth);
 
@@ -6365,7 +6535,7 @@ define(["./kernel", "../has", "require", "module", "../json", "./lang", "./array
 			startApplication  // the position in text where the function application expression starts
 		){
 			// find end of the call by finding the matching end paren
-			// Warning: as usual, this will fail in the presense of unmatched right parans contained in strings, regexs, or unremoved comments
+			// Warning: as usual, this will fail in the presence of unmatched right parans contained in strings, regexs, or unremoved comments
 			var parenRe = /\(|\)/g,
 				matchCount = 1,
 				match;
@@ -6791,7 +6961,7 @@ define(["./kernel", "../has", "require", "module", "../json", "./lang", "./array
 		//		optionally load dojo modules. The map is indexed by the
 		//		possible dojo.name_ values, with two additional values:
 		//		"default" and "common". The items in the "default" array will
-		//		be loaded if none of the other items have been choosen based on
+		//		be loaded if none of the other items have been chosen based on
 		//		dojo.name_, set by your host environment. The items in the
 		//		"common" array will *always* be loaded, regardless of which
 		//		list is chosen.
@@ -7341,9 +7511,18 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 		return this;
 	}
 
-	function createSubclass(mixins, props){
-		return declare([this].concat(mixins), props || {});
-	}
+    function createSubclass(mixins, props){
+        // crack parameters
+        if(!(mixins instanceof Array || typeof mixins == 'function')){
+            props = mixins;
+            mixins = undefined;
+        }
+
+        props = props || {};
+        mixins = mixins || [];
+
+        return declare([this].concat(mixins), props);
+    }
 
 	// chained constructor compatible with the legacy declare()
 	function chainedConstructor(bases, ctorSpecial){
@@ -8049,7 +8228,7 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 			//	|		d1: 42
 			//	|	});
 		},
-		
+
 		createSubclass: function(mixins, props){
 			// summary:
 			//		Create a subclass of the declared class from a list of base classes.
@@ -8163,33 +8342,39 @@ define(["./sniff", "./_base/window"],
 	}
 	/*=====
 	 dom.byId = function(id, doc){
-		 // summary:
-		 //		Returns DOM node with matching `id` attribute or falsy value (ex: null or undefined)
-		 //		if not found.  If `id` is a DomNode, this function is a no-op.
-		 //
-		 // id: String|DOMNode
-		 //		A string to match an HTML id attribute or a reference to a DOM Node
-		 //
-		 // doc: Document?
-		 //		Document to work in. Defaults to the current value of
-		 //		dojo.doc.  Can be used to retrieve
-		 //		node references from other documents.
-		 //
-		 // example:
-		 //		Look up a node by ID:
-		 //	|	var n = dojo.byId("foo");
-		 //
-		 // example:
-		 //		Check if a node exists, and use it.
-		 //	|	var n = dojo.byId("bar");
-		 //	|	if(n){ doStuff() ... }
-		 //
-		 // example:
-		 //		Allow string or DomNode references to be passed to a custom function:
-		 //	|	var foo = function(nodeOrId){
-		 //	|		nodeOrId = dojo.byId(nodeOrId);
-		 //	|		// ... more stuff
-		 //	|	}
+		// summary:
+		//		Returns DOM node with matching `id` attribute or falsy value (ex: null or undefined)
+		//		if not found.  If `id` is a DomNode, this function is a no-op.
+		//
+		// id: String|DOMNode
+		//		A string to match an HTML id attribute or a reference to a DOM Node
+		//
+		// doc: Document?
+		//		Document to work in. Defaults to the current value of
+		//		dojo/_base/window.doc.  Can be used to retrieve
+		//		node references from other documents.
+		//
+		// example:
+		//		Look up a node by ID:
+		//	|	require(["dojo/dom"], function(dom){
+		//	|		var n = dom.byId("foo");
+		//	|	});
+		//
+		// example:
+		//		Check if a node exists, and use it.
+		//	|	require(["dojo/dom"], function(dom){
+		//	|		var n = dom.byId("bar");
+		//	|		if(n){ doStuff() ... }
+		//	|	});
+		//
+		// example:
+		//		Allow string or DomNode references to be passed to a custom function:
+		//	|	require(["dojo/dom"], function(dom){
+		//	|		var foo = function(nodeOrId){
+		//	|			nodeOrId = dom.byId(nodeOrId);
+		//	|			// ... more stuff
+		//	|		}
+		//	|	});
 	 };
 	 =====*/
 
@@ -8203,7 +8388,9 @@ define(["./sniff", "./_base/window"],
 		//
 		// example:
 		//		Test is node id="bar" is a descendant of node id="foo"
-		//	|	if(dojo.isDescendant("bar", "foo")){ ... }
+		//	|	require(["dojo/dom"], function(dom){
+		//	|		if(dom.isDescendant("bar", "foo")){ ... }
+		//	|	});
 
 		try{
 			node = dom.byId(node);
@@ -8223,12 +8410,17 @@ define(["./sniff", "./_base/window"],
 
 	// Add feature test for user-select CSS property
 	// (currently known to work in all but IE < 10 and Opera)
+	// TODO: The user-select CSS property as of May 2014 is no longer part of
+	// any CSS specification. In IE, -ms-user-select does not do the same thing
+	// as the unselectable attribute on elements; namely, dijit Editor buttons
+	// do not properly prevent the content of the editable content frame from
+	// unblurring. As a result, the -ms- prefixed version is omitted here.
 	has.add("css-user-select", function(global, doc, element){
 		// Avoid exception when dom.js is loaded in non-browser environments
 		if(!element){ return false; }
 		
 		var style = element.style;
-		var prefixes = ["Khtml", "O", "ms", "Moz", "Webkit"],
+		var prefixes = ["Khtml", "O", "Moz", "Webkit"],
 			i = prefixes.length,
 			name = "userSelect",
 			prefix;
@@ -8256,10 +8448,14 @@ define(["./sniff", "./_base/window"],
 		//		allows selection.
 		// example:
 		//		Make the node id="bar" unselectable
-		//	|	dojo.setSelectable("bar");
+		//	|	require(["dojo/dom"], function(dom){
+		//	|		dom.setSelectable("bar");
+		//	|	});
 		// example:
 		//		Make the node id="bar" selectable
-		//	|	dojo.setSelectable("bar", true);
+		//	|	require(["dojo/dom"], function(dom){
+		//	|		dom.setSelectable("bar", true);
+		//	|	});
 	};
 	=====*/
 
@@ -9725,14 +9921,19 @@ define([
 		// returns: Array
 		// example:
 		//		search the entire document for elements with the class "foo":
-		//	|	dojo.query(".foo");
+		//	|	require(["dojo/query"], function(query) {
+		//	|	    query(".foo").forEach(function(q) { console.log(q); });
+		//	|	});
 		//		these elements will match:
 		//	|	<span class="foo"></span>
 		//	|	<span class="foo bar"></span>
 		//	|	<p class="thud foo"></p>
 		// example:
 		//		search the entire document for elements with the classes "foo" *and* "bar":
-		//	|	dojo.query(".foo.bar");
+		//	|	require(["dojo/query"], function(query) {
+		//	|	    query(".foo.bar").forEach(function(q) { console.log(q); });
+		//	|	});
+		
 		//		these elements will match:
 		//	|	<span class="foo bar"></span>
 		//		while these will not:
@@ -9741,7 +9942,9 @@ define([
 		// example:
 		//		find `<span>` elements which are descendants of paragraphs and
 		//		which have a "highlighted" class:
-		//	|	dojo.query("p span.highlighted");
+		//	|	require(["dojo/query"], function(query) {
+		//	|	    query("p span.highlighted").forEach(function(q) { console.log(q); });
+		//	|	});
 		//		the innermost span in this fragment matches:
 		//	|	<p class="foo">
 		//	|		<span>...
@@ -9752,28 +9955,32 @@ define([
 		//		set an "odd" class on all odd table rows inside of the table
 		//		`#tabular_data`, using the `>` (direct child) selector to avoid
 		//		affecting any nested tables:
-		//	|	dojo.query("#tabular_data > tbody > tr:nth-child(odd)").addClass("odd");
+		//	|	require(["dojo/query"], function(query) {    
+		//	|	    query("#tabular_data > tbody > tr:nth-child(odd)").addClass("odd");
+		//	|	);
 		// example:
-		//		remove all elements with the class "error" from the document
-		//		and store them in a list:
-		//	|	var errors = dojo.query(".error").orphan();
+		//		remove all elements with the class "error" from the document:
+		//	|	require(["dojo/query"], function(query) {
+		//	|	    query(".error").orphan();
+		//	|	);
 		// example:
 		//		add an onclick handler to every submit button in the document
 		//		which causes the form to be sent via Ajax instead:
-		//	|	dojo.query("input[type='submit']").onclick(function(e){
-		//	|		dojo.stopEvent(e); // prevent sending the form
-		//	|		var btn = e.target;
-		//	|		dojo.xhrPost({
-		//	|			form: btn.form,
-		//	|			load: function(data){
-		//	|				// replace the form with the response
-		//	|				var div = dojo.doc.createElement("div");
-		//	|				dojo.place(div, btn.form, "after");
-		//	|				div.innerHTML = data;
-		//	|				dojo.style(btn.form, "display", "none");
-		//	|			}
-		//	|		});
+		//	|	require(["dojo/query", "dojo/request", "dojo/dom-construct", "dojo/dom-style"
+		//	|	], function (query, request, domConstruct, domStyle) {
+		//	|	    query("input[type='submit']").on("click", function (e) {
+		//	|	        e.stopPropagation();
+		//	|	        e.preventDefault();
+		//	|	        var btn = e.target;
+		//	|	        request.post("", { data: btn.form, timeout: 2000 })
+		//	|	        .then(function (data) {
+		//	|	            // replace the form with the response
+		//	|	            domConstruct.create("div", { innerHTML: data }, btn.form, "after");
+		//	|	            domStyle.set(btn.form, "display", "none");
+		//	|	        });
+		//	|	    });
 		//	|	});
+
 
 		root = root || getDoc();
 
@@ -9901,19 +10108,23 @@ define(["./sniff", "./dom"], function(has, dom){
 		//		Note also that this method is expensive.  Wherever possible,
 		//		reuse the returned object.
 		//
-		//		Use the dojo.style() method for more consistent (pixelized)
+		//		Use the dojo/dom-style.get() method for more consistent (pixelized)
 		//		return values.
 		//
 		// node: DOMNode
 		//		A reference to a DOM node. Does NOT support taking an
 		//		ID string for speed reasons.
 		// example:
-		//	|	dojo.getComputedStyle(dojo.byId('foo')).borderWidth;
+		//	|	require(["dojo/dom-style", "dojo/dom"], function(domStyle, dom){
+		//	|		domStyle.getComputedStyle(dom.byId('foo')).borderWidth;
+		//	|	});
 		//
 		// example:
 		//		Reusing the returned object, avoiding multiple lookups:
-		//	|	var cs = dojo.getComputedStyle(dojo.byId("someNode"));
-		//	|	var w = cs.width, h = cs.height;
+		//	|	require(["dojo/dom-style", "dojo/dom"], function(domStyle, dom){
+		//	|		var cs = domStyle.getComputedStyle(dom.byId("someNode"));
+		//	|		var w = cs.width, h = cs.height;
+		//	|	});
 		return; // CSS2Properties
 	};
 	=====*/
@@ -10030,7 +10241,7 @@ define(["./sniff", "./dom"], function(has, dom){
 	function _toStyleValue(node, type, value){
 		//TODO: should we really be doing string case conversion here? Should we cache it? Need to profile!
 		type = type.toLowerCase();
-		if(has("ie")){
+		if(has("ie") || has("trident")){
 			if(value == "auto"){
 				if(type == "height"){ return node.offsetHeight; }
 				if(type == "width"){ return node.offsetWidth; }
@@ -10062,8 +10273,8 @@ define(["./sniff", "./dom"], function(has, dom){
 		//		Also when getting values, use specific style names,
 		//		like "borderBottomWidth" instead of "border" since compound values like
 		//		"border" are not necessarily reflected as expected.
-		//		If you want to get node dimensions, use `dojo.marginBox()`,
-		//		`dojo.contentBox()` or `dojo.position()`.
+		//		If you want to get node dimensions, use `dojo/dom-geometry.getMarginBox()`,
+		//		`dojo/dom-geometry.getContentBox()` or `dojo/dom-geometry.getPosition()`.
 		// node: DOMNode|String
 		//		id or reference to node to get style for
 		// name: String?
@@ -10071,11 +10282,15 @@ define(["./sniff", "./dom"], function(has, dom){
 		// example:
 		//		Passing only an ID or node returns the computed style object of
 		//		the node:
-		//	|	dojo.getStyle("thinger");
+		//	|	require(["dojo/dom-style", "dojo/dom"], function(domStyle, dom){
+		//	|		domStyle.get("thinger");
+		//	|	});
 		// example:
 		//		Passing a node and a style property returns the current
 		//		normalized, computed value for that property:
-		//	|	dojo.getStyle("thinger", "opacity"); // 1 by default
+		//	|	require(["dojo/dom-style", "dojo/dom"], function(domStyle, dom){
+		//	|		domStyle.get("thinger", "opacity"); // 1 by default
+		//	|	});
 
 		var n = dom.byId(node), l = arguments.length, op = (name == "opacity");
 		if(l == 2 && op){
@@ -10104,32 +10319,41 @@ define(["./sniff", "./dom"], function(has, dom){
 		// example:
 		//		Passing a node, a style property, and a value changes the
 		//		current display of the node and returns the new computed value
-		//	|	dojo.setStyle("thinger", "opacity", 0.5); // == 0.5
+		//	|	require(["dojo/dom-style"], function(domStyle){
+		//	|		domStyle.set("thinger", "opacity", 0.5); // == 0.5
+		//	|	});
 		//
 		// example:
 		//		Passing a node, an object-style style property sets each of the values in turn and returns the computed style object of the node:
-		//	|	dojo.setStyle("thinger", {
-		//	|		"opacity": 0.5,
-		//	|		"border": "3px solid black",
-		//	|		"height": "300px"
+		//	|	require(["dojo/dom-style"], function(domStyle){
+		//	|		domStyle.set("thinger", {
+		//	|			"opacity": 0.5,
+		//	|			"border": "3px solid black",
+		//	|			"height": "300px"
+		//	|		});
 		//	|	});
 		//
 		// example:
 		//		When the CSS style property is hyphenated, the JavaScript property is camelCased.
 		//		font-size becomes fontSize, and so on.
-		//	|	dojo.setStyle("thinger",{
-		//	|		fontSize:"14pt",
-		//	|		letterSpacing:"1.2em"
+		//	|	require(["dojo/dom-style", "dojo/dom"], function(domStyle, dom){
+		//	|		domStyle.set("thinger",{
+		//	|			fontSize:"14pt",
+		//	|			letterSpacing:"1.2em"
+		//	|		});
 		//	|	});
 		//
 		// example:
 		//		dojo/NodeList implements .style() using the same syntax, omitting the "node" parameter, calling
-		//		dojo.style() on every element of the list. See: `dojo.query()` and `dojo/NodeList`
-		//	|	dojo.query(".someClassName").style("visibility","hidden");
-		//	|	// or
-		//	|	dojo.query("#baz > div").style({
-		//	|		opacity:0.75,
-		//	|		fontSize:"13pt"
+		//		dojo/dom-style.get() on every element of the list. See: `dojo/query` and `dojo/NodeList`
+		//	|	require(["dojo/dom-style", "dojo/query", "dojo/NodeList-dom"],
+		//	|	function(domStyle, query){
+		//	|		query(".someClassName").style("visibility","hidden");
+		//	|		// or
+		//	|		query("#baz > div").style({
+		//	|			opacity:0.75,
+		//	|			fontSize:"13pt"
+		//	|		});
 		//	|	});
 
 		var n = dom.byId(node), l = arguments.length, op = (name == "opacity");
@@ -10199,8 +10423,8 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		// computedStyle: Object?
 		//		This parameter accepts computed styles object.
 		//		If this parameter is omitted, the functions will call
-		//		dojo.getComputedStyle to get one. It is a better way, calling
-		//		dojo.computedStyle once, and then pass the reference to this
+		//		dojo/dom-style.getComputedStyle to get one. It is a better way, calling
+		//		dojo/dom-style.getComputedStyle once, and then pass the reference to this
 		//		computedStyle parameter. Wherever possible, reuse the returned
 		//		object of dojo/dom-style.getComputedStyle().
 
@@ -10228,8 +10452,8 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		// computedStyle: Object?
 		//		This parameter accepts computed styles object.
 		//		If this parameter is omitted, the functions will call
-		//		dojo.getComputedStyle to get one. It is a better way, calling
-		//		dojo.computedStyle once, and then pass the reference to this
+		//		dojo/dom-style.getComputedStyle to get one. It is a better way, calling
+		//		dojo/dom-style.getComputedStyle once, and then pass the reference to this
 		//		computedStyle parameter. Wherever possible, reuse the returned
 		//		object of dojo/dom-style.getComputedStyle().
 
@@ -10258,8 +10482,8 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		// computedStyle: Object?
 		//		This parameter accepts computed styles object.
 		//		If this parameter is omitted, the functions will call
-		//		dojo.getComputedStyle to get one. It is a better way, calling
-		//		dojo.computedStyle once, and then pass the reference to this
+		//		dojo/dom-style.getComputedStyle to get one. It is a better way, calling
+		//		dojo/dom-style.getComputedStyle once, and then pass the reference to this
 		//		computedStyle parameter. Wherever possible, reuse the returned
 		//		object of dojo/dom-style.getComputedStyle().
 
@@ -10293,8 +10517,8 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		// computedStyle: Object?
 		//		This parameter accepts computed styles object.
 		//		If this parameter is omitted, the functions will call
-		//		dojo.getComputedStyle to get one. It is a better way, calling
-		//		dojo.computedStyle once, and then pass the reference to this
+		//		dojo/dom-style.getComputedStyle to get one. It is a better way, calling
+		//		dojo/dom-style.getComputedStyle once, and then pass the reference to this
 		//		computedStyle parameter. Wherever possible, reuse the returned
 		//		object of dojo/dom-style.getComputedStyle().
 
@@ -10327,8 +10551,8 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		// computedStyle: Object?
 		//		This parameter accepts computed styles object.
 		//		If this parameter is omitted, the functions will call
-		//		dojo.getComputedStyle to get one. It is a better way, calling
-		//		dojo.computedStyle once, and then pass the reference to this
+		//		dojo/dom-style.getComputedStyle to get one. It is a better way, calling
+		//		dojo/dom-style.getComputedStyle once, and then pass the reference to this
 		//		computedStyle parameter. Wherever possible, reuse the returned
 		//		object of dojo/dom-style.getComputedStyle().
 
@@ -10376,8 +10600,8 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		// computedStyle: Object?
 		//		This parameter accepts computed styles object.
 		//		If this parameter is omitted, the functions will call
-		//		dojo.getComputedStyle to get one. It is a better way, calling
-		//		dojo.computedStyle once, and then pass the reference to this
+		//		dojo/dom-style.getComputedStyle to get one. It is a better way, calling
+		//		dojo/dom-style.getComputedStyle once, and then pass the reference to this
 		//		computedStyle parameter. Wherever possible, reuse the returned
 		//		object of dojo/dom-style.getComputedStyle().
 
@@ -10483,8 +10707,8 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		// computedStyle: Object?
 		//		This parameter accepts computed styles object.
 		//		If this parameter is omitted, the functions will call
-		//		dojo.getComputedStyle to get one. It is a better way, calling
-		//		dojo.computedStyle once, and then pass the reference to this
+		//		dojo/dom-style.getComputedStyle to get one. It is a better way, calling
+		//		dojo/dom-style.getComputedStyle once, and then pass the reference to this
 		//		computedStyle parameter. Wherever possible, reuse the returned
 		//		object of dojo/dom-style.getComputedStyle().
 
@@ -10517,8 +10741,8 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		// computedStyle: Object?
 		//		This parameter accepts computed styles object.
 		//		If this parameter is omitted, the functions will call
-		//		dojo.getComputedStyle to get one. It is a better way, calling
-		//		dojo.computedStyle once, and then pass the reference to this
+		//		dojo/dom-style.getComputedStyle to get one. It is a better way, calling
+		//		dojo/dom-style.getComputedStyle once, and then pass the reference to this
 		//		computedStyle parameter. Wherever possible, reuse the returned
 		//		object of dojo/dom-style.getComputedStyle().
 
@@ -10710,8 +10934,8 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		// computedStyle: Object?
 		//		This parameter accepts computed styles object.
 		//		If this parameter is omitted, the functions will call
-		//		dojo.getComputedStyle to get one. It is a better way, calling
-		//		dojo.computedStyle once, and then pass the reference to this
+		//		dojo/dom-style.getComputedStyle to get one. It is a better way, calling
+		//		dojo/dom-style.getComputedStyle once, and then pass the reference to this
 		//		computedStyle parameter. Wherever possible, reuse the returned
 		//		object of dojo/dom-style.getComputedStyle().
 
@@ -10735,12 +10959,12 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		}
 		if(!has("dom-addeventlistener")){
 			// old IE version
-			// FIXME: scroll position query is duped from dojo.html to
+			// FIXME: scroll position query is duped from dojo/_base/html to
 			// avoid dependency on that entire module. Now that HTML is in
 			// Base, we should convert back to something similar there.
 			var se = event.target;
 			var doc = (se && se.ownerDocument) || document;
-			// DO NOT replace the following to use dojo.body(), in IE, document.documentElement should be used
+			// DO NOT replace the following to use dojo/_base/window.body(), in IE, document.documentElement should be used
 			// here rather than document.body
 			var docBody = has("quirks") ? doc.body : doc.documentElement;
 			var offset = geom.getIeDocumentElementOffset(doc);
@@ -10771,6 +10995,7 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/lang", "./dom", "./dom-
 
 	// helper to connect events
 	var _evtHdlrMap = {}, _ctr = 0, _attrId = dojo._scopeName + "attrid";
+	has.add('dom-textContent', function (global, doc, element) { return 'textContent' in element; });
 
 	exports.names = {
 		// properties renamed to avoid clashes with reserved words
@@ -10782,8 +11007,29 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/lang", "./dom", "./dom-
 		colspan: "colSpan",
 		frameborder: "frameBorder",
 		rowspan: "rowSpan",
+		textcontent: "textContent",
 		valuetype: "valueType"
 	};
+	
+	function getText(/*DOMNode*/node){
+		// summary:
+		//		recursion method for get('textContent') to use. Gets text value for a node.
+		// description:
+		//		Juse uses nodedValue so things like <br/> tags do not end up in
+		//		the text as any sort of line return.
+		var text = "", ch = node.childNodes;
+		for(var i = 0, n; n = ch[i]; i++){
+			//Skip comments.
+			if(n.nodeType != 8){
+				if(n.nodeType == 1){
+					text += getText(n);
+				}else{
+					text += n.nodeValue;
+				}
+			}
+		}
+		return text;
+	}
 
 	exports.get = function getProp(/*DOMNode|String*/ node, /*String*/ name){
 		// summary:
@@ -10800,12 +11046,19 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/lang", "./dom", "./dom-
 		//
 		// example:
 		//	|	// get the current value of the "foo" property on a node
-		//	|	dojo.getProp(dojo.byId("nodeId"), "foo");
-		//	|	// or we can just pass the id:
-		//	|	dojo.getProp("nodeId", "foo");
+		//	|	require(["dojo/dom-prop", "dojo/dom"], function(domProp, dom){
+		//	|		domProp.get(dom.byId("nodeId"), "foo");
+		//	|		// or we can just pass the id:
+		//	|		domProp.get("nodeId", "foo");
+		//	|	});
 
 		node = dom.byId(node);
 		var lc = name.toLowerCase(), propName = exports.names[lc] || name;
+		
+		if(propName == "textContent" && !has("dom-textContent")){
+			return getText(node);
+		}
+		
 		return node[propName];	// Anything
 	};
 
@@ -10836,45 +11089,19 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/lang", "./dom", "./dom-
 		//
 		// example:
 		//	|	// use prop() to set the tab index
-		//	|	dojo.setProp("nodeId", "tabIndex", 3);
-		//	|
+		//	|	require(["dojo/dom-prop"], function(domProp){
+		//	|		domProp.set("nodeId", "tabIndex", 3);
+		//	|	});
 		//
 		// example:
 		//	Set multiple values at once, including event handlers:
-		//	|	dojo.setProp("formId", {
-		//	|		"foo": "bar",
-		//	|		"tabIndex": -1,
-		//	|		"method": "POST",
-		//	|		"onsubmit": function(e){
-		//	|			// stop submitting the form. Note that the IE behavior
-		//	|			// of returning true or false will have no effect here
-		//	|			// since our handler is connect()ed to the built-in
-		//	|			// onsubmit behavior and so we need to use
-		//	|			// dojo.stopEvent() to ensure that the submission
-		//	|			// doesn't proceed.
-		//	|			dojo.stopEvent(e);
-		//	|
-		//	|			// submit the form with Ajax
-		//	|			dojo.xhrPost({ form: "formId" });
-		//	|		}
+		//	|	require(["dojo/dom-prop"], function(domProp){
+		//	|		domProp.set("formId", {
+		//	|			"foo": "bar",
+		//	|			"tabIndex": -1,
+		//	|			"method": "POST",
+		//	|		});
 		//	|	});
-		//
-		// example:
-		//	Style is s special case: Only set with an object hash of styles
-		//	|	dojo.setProp("someNode",{
-		//	|		id:"bar",
-		//	|		style:{
-		//	|			width:"200px", height:"100px", color:"#000"
-		//	|		}
-		//	|	});
-		//
-		// example:
-		//	Again, only set style as an object hash of styles:
-		//	|	var obj = { color:"#fff", backgroundColor:"#000" };
-		//	|	dojo.setProp("someNode", "style", obj);
-		//	|
-		//	|	// though shorter to use `dojo.style()` in this case:
-		//	|	dojo.style("someNode", obj);
 
 		node = dom.byId(node);
 		var l = arguments.length;
@@ -10902,6 +11129,11 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/lang", "./dom", "./dom-
 				node[propName] = value;
 			}
 			return node; // DomNode
+		}
+		if(propName == "textContent" && !has("dom-textContent")) {
+			ctr.empty(node);
+			node.appendChild(node.ownerDocument.createTextNode(value));
+			return node;
 		}
 		if(lang.isFunction(value)){
 			// special case: assigning an event handler
@@ -11012,12 +11244,12 @@ define(["exports", "./sniff", "./_base/lang", "./dom", "./dom-style", "./dom-pro
 
 	// This module will be obsolete soon. Use dojo/prop instead.
 
-	// dojo.attr() should conform to http://www.w3.org/TR/DOM-Level-2-Core/
+	// dojo/dom-attr.get() should conform to http://www.w3.org/TR/DOM-Level-2-Core/
 
 	// attribute-related functions (to be obsolete soon)
-
 	var forcePropNames = {
 			innerHTML:	1,
+			textContent:1,
 			className:	1,
 			htmlFor:	has("ie"),
 			value:		1
@@ -11033,9 +11265,9 @@ define(["exports", "./sniff", "./_base/lang", "./dom", "./dom-style", "./dom-pro
 
 	function _hasAttr(node, name){
 		var attr = node.getAttributeNode && node.getAttributeNode(name);
-		return attr && attr.specified; // Boolean
+		return !!attr && attr.specified; // Boolean
 	}
-
+	
 	// There is a difference in the presence of certain properties and their default values
 	// between browsers. For example, on IE "disabled" is present on all elements,
 	// but it is value is "false"; "tabIndex" of <div> returns 0 by default on IE, yet other browsers
@@ -11072,9 +11304,12 @@ define(["exports", "./sniff", "./_base/lang", "./dom", "./dom-style", "./dom-pro
 		//
 		// example:
 		//	|	// get the current value of the "foo" attribute on a node
-		//	|	dojo.getAttr(dojo.byId("nodeId"), "foo");
-		//	|	// or we can just pass the id:
-		//	|	dojo.getAttr("nodeId", "foo");
+		//	|	require(["dojo/dom-attr", "dojo/dom"], function(domAttr, dom){
+		//	|		domAttr.get(dom.byId("nodeId"), "foo");
+		//	|		// or we can just pass the id:
+		//	|		domAttr.get("nodeId", "foo");
+		//	|	});	
+		//	|	
 
 		node = dom.byId(node);
 		var lc = name.toLowerCase(),
@@ -11086,6 +11321,11 @@ define(["exports", "./sniff", "./_base/lang", "./dom", "./dom-style", "./dom-pro
 			// node's property
 			return value;	// Anything
 		}
+		
+		if(propName == "textContent"){
+			return prop.get(node, propName);
+		}
+		
 		if(propName != "href" && (typeof value == "boolean" || lang.isFunction(value))){
 			// node's property
 			return value;	// Anything
@@ -11122,44 +11362,20 @@ define(["exports", "./sniff", "./_base/lang", "./dom", "./dom-style", "./dom-pro
 		//
 		// example:
 		//	|	// use attr() to set the tab index
-		//	|	dojo.setAttr("nodeId", "tabIndex", 3);
+		//	|	require(["dojo/dom-attr"], function(domAttr){
+		//	|		domAttr.set("nodeId", "tabIndex", 3);
+		//	|	});
 		//
 		// example:
 		//	Set multiple values at once, including event handlers:
-		//	|	dojo.setAttr("formId", {
-		//	|		"foo": "bar",
-		//	|		"tabIndex": -1,
-		//	|		"method": "POST",
-		//	|		"onsubmit": function(e){
-		//	|			// stop submitting the form. Note that the IE behavior
-		//	|			// of returning true or false will have no effect here
-		//	|			// since our handler is connect()ed to the built-in
-		//	|			// onsubmit behavior and so we need to use
-		//	|			// dojo.stopEvent() to ensure that the submission
-		//	|			// doesn't proceed.
-		//	|			dojo.stopEvent(e);
-		//	|
-		//	|			// submit the form with Ajax
-		//	|			dojo.xhrPost({ form: "formId" });
+		//	|	require(["dojo/dom-attr"],
+		//	|	function(domAttr){
+		//	|		domAttr.set("formId", {
+		//	|			"foo": "bar",
+		//	|			"tabIndex": -1,
+		//	|			"method": "POST"
 		//	|		}
 		//	|	});
-		//
-		// example:
-		//	Style is s special case: Only set with an object hash of styles
-		//	|	dojo.setAttr("someNode",{
-		//	|		id:"bar",
-		//	|		style:{
-		//	|			width:"200px", height:"100px", color:"#000"
-		//	|		}
-		//	|	});
-		//
-		// example:
-		//	Again, only set style as an object hash of styles:
-		//	|	var obj = { color:"#fff", backgroundColor:"#000" };
-		//	|	dojo.setAttr("someNode", "style", obj);
-		//	|
-		//	|	// though shorter to use `dojo.style()` in this case:
-		//	|	dojo.setStyle("someNode", obj);
 
 		node = dom.byId(node);
 		if(arguments.length == 2){ // inline'd type check
@@ -11304,12 +11520,14 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		//		the HTML fragment
 		// doc: DocumentNode?
 		//		optional document to use when creating DOM nodes, defaults to
-		//		dojo.doc if not specified.
+		//		dojo/_base/window.doc if not specified.
 		// returns:
 		//		Document fragment, unless it's a single node in which case it returns the node itself
 		// example:
 		//		Create a table row:
-		//	|	var tr = dojo.toDom("<tr><td>First!</td></tr>");
+		//	|	require(["dojo/dom-construct"], function(domConstruct){
+		//	|		var tr = domConstruct.toDom("<tr><td>First!</td></tr>");
+		//	|	});
 
 		doc = doc || win.doc;
 		var masterId = doc[masterName];
@@ -11355,11 +11573,11 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		return df; // DocumentFragment
 	};
 
-	exports.place = function place(/*DOMNode|String*/ node, /*DOMNode|String*/ refNode, /*String|Number?*/ position){
+	exports.place = function place(node, refNode, position){
 		// summary:
 		//		Attempt to insert node into the DOM, choosing from various positioning options.
 		//		Returns the first argument resolved to a DOM node.
-		// node: DOMNode|String
+		// node: DOMNode|DocumentFragment|String
 		//		id or node reference, or HTML fragment starting with "<" to place relative to refNode
 		// refNode: DOMNode|String
 		//		id or node reference to use as basis for placement
@@ -11380,19 +11598,28 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		// returns: DOMNode
 		//		Returned values is the first argument resolved to a DOM node.
 		//
-		//		.place() is also a method of `dojo/NodeList`, allowing `dojo.query` node lookups.
+		//		.place() is also a method of `dojo/NodeList`, allowing `dojo/query` node lookups.
 		// example:
 		//		Place a node by string id as the last child of another node by string id:
-		//	|	dojo.place("someNode", "anotherNode");
+		//	|	require(["dojo/dom-construct"], function(domConstruct){
+		//	|		domConstruct.place("someNode", "anotherNode");
+		//	|	});
 		// example:
 		//		Place a node by string id before another node by string id
-		//	|	dojo.place("someNode", "anotherNode", "before");
+		//	|	require(["dojo/dom-construct"], function(domConstruct){
+		//	|		domConstruct.place("someNode", "anotherNode", "before");
+		//	|	});
 		// example:
 		//		Create a Node, and place it in the body element (last child):
-		//	|	dojo.place("<div></div>", dojo.body());
+		//	|	require(["dojo/dom-construct", "dojo/_base/window"
+		//	|	], function(domConstruct, win){
+		//	|		domConstruct.place("<div></div>", win.body());
+		//	|	});
 		// example:
 		//		Put a new LI as the first child of a list by id:
-		//	|	dojo.place("<li></li>", "someUl", "first");
+		//	|	require(["dojo/dom-construct"], function(domConstruct){
+		//	|		domConstruct.place("<li></li>", "someUl", "first");
+		//	|	});
 
 		refNode = dom.byId(refNode);
 		if(typeof node == "string"){ // inline'd type check
@@ -11442,58 +11669,62 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		//		a fragment, and allowing for a convenient optional attribute setting step,
 		//		as well as an optional DOM placement reference.
 		//
-		//		Attributes are set by passing the optional object through `dojo.setAttr`.
-		//		See `dojo.setAttr` for noted caveats and nuances, and API if applicable.
+		//		Attributes are set by passing the optional object through `dojo/dom-attr.set`.
+		//		See `dojo/dom-attr.set` for noted caveats and nuances, and API if applicable.
 		//
-		//		Placement is done via `dojo.place`, assuming the new node to be the action
-		//		node, passing along the optional reference node and position.
+		//		Placement is done via `dojo/dom-construct.place`, assuming the new node to be
+		//		the action node, passing along the optional reference node and position.
 		// tag: DOMNode|String
 		//		A string of the element to create (eg: "div", "a", "p", "li", "script", "br"),
 		//		or an existing DOM node to process.
 		// attrs: Object
 		//		An object-hash of attributes to set on the newly created node.
 		//		Can be null, if you don't want to set any attributes/styles.
-		//		See: `dojo.setAttr` for a description of available attributes.
+		//		See: `dojo/dom-attr.set` for a description of available attributes.
 		// refNode: DOMNode|String?
-		//		Optional reference node. Used by `dojo.place` to place the newly created
+		//		Optional reference node. Used by `dojo/dom-construct.place` to place the newly created
 		//		node somewhere in the dom relative to refNode. Can be a DomNode reference
 		//		or String ID of a node.
 		// pos: String?
-		//		Optional positional reference. Defaults to "last" by way of `dojo.place`,
+		//		Optional positional reference. Defaults to "last" by way of `dojo/domConstruct.place`,
 		//		though can be set to "first","after","before","last", "replace" or "only"
 		//		to further control the placement of the new node relative to the refNode.
 		//		'refNode' is required if a 'pos' is specified.
 		// example:
 		//		Create a DIV:
-		//	|	var n = dojo.create("div");
+		//	|	require(["dojo/dom-construct"], function(domConstruct){
+		//	|		var n = domConstruct.create("div");
+		//	|	});
 		//
 		// example:
 		//		Create a DIV with content:
-		//	|	var n = dojo.create("div", { innerHTML:"<p>hi</p>" });
+		//	|	require(["dojo/dom-construct"], function(domConstruct){
+		//	|		var n = domConstruct.create("div", { innerHTML:"<p>hi</p>" });
+		//	|	});
 		//
 		// example:
 		//		Place a new DIV in the BODY, with no attributes set
-		//	|	var n = dojo.create("div", null, dojo.body());
+		//	|	require(["dojo/dom-construct", "dojo/_base/window"], function(domConstruct, win){
+		//	|		var n = domConstruct.create("div", null, win.body());
+		//	|	});
 		//
 		// example:
 		//		Create an UL, and populate it with LI's. Place the list as the first-child of a
 		//		node with id="someId":
-		//	|	var ul = dojo.create("ul", null, "someId", "first");
-		//	|	var items = ["one", "two", "three", "four"];
-		//	|	dojo.forEach(items, function(data){
-		//	|		dojo.create("li", { innerHTML: data }, ul);
+		//	|	require(["dojo/dom-construct", "dojo/_base/array"],
+		//	|	function(domConstruct, arrayUtil){
+		//	|		var ul = domConstruct.create("ul", null, "someId", "first");
+		//	|		var items = ["one", "two", "three", "four"];
+		//	|		arrayUtil.forEach(items, function(data){
+		//	|			domConstruct.create("li", { innerHTML: data }, ul);
+		//	|		});
 		//	|	});
 		//
 		// example:
 		//		Create an anchor, with an href. Place in BODY:
-		//	|	dojo.create("a", { href:"foo.html", title:"Goto FOO!" }, dojo.body());
-		//
-		// example:
-		//		Create a `dojo/NodeList()` from a new element (for syntactic sugar):
-		//	|	dojo.query(dojo.create('div'))
-		//	|		.addClass("newDiv")
-		//	|		.onclick(function(e){ console.log('clicked', e.target) })
-		//	|		.place("#someNode"); // redundant, but cleaner.
+		//	|	require(["dojo/dom-construct", "dojo/_base/window"], function(domConstruct, win){
+		//	|		domConstruct.create("a", { href:"foo.html", title:"Goto FOO!" }, win.body());
+		//	|	});
 
 		var doc = win.doc;
 		if(refNode){
@@ -11509,7 +11740,11 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 	};
 
 	function _empty(/*DomNode*/ node){
-		if(node.canHaveChildren){
+		// TODO: remove this if() block in 2.0 when we no longer have to worry about IE memory leaks,
+		// and then uncomment the emptyGrandchildren() test case from html.html.
+		// Note that besides fixing #16957, using removeChild() is actually faster than setting node.innerHTML,
+		// see http://jsperf.com/clear-dom-node.
+		if("innerHTML" in node){
 			try{
 				// fast path
 				node.innerHTML = "";
@@ -11519,24 +11754,23 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 				// Fall through (saves bytes)
 			}
 		}
-		// SVG/strict elements don't support innerHTML/canHaveChildren, and OBJECT/APPLET elements in quirks node have canHaveChildren=false
+
+		// SVG/strict elements don't support innerHTML
 		for(var c; c = node.lastChild;){ // intentional assignment
-			_destroy(c, node); // destroy is better than removeChild so TABLE subelements are removed in proper order
+			node.removeChild(c);
 		}
 	}
 
 	exports.empty = function empty(/*DOMNode|String*/ node){
-		 // summary:
-		 //		safely removes all children of the node.
-		 // node: DOMNode|String
-		 //		a reference to a DOM node or an id.
-		 // example:
-		 //		Destroy node's children byId:
-		 //	|	dojo.empty("someId");
-		 //
-		 // example:
-		 //		Destroy all nodes' children in a list by reference:
-		 //	|	dojo.query(".someNode").forEach(dojo.empty);
+		// summary:
+		//		safely removes all children of the node.
+		// node: DOMNode|String
+		//		a reference to a DOM node or an id.
+		// example:
+		//		Destroy node's children byId:
+		//	|	require(["dojo/dom-construct"], function(domConstruct){
+		//	|		domConstruct.empty("someId");
+		//	|	});
 
 		_empty(dom.byId(node));
 	};
@@ -11569,11 +11803,9 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		//
 		// example:
 		//		Destroy a node byId:
-		//	|	dojo.destroy("someId");
-		//
-		// example:
-		//		Destroy all nodes in a list by reference:
-		//	|	dojo.query(".someNode").forEach(dojo.destroy);
+		//	|	require(["dojo/dom-construct"], function(domConstruct){
+		//	|		domConstruct.destroy("someId");
+		//	|	});
 
 		node = dom.byId(node);
 		if(!node){ return; }
@@ -11609,13 +11841,41 @@ define([
 
 	has.add('native-formdata', function(){
 		// if true, the environment has a native FormData implementation
-		return typeof FormData === 'function';
+		return typeof FormData !== 'undefined';
 	});
+
+	has.add('native-response-type', function(){
+		return has('native-xhr') && typeof new XMLHttpRequest().responseType !== 'undefined';
+	});
+
+	has.add('native-xhr2-blob', function(){
+		if(!has('native-response-type')){ return; }
+		var x = new XMLHttpRequest();
+		x.open('GET', '/', true);
+		x.responseType = 'blob';
+		// will not be set if unsupported
+		var responseType = x.responseType;
+		x.abort();
+		return responseType === 'blob';
+	});
+
+	// Google Chrome doesn't support "json" response type
+	// up to version 30, so it's intentionally not included here
+	var nativeResponseTypes = {
+		'blob': has('native-xhr2-blob') ? 'blob' : 'arraybuffer',
+		'document': 'document',
+		'arraybuffer': 'arraybuffer'
+	};
 
 	function handleResponse(response, error){
 		var _xhr = response.xhr;
 		response.status = response.xhr.status;
-		response.text = _xhr.responseText;
+
+		try {
+			// Firefox throws an error when trying to access
+			// xhr.responseText if response isn't text
+			response.text = _xhr.responseText;
+		} catch (e) {}
 
 		if(response.options.handleAs === 'xml'){
 			response.data = _xhr.responseXML;
@@ -11671,6 +11931,9 @@ define([
 					response.loaded = evt.loaded;
 					response.total = evt.total;
 					dfd.progress(response);
+				} else if(response.xhr.readyState === 3){
+					response.loaded = evt.position;
+					dfd.progress(response);
 				}
 			}
 
@@ -11715,10 +11978,11 @@ define([
 			method: 'GET'
 		};
 	function xhr(url, options, returnDeferred){
+		var isFormData = has('native-formdata') && options && options.data && options.data instanceof FormData;
 		var response = util.parseArgs(
 			url,
 			util.deepCreate(defaultOptions, options),
-			has('native-formdata') && options && options.data && options.data instanceof FormData
+			isFormData
 		);
 		url = response.url;
 		options = response.options;
@@ -11764,8 +12028,12 @@ define([
 				_xhr.withCredentials = options.withCredentials;
 			}
 
+			if(has('native-response-type') && options.handleAs in nativeResponseTypes) {
+				_xhr.responseType = nativeResponseTypes[options.handleAs];
+			}
+
 			var headers = options.headers,
-				contentType = 'application/x-www-form-urlencoded';
+				contentType = isFormData ? false : 'application/x-www-form-urlencoded';
 			if(headers){
 				for(var hdr in headers){
 					if(hdr.toLowerCase() === 'content-type'){
@@ -11909,7 +12177,7 @@ define(["./_base/kernel", "require", "./has", "./request"], function(dojo, requi
 	var getText;
 	if( 1 ){
 		getText= function(url, sync, load){
-			request(url, {sync:!!sync}).then(load);
+			request(url, {sync:!!sync, headers: { 'X-Requested-With': null } }).then(load);
 		};
 	}else{
 		// Path for node.js and rhino, to load from local file system.
@@ -11983,6 +12251,7 @@ define(["./_base/kernel", "require", "./has", "./request"], function(dojo, requi
 		//		"dojo.cache" style of call):
 		//		| //If template.html contains "<h1>Hello</h1>" that will be
 		//		| //the value for the text variable.
+		//		| //Note: This is pre-AMD, deprecated syntax
 		//		| var text = dojo["cache"]("my.module", "template.html");
 		// example:
 		//		To ask dojo.cache to fetch content and store it in the cache, and sanitize the input
@@ -11991,12 +12260,14 @@ define(["./_base/kernel", "require", "./has", "./request"], function(dojo, requi
 		//		dojo.cache calls, use the "dojo.cache" style of call):
 		//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
 		//		| //text variable will contain just "<h1>Hello</h1>".
+		//		| //Note: This is pre-AMD, deprecated syntax
 		//		| var text = dojo["cache"]("my.module", "template.html", {sanitize: true});
 		// example:
 		//		Same example as previous, but demonstrates how an object can be passed in as
 		//		the first argument, then the value argument can then be the second argument.
 		//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
 		//		| //text variable will contain just "<h1>Hello</h1>".
+		//		| //Note: This is pre-AMD, deprecated syntax
 		//		| var text = dojo["cache"](new dojo._Url("my/module/template.html"), {sanitize: true});
 
 		//	 * (string string [value]) => (module, url, value)
@@ -12201,7 +12472,7 @@ define(["./_base/kernel", "./sniff"], function(dojo, has){
 },
 'dojo/domReady':function(){
 define(['./has'], function(has){
-	var global = this,
+	var global = (function () { return this; })(),
 		doc = document,
 		readyStates = { 'loaded': 1, 'complete': 1 },
 		fixReadyState = typeof doc.readyState != "string",
@@ -12241,7 +12512,7 @@ define(['./has'], function(has){
 			try{
 				(readyQ.shift())(doc);
 			}catch(err){
-				console.log("Error on domReady callback: " + err);
+				console.error(err, "in domReady callback", err.stack);
 			}
 		}
 
@@ -12347,22 +12618,33 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 		_extraLen = _extraNames.length,
 
 		getProp = function(/*Array*/parts, /*Boolean*/create, /*Object*/context){
-			var p, i = 0, dojoGlobal = dojo.global;
 			if(!context){
-				if(!parts.length){
-					return dojoGlobal;
+				if(parts[0] && dojo.scopeMap[parts[0]]) {
+					// Voodoo code from the old days where "dojo" or "dijit" maps to some special object
+					// rather than just window.dojo
+					context = dojo.scopeMap[parts.shift()][1];
 				}else{
-					p = parts[i++];
-					try{
-						context = dojo.scopeMap[p] && dojo.scopeMap[p][1];
-					}catch(e){}
-					context = context || (p in dojoGlobal ? dojoGlobal[p] : (create ? dojoGlobal[p] = {} : undefined));
+					context = dojo.global;
 				}
 			}
-			while(context && (p = parts[i++])){
-				context = (p in context ? context[p] : (create ? context[p] = {} : undefined));
+
+			try{
+				for(var i = 0; i < parts.length; i++){
+					var p = parts[i];
+					if(!(p in context)){
+						if(create){
+							context[p] = {};
+						}else{
+							return;		// return undefined
+						}
+					}
+					context = context[p];
+				}
+				return context; // mixed
+			}catch(e){
+				// "p in context" throws an exception when context is a number, boolean, etc. rather than an object,
+				// so in that corner case just return undefined (by having no return statement)
 			}
-			return context; // mixed
 		},
 
 		opts = Object.prototype.toString,
@@ -12534,7 +12816,7 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 			// context: Object?
 			//		Optional. Object to use as root of path. Defaults to
 			//		'dojo.global'. Null may be passed.
-			return getProp(name.split("."), create, context); // Object
+			return getProp(name ? name.split(".") : [], create, context); // Object
 		},
 
 		exists: function(name, obj){
@@ -12659,7 +12941,7 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 
 		hitch: function(scope, method){
 			// summary:
-			//		Returns a function that will only ever execute in the a given scope.
+			//		Returns a function that will only ever execute in the given scope.
 			//		This allows for easy use of object member functions
 			//		in callbacks and other places in which the "this" keyword may
 			//		otherwise not reference the expected scope.
@@ -13107,15 +13389,16 @@ define(["./aspect", "./on"], function(aspect, on){
 		//		A class that can be used as a mixin or base class,
 		//		to add on() and emit() methods to a class
 		//		for listening for events and emitting events:
-		//
-		//		|	define(["dojo/Evented"], function(Evented){
-		//		|		var EventedWidget = dojo.declare([Evented, dijit._Widget], {...});
-		//		|		widget = new EventedWidget();
-		//		|		widget.on("open", function(event){
+		// example:
+		//		|	define(["dojo/Evented", "dojo/_base/declare", "dojo/Stateful"
+		//		|	], function(Evented, declare, Stateful){
+		//		|		var EventedStateful = declare([Evented, Stateful], {...});
+		//		|		var instance = new EventedStateful();
+		//		|		instance.on("open", function(event){
 		//		|		... do something with event
 		//		|	 });
 		//		|
-		//		|	widget.emit("open", {name:"some event", ...});
+		//		|	instance.emit("open", {name:"some event", ...});
 	}
 	Evented.prototype = {
 		on: function(type, listener){
@@ -13255,7 +13538,7 @@ define(["./_base/kernel", "./on", "./has", "./dom", "./_base/window"], function(
 		//		mouseenter and mouseleave event emulation.
 		// example:
 		//		To use these events, you register a mouseenter like this:
-		//		|	define(["dojo/on", dojo/mouse"], function(on, mouse){
+		//		|	define(["dojo/on", "dojo/mouse"], function(on, mouse){
 		//		|		on(targetNode, mouse.enter, function(event){
 		//		|			dojo.addClass(targetNode, "highlighted");
 		//		|		});
@@ -14090,11 +14373,13 @@ var win = window;
 var unload = {
 	// summary:
 	//		This module contains the document and window unload detection API.
+	//		This module is deprecated.  Use on(window, "unload", func)
+	//		and on(window, "beforeunload", func) instead.
 
 	addOnWindowUnload: function(/*Object|Function?*/ obj, /*String|Function?*/ functionName){
 		// summary:
-		//		registers a function to be triggered when window.onunload
-		//		fires.
+		//		Registers a function to be triggered when window.onunload fires.
+		//		Deprecated, use on(window, "unload", lang.hitch(obj, functionName)) instead.
 		// description:
 		//		The first time that addOnWindowUnload is called Dojo
 		//		will register a page listener to trigger your unload
@@ -14107,9 +14392,14 @@ var unload = {
 		//		heavy JavaScript work since it fires at the equivalent of
 		//		the page's "onbeforeunload" event.
 		// example:
-		//	|	unload.addOnWindowUnload(functionPointer)
-		//	|	unload.addOnWindowUnload(object, "functionName");
-		//	|	unload.addOnWindowUnload(object, function(){ /* ... */});
+		//	|	var afunc = function() {console.log("global function");};
+		//	|	require(["dojo/_base/unload"], function(unload) {
+		//	|		var foo = {bar: function(){ console.log("bar unloading...");}, 
+		//	|		           data: "mydata"};
+		//	|		unload.addOnWindowUnload(afunc);
+		//	|		unload.addOnWindowUnload(foo, "bar");
+		//	|		unload.addOnWindowUnload(foo, function(){console.log("", this.data);});
+		//	|	});
 
 		if (!dojo.windowUnloaded){
 			on(win, "unload", (dojo.windowUnloaded = function(){
@@ -14129,7 +14419,8 @@ var unload = {
 
 	addOnUnload: function(/*Object?|Function?*/ obj, /*String|Function?*/ functionName){
 		// summary:
-		//		registers a function to be triggered when the page unloads.
+		//		Registers a function to be triggered when the page unloads.
+		//		Deprecated, use on(window, "beforeunload", lang.hitch(obj, functionName)) instead.
 		// description:
 		//		The first time that addOnUnload is called Dojo will
 		//		register a page listener to trigger your unload handler
@@ -14148,9 +14439,14 @@ var unload = {
 		//		browsers from using a "fast back" cache to make page
 		//		loading via back button instantaneous.
 		// example:
-		//	|	dojo.addOnUnload(functionPointer)
-		//	|	dojo.addOnUnload(object, "functionName")
-		//	|	dojo.addOnUnload(object, function(){ /* ... */});
+		//	|	var afunc = function() {console.log("global function");};
+		//	|	require(["dojo/_base/unload"], function(unload) {
+		//	|		var foo = {bar: function(){ console.log("bar unloading...");}, 
+		//	|		           data: "mydata"};
+		//	|		unload.addOnUnload(afunc);
+		//	|		unload.addOnUnload(foo, "bar");
+		//	|		unload.addOnUnload(foo, function(){console.log("", this.data);});
+		//	|	});
 
 		on(win, "beforeunload", lang.hitch(obj, functionName));
 	}
@@ -14695,17 +14991,22 @@ define(["./kernel", "./lang", "./array", "./config"], function(dojo, lang, Array
 		//
 		// example:
 		//		Work with a Color instance:
-		//	 | var c = new Color();
-		//	 | c.setColor([0,0,0]); // black
-		//	 | var hex = c.toHex(); // #000000
+		//	|	require(["dojo/_base/color"], function(Color){
+		//	|		var c = new Color();
+		//	|		c.setColor([0,0,0]); // black
+		//	|		var hex = c.toHex(); // #000000
+		//	|	});
 		//
 		// example:
 		//		Work with a node's color:
-		//	 | var color = dojo.style("someNode", "backgroundColor");
-		//	 | var n = new Color(color);
-		//	 | // adjust the color some
-		//	 | n.r *= .5;
-		//	 | console.log(n.toString()); // rgb(128, 255, 255);
+		//	| 
+		//	|	require(["dojo/_base/color", "dojo/dom-style"], function(Color, domStyle){
+		//	|		var color = domStyle("someNode", "backgroundColor");
+		//	|		var n = new Color(color);
+		//	|		// adjust the color some
+		//	|		n.r *= .5;
+		//	|		console.log(n.toString()); // rgb(128, 255, 255);
+		//	|	});
 		if(color){ this.setColor(color); }
 	};
 
@@ -14746,8 +15047,10 @@ define(["./kernel", "./lang", "./array", "./config"], function(dojo, lang, Array
 			//		and sets this color instance to that value.
 			//
 			// example:
-			//	|	var c = new Color(); // no color
-			//	|	c.setColor("#ededed"); // greyish
+			//	|	require(["dojo/_base/color"], function(Color){
+			//	|		var c = new Color(); // no color
+			//	|		c.setColor("#ededed"); // greyish
+			//	|	});
 			if(lang.isString(color)){
 				Color.fromString(color, this);
 			}else if(lang.isArray(color)){
@@ -14770,8 +15073,10 @@ define(["./kernel", "./lang", "./array", "./config"], function(dojo, lang, Array
 			// summary:
 			//		Returns 3 component array of rgb values
 			// example:
-			//	|	var c = new Color("#000000");
-			//	|	console.log(c.toRgb()); // [0,0,0]
+			//	|	require(["dojo/_base/color"], function(Color){
+			//	|		var c = new Color("#000000");
+			//	|		console.log(c.toRgb()); // [0,0,0]
+			//	|	});
 			var t = this;
 			return [t.r, t.g, t.b]; // Array
 		},
@@ -14786,7 +15091,9 @@ define(["./kernel", "./lang", "./array", "./config"], function(dojo, lang, Array
 			// summary:
 			//		Returns a CSS color string in hexadecimal representation
 			// example:
-			//	|	console.log(new Color([0,0,0]).toHex()); // #000000
+			//	|	require(["dojo/_base/color"], function(Color){
+			//	|		console.log(new Color([0,0,0]).toHex()); // #000000
+			//	|	});
 			var arr = ArrayUtil.map(["r", "g", "b"], function(x){
 				var s = this[x].toString(16);
 				return s.length < 2 ? "0" + s : s;
@@ -14797,8 +15104,10 @@ define(["./kernel", "./lang", "./array", "./config"], function(dojo, lang, Array
 			// summary:
 			//		Returns a css color string in rgb(a) representation
 			// example:
-			//	|	var c = new Color("#FFF").toCss();
-			//	|	console.log(c); // rgb('255','255','255')
+			//	|	require(["dojo/_base/color"], function(Color){
+			//	|		var c = new Color("#FFF").toCss();
+			//	|		console.log(c); // rgb('255','255','255')
+			//	|	});
 			var t = this, rgb = t.r + ", " + t.g + ", " + t.b;
 			return (includeAlpha ? "rgba(" + rgb + ", " + t.a : "rgb(" + rgb) + ")";	// String
 		},
@@ -14848,10 +15157,10 @@ define(["./kernel", "./lang", "./array", "./config"], function(dojo, lang, Array
 		//		A Color object. If obj is passed, it will be the return value.
 		//
 		// example:
-		//	 | var thing = dojo.colorFromHex("#ededed"); // grey, longhand
-		//
-		// example:
-		//	| var thing = dojo.colorFromHex("#000"); // black, shorthand
+		//	|	require(["dojo/_base/color"], function(Color){
+		//	|		var thing = new Color().fromHex("#ededed"); // grey, longhand
+		//	|		var thing2 = new Color().fromHex("#000"); // black, shorthand
+		//	|	});
 		var t = obj || new Color(),
 			bits = (color.length == 4) ? 4 : 8,
 			mask = (1 << bits) - 1;
@@ -14873,7 +15182,9 @@ define(["./kernel", "./lang", "./array", "./config"], function(dojo, lang, Array
 		//		Builds a `Color` from a 3 or 4 element array, mapping each
 		//		element in sequence to the rgb(a) values of the color.
 		// example:
-		//		| var myColor = dojo.colorFromArray([237,237,237,0.5]); // grey, 50% alpha
+		//		|	require(["dojo/_base/color"], function(Color){
+		//		|		var myColor = new Color().fromArray([237,237,237,0.5]); // grey, 50% alpha
+		//		|	});
 		// returns:
 		//		A Color object. If obj is passed, it will be the return value.
 		var t = obj || new Color();
@@ -14908,6 +15219,8 @@ define([
 	"../_base/lang",
 	"../_base/array"
 ], function(tracer, has, lang, arrayUtil){
+	has.add("config-useDeferredInstrumentation", "report-unhandled-rejections");
+
 	function logError(error, rejection, deferred){
 		var stack = "";
 		if(error && error.stack){
@@ -14932,17 +15245,22 @@ define([
 	var activeTimeout = false;
 	var unhandledWait = 1000;
 	function trackUnhandledRejections(error, handled, rejection, deferred){
-		if(handled){
-			arrayUtil.some(errors, function(obj, ix){
-				if(obj.error === error){
-					errors.splice(ix, 1);
-					return true;
+		// try to find the existing tracking object
+		if(!arrayUtil.some(errors, function(obj){
+			if(obj.error === error){
+				// found the tracking object for this error
+				if(handled){
+					// if handled, update the state
+					obj.handled = true;
 				}
-			});
-		}else if(!arrayUtil.some(errors, function(obj){ return obj.error === error; })){
+				return true;
+			}
+		})){
+			// no tracking object has been setup, create one
 			errors.push({
 				error: error,
 				rejection: rejection,
+				handled: handled,
 				deferred: deferred,
 				timestamp: new Date().getTime()
 			});
@@ -14957,8 +15275,12 @@ define([
 		var now = new Date().getTime();
 		var reportBefore = now - unhandledWait;
 		errors = arrayUtil.filter(errors, function(obj){
+			// only report the error if we have waited long enough and
+			// it hasn't been handled
 			if(obj.timestamp < reportBefore){
-				logError(obj.error, obj.rejection, obj.deferred);
+				if(!obj.handled){
+					logError(obj.error, obj.rejection, obj.deferred);
+				}
 				return false;
 			}
 			return true;
@@ -15317,10 +15639,32 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 		has.add("event-orientationchange", has("touch") && !has("android")); // TODO: how do we detect this?
 		has.add("event-stopimmediatepropagation", window.Event && !!window.Event.prototype && !!window.Event.prototype.stopImmediatePropagation);
 		has.add("event-focusin", function(global, doc, element){
-			// All browsers except firefox support focusin, but too hard to feature test webkit since element.onfocusin
-			// is undefined.  Just return true for IE and use fallback path for other browsers.
-			return !!element.attachEvent;
+			return 'onfocusin' in element;
 		});
+		
+		if(has("touch")){
+			has.add("touch-can-modify-event-delegate", function(){
+				// This feature test checks whether deleting a property of an event delegate works
+				// for a touch-enabled device. If it works, event delegation can be used as fallback
+				// for browsers such as Safari in older iOS where deleting properties of the original
+				// event does not work.
+				var EventDelegate = function(){};
+				EventDelegate.prototype =
+					document.createEvent("MouseEvents"); // original event
+				// Attempt to modify a property of an event delegate and check if
+				// it succeeds. Depending on browsers and on whether dojo/on's
+				// strict mode is stripped in a Dojo build, there are 3 known behaviors:
+				// it may either succeed, or raise an error, or fail to set the property
+				// without raising an error.
+				try{
+					var eventDelegate = new EventDelegate;
+					eventDelegate.target = null;
+					return eventDelegate.target === null;
+				}catch(e){
+					return false; // cannot use event delegation
+				}
+			});
+		}
 	}
 	var on = function(target, type, listener, dontFix){
 		// summary:
@@ -15338,7 +15682,7 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 		//		event.
 		// description:
 		//		To listen for "click" events on a button node, we can do:
-		//		|	define(["dojo/on"], function(listen){
+		//		|	define(["dojo/on"], function(on){
 		//		|		on(button, "click", clickHandler);
 		//		|		...
 		//		Evented JavaScript objects can also have their own events.
@@ -15347,7 +15691,7 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 		//		And then we could publish a "foo" event:
 		//		|	on.emit(obj, "foo", {key: "value"});
 		//		We can use extension events as well. For example, you could listen for a tap gesture:
-		//		|	define(["dojo/on", "dojo/gesture/tap", function(listen, tap){
+		//		|	define(["dojo/on", "dojo/gesture/tap", function(on, tap){
 		//		|		on(button, tap, tapHandler);
 		//		|		...
 		//		which would trigger fooHandler. Note that for a simple object this is equivalent to calling:
@@ -15403,14 +15747,19 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 			return type.call(matchesTarget, target, listener);
 		}
 
-		if(type.indexOf(",") > -1){
+		if(type instanceof Array){
+			// allow an array of event names (or event handler functions)
+			events = type;
+		}else if(type.indexOf(",") > -1){
 			// we allow comma delimited event names, so you can register for multiple events at once
 			var events = type.split(/\s*,\s*/);
+		} 
+		if(events){
 			var handles = [];
 			var i = 0;
 			var eventName;
 			while(eventName = events[i++]){
-				handles.push(addListener(target, eventName, listener, dontFix, matchesTarget));
+				handles.push(on.parse(target, eventName, listener, addListener, dontFix, matchesTarget));
 			}
 			handles.remove = function(){
 				for(var i = 0; i < handles.length; i++){
@@ -15470,7 +15819,42 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 		}
 		throw new Error("Target must be an event emitter");
 	}
+	on.matches = function(node, selector, context, children, matchesTarget) {
+		// summary:
+		//		Check if a node match the current selector within the constraint of a context
+		// node: DOMNode
+		//		The node that originate the event
+		// selector: String
+		//		The selector to check against
+		// context: DOMNode
+		//		The context to search in.
+		// children: Boolean
+		//		Indicates if children elements of the selector should be allowed. This defaults to
+		//		true
+		// matchesTarget: Object|dojo/query?
+		//		An object with a property "matches" as a function. Default is dojo/query.
+		//		Matching DOMNodes will be done against this function
+		//		The function must return a Boolean.
+		//		It will have 3 arguments: "node", "selector" and "context"
+		//		True is expected if "node" is matching the current "selector" in the passed "context"
+		// returns: DOMNode?
+		//		The matching node, if any. Else you get false
 
+		// see if we have a valid matchesTarget or default to dojo/query
+		matchesTarget = matchesTarget && matchesTarget.matches ? matchesTarget : dojo.query;
+		children = children !== false;
+		// there is a selector, so make sure it matches
+		if(node.nodeType != 1){
+			// text node will fail in native match selector
+			node = node.parentNode;
+		}
+		while(!matchesTarget.matches(node, selector, context)){
+			if(node == context || children === false || !(node = node.parentNode) || node.nodeType != 1){ // intentional assignment
+				return false;
+			}
+		}
+		return node;
+	}
 	on.selector = function(selector, eventType, children){
 		// summary:
 		//		Creates a new extension event with event delegation. This is based on
@@ -15486,22 +15870,14 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 		//		Indicates if children elements of the selector should be allowed. This defaults to 
 		//		true
 		// example:
-		// |	require(["dojo/on", "dojo/mouse", "dojo/query!css2"], function(listen, mouse){
+		// |	require(["dojo/on", "dojo/mouse", "dojo/query!css2"], function(on, mouse){
 		// |		on(node, on.selector(".my-class", mouse.enter), handlerForMyHover);
 		return function(target, listener){
 			// if the selector is function, use it to select the node, otherwise use the matches method
 			var matchesTarget = typeof selector == "function" ? {matches: selector} : this,
 				bubble = eventType.bubble;
 			function select(eventTarget){
-				// see if we have a valid matchesTarget or default to dojo.query
-				matchesTarget = matchesTarget && matchesTarget.matches ? matchesTarget : dojo.query;
-				// there is a selector, so make sure it matches
-				while(!matchesTarget.matches(eventTarget, selector, target)){
-					if(eventTarget == target || children === false || !(eventTarget = eventTarget.parentNode) || eventTarget.nodeType != 1){ // intentional assignment
-						return;
-					}
-				}
-				return eventTarget;
+				return on.matches(eventTarget, selector, target, children, matchesTarget);
 			}
 			if(bubble){
 				// the event type doesn't naturally bubble, but has a bubbling form, use that, and give it the selector so it can perform the select itself
@@ -15512,7 +15888,9 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 				// call select to see if we match
 				var eventTarget = select(event.target);
 				// if it matches we call the listener
-				return eventTarget && listener.call(eventTarget, event);
+				if (eventTarget) {
+					return listener.call(eventTarget, event);
+				}
 			});
 		};
 	};
@@ -15561,17 +15939,20 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 		//		to appear in a textbox.
 		// example:
 		//		To fire our own click event
-		//	|	on.emit(dojo.byId("button"), "click", {
-		//	|		cancelable: true,
-		//	|		bubbles: true,
-		//	|		screenX: 33,
-		//	|		screenY: 44
-		//	|	});
+		//	|	require(["dojo/on", "dojo/dom"
+		//	|	], function(on, dom){
+		//	|		on.emit(dom.byId("button"), "click", {
+		//	|			cancelable: true,
+		//	|			bubbles: true,
+		//	|			screenX: 33,
+		//	|			screenY: 44
+		//	|		});
 		//		We can also fire our own custom events:
-		//	|	on.emit(dojo.byId("slider"), "slide", {
-		//	|		cancelable: true,
-		//	|		bubbles: true,
-		//	|		direction: "left-to-right"
+		//	|		on.emit(dom.byId("slider"), "slide", {
+		//	|			cancelable: true,
+		//	|			bubbles: true,
+		//	|			direction: "left-to-right"
+		//	|		});
 		//	|	});
 		var args = slice.call(arguments, 2);
 		var method = "on" + type;
@@ -15619,7 +16000,8 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 				// that would be a lot of extra code, with little benefit that I can see, seems 
 				// best to use the generic constructor and copy properties over, making it 
 				// easy to have events look like the ones created with specific initializers
-				var nativeEvent = target.ownerDocument.createEvent("HTMLEvents");
+				var ownerDocument = target.ownerDocument || document;
+				var nativeEvent = ownerDocument.createEvent("HTMLEvents");
 				nativeEvent.initEvent(type, !!event.bubbles, !!event.cancelable);
 				// and copy all our properties over
 				for(var i in event){
@@ -15743,7 +16125,7 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 
 		var _setKeyChar = function(evt){
 			evt.keyChar = evt.charCode ? String.fromCharCode(evt.charCode) : '';
-			evt.charOrCode = evt.keyChar || evt.keyCode;
+			evt.charOrCode = evt.keyChar || evt.keyCode;	// TODO: remove for 2.0
 		};
 		// Called in Event scope
 		var stopPropagation = function(){
@@ -15771,7 +16153,7 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 		};
 	}
 	if(has("touch")){ 
-		var Event = function(){};
+		var EventDelegate = function(){};
 		var windowOrientation = window.orientation; 
 		var fixTouchListener = function(listener){ 
 			return function(originalEvent){ 
@@ -15785,20 +16167,22 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./sniff"], fu
 				if(!event){
 					var type = originalEvent.type;
 					try{
-						delete originalEvent.type; // on some JS engines (android), deleting properties make them mutable
+						delete originalEvent.type; // on some JS engines (android), deleting properties makes them mutable
 					}catch(e){} 
 					if(originalEvent.type){
-						// deleting properties doesn't work (older iOS), have to use delegation
-						if(has('mozilla')){
-							// Firefox doesn't like delegated properties, so we have to copy
-							var event = {};
+						// Deleting the property of the original event did not work (this is the case of
+						// browsers such as older Safari iOS), hence fallback:
+						if(has("touch-can-modify-event-delegate")){
+							// If deleting properties of delegated event works, use event delegation:
+							EventDelegate.prototype = originalEvent;
+							event = new EventDelegate;
+						}else{
+							// Otherwise last fallback: other browsers, such as mobile Firefox, do not like
+							// delegated properties, so we have to copy
+							event = {};
 							for(var name in originalEvent){
 								event[name] = originalEvent[name];
 							}
-						}else{
-							// old iOS branch
-							Event.prototype = originalEvent;
-							var event = new Event;
 						}
 						// have to delegate methods to make them work
 						event.preventDefault = function(){
@@ -16449,7 +16833,7 @@ var ret = {
 	 },
 	 =====*/
 
-	doc: this["document"] || null,
+	doc: dojo.global["document"] || null,
 	/*=====
 	doc: {
 		// summary:
@@ -17071,18 +17455,22 @@ return {
 				p!="has" && has.add(prefix + p, featureSet[p], 0, booting);
 			}
 		};
+		var global = (function () { return this; })();
 		result =  1  ?
 			// must be a built version of the dojo loader; all config stuffed in require.rawConfig
 			require.rawConfig :
 			// a foreign loader
-			this.dojoConfig || this.djConfig || {};
+			global.dojoConfig || global.djConfig || {};
 		adviseHas(result, "config", 1);
 		adviseHas(result.has, "", 1);
 	}
 
-	if(!result.locale){
+	if(!result.locale && typeof navigator != "undefined"){
 		// Default locale for browsers.
-		result.locale = (navigator.language || navigator.userLanguage).toLowerCase();
+		var language = (navigator.language || navigator.userLanguage);
+		if(language){
+			result.locale = language.toLowerCase();
+		}
 	}
 
 	return result;
@@ -17243,6 +17631,7 @@ define(["./has"], function(has){
 		}
 		has.add("android", parseFloat(dua.split("Android ")[1]) || undefined);
 		has.add("bb", (dua.indexOf("BlackBerry") >= 0 || dua.indexOf("BB10") >= 0) && parseFloat(dua.split("Version/")[1]) || undefined);
+		has.add("trident", parseFloat(dav.split("Trident/")[1]) || undefined);
 
 		has.add("svg", typeof SVGAngle !== "undefined");
 
@@ -17255,7 +17644,7 @@ define(["./has"], function(has){
 			}
 
 			// Mozilla and firefox
-			if(dua.indexOf("Gecko") >= 0 && !has("khtml") && !has("webkit")){
+			if(dua.indexOf("Gecko") >= 0 && !has("khtml") && !has("webkit") && !has("trident")){
 				has.add("mozilla", tv);
 			}
 			if(has("mozilla")){
@@ -17312,33 +17701,54 @@ define([
 			'MSXML2.DOMDocument.3.0',
 			'MSXML.DOMDocument' // 2.0
 		];
+		var lastParser;
 
 		handleXML = function(response){
 			var result = response.data;
+			var text = response.text;
 
 			if(result && has('dom-qsa2.1') && !result.querySelectorAll && has('dom-parser')){
 				// http://bugs.dojotoolkit.org/ticket/15631
-				// IE9 supports a CSS3 querySelectorAll implementation, but the DOM implementation 
-				// returned by IE9 xhr.responseXML does not. Manually create the XML DOM to gain 
+				// IE9 supports a CSS3 querySelectorAll implementation, but the DOM implementation
+				// returned by IE9 xhr.responseXML does not. Manually create the XML DOM to gain
 				// the fuller-featured implementation and avoid bugs caused by the inconsistency
-				result = new DOMParser().parseFromString(response.text, 'application/xml');
+				result = new DOMParser().parseFromString(text, 'application/xml');
 			}
 
-			if(!result || !result.documentElement){
-				var text = response.text;
-				array.some(dp, function(p){
+			function createDocument(p) {
 					try{
 						var dom = new ActiveXObject(p);
 						dom.async = false;
 						dom.loadXML(text);
 						result = dom;
+						lastParser = p;
 					}catch(e){ return false; }
 					return true;
-				});
+			}
+
+			if(!result || !result.documentElement){
+				// The creation of an ActiveX object is expensive, so we cache the
+				// parser type to avoid trying all parser types each time we handle a
+				// document. There is some concern that some parser types might fail
+				// depending on the document being parsed. If parsing using the cached
+				// parser type fails, we do the more expensive operation of finding one
+				// that works for the given document.
+				// https://bugs.dojotoolkit.org/ticket/15246
+				if(!lastParser || !createDocument(lastParser)) {
+					array.some(dp, createDocument);
+				}
 			}
 
 			return result;
 		};
+	}
+
+	var handleNativeResponse = function(response) {
+		if(!has('native-xhr2-blob') && response.options.handleAs === 'blob' && typeof Blob !== 'undefined'){
+			return new Blob([ response.xhr.response ], { type: response.xhr.getResponseHeader('Content-Type') });
+		}
+
+		return response.xhr.response;
 	}
 
 	var handlers = {
@@ -17348,7 +17758,10 @@ define([
 		'json': function(response){
 			return JSON.parse(response.text || null);
 		},
-		'xml': handleXML
+		'xml': handleXML,
+		'blob': handleNativeResponse,
+		'arraybuffer': handleNativeResponse,
+		'document': handleNativeResponse
 	};
 
 	function handle(response){
