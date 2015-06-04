@@ -3,43 +3,12 @@
 <head>
     <meta charset="utf-8">
     <title>set INPUT/TEXTAREA cursor position</title>
-    <script type="text/javascript" src="jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="jquery-1.6.4.js"></script>
 </head>  
 <body>  
-    <input id="txt" type="text" value="snandy"/>
+    <input id="txt" type="text" value="snandy" data-name="John"/>
     <script>
 
-$.fn.setCursorPosition = function(option) {
-    var settings = $.extends({
-        index: 0
-    }, option)
-    return this.each(function() {
-        var elem  = this
-        var val   = elem.value
-        var len   = val.length
-        var index = settings.index
-
-        // 非input和textarea直接返回
-        var $elem = $(elem)
-        if (!$elem.is('input') || !$elem.is('textarea')) return 
-        // 超过文本长度直接返回
-        if (len < index) return
-
-        setTimeout(function() {
-            elem.focus()
-            if (elem.setSelectionRange) { // 标准浏览器
-                elem.setSelectionRange(index, index)    
-            } else { // IE9-
-                var range = elem.createTextRange()
-                range.moveStart("character", -len)
-                range.moveEnd("character", -len)
-                range.moveStart("character", index)
-                range.moveEnd("character", 0)
-                range.select()
-            }
-        }, 10)
-    })
-}
 
 
     </script>
