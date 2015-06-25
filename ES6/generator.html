@@ -10,5 +10,40 @@
 	<p>
 		两次Ajax返回的结果相加为：<span>?</span>
 	</p>
+	<p>
+		<textarea>
+function ajax1(callback) {
+	$.getJSON('a.txt', function(obj) {
+		callback(obj)
+		// console.log(obj)
+	})
+}
+function ajax2(callback) {
+	$.getJSON('b.txt', function(obj) {
+		callback(obj);
+		// console.log(obj)
+	})
+}
+function *delayAjax(resume) {
+	var r1 = yield ajax1(resume)
+	var r2 = yield ajax2(resume)
+	return r1.v + r2.v
+}
+
+function run() {
+	var iter = delayAjax(resume)
+	function resume(callbackValue) {
+		var rs = iter.next(callbackValue)
+		if (rs.done) {
+			console.log(rs.value)
+			$('span').text(rs.value)
+		}
+	}
+	iter.next()
+}
+
+run()	
+		</textarea>
+	</p>
 </body>
 </html>
