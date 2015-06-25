@@ -58,13 +58,13 @@ var iter = ticketGenerator();
 	function ajax1(callback) {
 		$.getJSON('a.txt', function(obj) {
 			callback(obj)
-			// console.log(obj)
+			a1.innerHTML = obj.v
 		})
 	}
 	function ajax2(callback) {
 		$.getJSON('b.txt', function(obj) {
 			callback(obj);
-			// console.log(obj)
+			a2.innerHTML = obj.v
 		})
 	}
 	function *delayAjax(resume) {
@@ -79,7 +79,7 @@ var iter = ticketGenerator();
 			var rs = iter.next(callbackValue)
 			if (rs.done) {
 				console.log(rs.value)
-				$('span').text(rs.value)
+				a3.innerHTML = rs.value
 			}
 		}
 		iter.next()
