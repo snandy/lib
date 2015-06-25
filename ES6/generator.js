@@ -76,7 +76,10 @@ var iter = ticketGenerator();
 	function run() {
 		var iter = delayAjax(resume)
 		function resume(callbackValue) {
-			iter.next(callbackValue)
+			var rs = iter.next(callbackValue)
+			if (rs.done) {
+				console.log(rs.value)
+			}
 		}
 		iter.next()
 	}
