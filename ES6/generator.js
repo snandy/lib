@@ -79,6 +79,7 @@ var iter = ticketGenerator();
 			var rs = iter.next(callbackValue)
 			if (rs.done) {
 				console.log(rs.value)
+				$('span').text(rs.value)
 			}
 		}
 		iter.next()
