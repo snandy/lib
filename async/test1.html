@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Q.js for Promise</title>
+    <script src="q.js"></script>
+</head>
+<body>
+<script>
+
+// 根据IP查询用户所在城市
+function queryCity(ip) {
+	// 这里省略了一堆业务逻辑
+	return 'BeiJing'
+}
+// 调用第三方接口取城市的天气预报信息
+function queryWeather(city) {
+	// 这里省略了一堆查询逻辑
+	return 'rain or snow.'
+}
+
+
+
+~function() {
+	function getInputPromise() {
+		return Q.promise(function(resolve, reject, notify) {
+			setTimeout(function() {
+				// resolve('success')
+				reject(new Error('fail'))
+			}, 2000)
+		})
+	}
+
+	// var outputPromise = getInputPromise()
+	// 	.then(function(input) {
+	// 		console.log(input)
+	// 	}, function(reason) {
+	// 		console.log(reason)
+	// 	});
+
+}();
+
+/*
+ *  Q.defer
+ */ 
+~function() {
+
+	function getCityNameByIP(ip) {
+		var deferred = Q.defer()
+		setTimeout(function() {
+			var city = queryCity(ip)
+			deferred.resolve(city)
+		}, 2000)
+		return deferred.promise
+	}
+
+	function getWeatherByCityName(city) {
+		var deferred = Q.defer()
+		setTimeout(function() {
+			var weather = queryWeather(city)
+			deferred.resolve(city + ', ' + weather)
+		}, 4000)
+		return deferred.promise
+	}
+
+	// getCityNameByIP()
+	// 	.then(function(r1) {
+	// 		console.log(r1)
+	// 		return getWeatherByCityName(r1)
+	// 	})
+	// 	.then(function(r2) {
+	// 		console.log(r2)
+	// 	})
+
+}();
+
+/*
+ *  Q.promise
+ */ 
+~function() {
+
+	function getCityNameByIP(ip) {
+		return Q.Promise(function(resolve, reject, notify) {
+			setTimeout(function() {
+				var city = queryCity(ip)
+				resolve(city)
+			}, 2000)
+		})
+	}
+
+	function getWeatherByCityName(city) {
+		return Q.Promise(function(resolve, reject, notify) {
+			setTimeout(function() {
+				var weather = queryWeather(city)
+				resolve(city + ', ' + weather)
+			}, 4000)
+		})
+	}
+
+	// getCityNameByIP()
+	// 	.then(function(r1) {
+	// 		console.log(r1)
+	// 		return getWeatherByCityName(r1)
+	// 	})
+	// 	.then(function(r2) {
+	// 		console.log(r2)
+	// 	})
+}();
+
+/*
+ *  Q.all
+ */ 
+~function() {
+
+	function getCityNameByIP(ip) {
+		return Q.Promise(function(resolve, reject, notify) {
+			setTimeout(function() {
+				var city = queryCity(ip)
+				resolve(city)
+			}, 2000)
+		})
+	}
+
+	function getWeatherByCityName(city) {
+		return Q.Promise(function(resolve, reject, notify) {
+			setTimeout(function() {
+				var weather = queryWeather(city)
+				resolve(weather)
+			}, 4000)
+		})
+	}
+
+	// Q.all([getCityNameByIP(), getWeatherByCityName()])
+	// 	.then(function(args) {
+	// 		console.log(args)
+	// 	})
+
+
+}();
+
+
+/*
+ *  spread
+ */ 
+~function() {
+
+	function getCityNameByIP(ip) {
+		return Q.Promise(function(resolve, reject, notify) {
+			setTimeout(function() {
+				var city = queryCity(ip)
+				resolve(city)
+			}, 2000)
+		})
+	}
+
+	function getWeatherByCityName(city) {
+		return Q.Promise(function(resolve, reject, notify) {
+			setTimeout(function() {
+				console.log(city)
+				var weather = queryWeather(city)
+				resolve(weather)
+			}, 4000)
+		})
+	}
+
+	return getCityNameByIP()
+		.then(function (cityName) {
+		    return [cityName, getWeatherByCityName(cityName)];
+		})
+		.spread(function (cityName, weather) {
+			console.log(cityName, ',', weather)
+		});
+
+}();
+
+
+
+
+
+</script>
+</body>
+</html>

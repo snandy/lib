@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Generator Function</title>
+    <script src="http://misc.360buyimg.com/jdf/lib/jquery-1.6.4.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+
+	function delay1(callback) {
+		var val = 'first'
+		setTimeout(function() {
+			callback(val)
+		}, 1000)
+	}
+
+	function delay2(callback) {
+		var val = 'second'
+		setTimeout(function() {
+			callback(val)
+		}, 3000)
+	}
+
+	function *gener(callback) {
+		var r1 = yield delay1(callback)
+		var r2 = yield delay2(callback)
+	}
+
+	function run() {
+		var iter = gener(callback)
+		var arr  = []
+		function callback(val) {
+			arr.push(val)
+			var rs = iter.next(val)	
+			if (rs.done) {
+				console.log(arr.join(','))
+			}
+		}
+		iter.next()
+	}
+
+	run()
+</script>
+</body>
+</html>
