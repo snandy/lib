@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+
+<title>iScroll demo: simple</title>
+
+<script type="text/javascript" src="zepto.js"></script>
+
+<script type="text/javascript">
+</script>
+
+<style type="text/css">
+ul, li {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+#slider {
+	position: relative;
+	background: #fff;
+}
+#slider_touch {
+	height: 194px;
+	overflow: hidden;
+}
+#slider li {
+	position: absolute;
+}
+#serial-number {
+	position: absolute;
+	left: 0;
+	bottom: 7px;
+	width: 100%;
+	z-index: 100;
+	overflow: hidden;
+	text-align: center;
+}
+#serial-number .point {
+    border-radius: 7px;
+    -webkit-border-radius: 7px;
+    -ms-border-radius: 7px;
+    height: 7px;
+    width: 7px;
+    margin-right: 7px;
+    background: #fff;
+    display: inline-block;
+}
+</style>
+</head>
+<body>
+<div id="slider" class="slider">
+        <ul id="slider_touch">
+        <li><a class="J_ping" href="http://sale.jd.com/m/act/fVHkZbhnY6zQ.html?resourceType=listActivity&amp;resourceValue=0_0_1_60909&amp;resourceType=index_activity&amp;resourceValue=&amp;client=m&amp;sid=623f8bb70b57129270ec08ec13fffbe9"><img alt="金秋风暴 " style="z-index:1;height:auto; max-width:640px; min-width:320px; width: 100%" src="http://m.360buyimg.com/mobilecms/s480x180_jfs/t2410/295/310005863/113498/3302d1ef/55ffede0N5ef64f46.jpg"></a></li>
+        <li><a class="J_ping" href="http://sale.jd.com/m/act/XFbkjNVzhlgaJrxM.html?resourceType=listActivity&amp;resourceValue=0_0_2_60883&amp;resourceType=index_activity&amp;resourceValue=&amp;client=m&amp;sid=623f8bb70b57129270ec08ec13fffbe9"><img alt="手机焕新季" style="z-index:1;height:auto; max-width:640px; min-width:320px; width: 100%" src="http://m.360buyimg.com/mobilecms/s480x180_jfs/t1783/151/1667339240/153760/56836459/55ff8114Ncb20d5ee.jpg"></a></li>
+        <li><a class="J_ping" href="http://sale.jd.com/m/act/iHsJKgeGlMC.html?resourceType=listActivity&amp;resourceValue=0_0_3_60884&amp;resourceType=index_activity&amp;resourceValue=&amp;client=m&amp;sid=623f8bb70b57129270ec08ec13fffbe9"><img alt="电视家影躺购节" style="z-index:1;height:auto; max-width:640px; min-width:320px; width: 100%" src="http://m.360buyimg.com/mobilecms/s480x180_jfs/t2374/151/345427910/145629/657bf173/55ff8266N84c41e2e.jpg"></a></li>
+        <li><a class="J_ping" href="http://sale.jd.com/m/act/lGXY4WQDLOxP.html?resourceType=listActivity&amp;resourceValue=0_0_4_60910&amp;resourceType=index_activity&amp;resourceValue=&amp;client=m&amp;sid=623f8bb70b57129270ec08ec13fffbe9"><img alt="IT约惠过中秋" style="z-index:1;height:auto; max-width:640px; min-width:320px; width: 100%" src="http://m.360buyimg.com/mobilecms/s480x180_jfs/t2095/218/328221753/80127/86daff66/55fff3a2N48ec5699.jpg"></a></li>
+        <li><a class="J_ping" href="http://sale.jd.com/m/act/sb0acRLV81TJCM.html?resourceType=listActivity&amp;resourceValue=0_0_5_60891&amp;resourceType=index_activity&amp;resourceValue=&amp;client=m&amp;sid=623f8bb70b57129270ec08ec13fffbe9"><img alt="金秋茗茶节" style="z-index:1;height:auto; max-width:640px; min-width:320px; width: 100%" src="http://m.360buyimg.com/mobilecms/s480x180_jfs/t2056/300/309329535/118629/f37d25e9/55ffb013N48f4c75b.jpg"></a></li>
+        <li><a class="J_ping"  href="http://sale.jd.com/m/act/tB3nqpJ7Gvdck.html?resourceType=listActivity&amp;resourceValue=0_0_6_60890&amp;resourceType=index_activity&amp;resourceValue=&amp;client=m&amp;sid=623f8bb70b57129270ec08ec13fffbe9"><img alt="金融-京东钱包-抢吧·" style="z-index:1;height:auto; max-width:640px; min-width:320px; width: 100%" src="http://m.360buyimg.com/mobilecms/s480x180_jfs/t2320/269/330051985/96940/3cba0f16/55ffa602N43db34e8.jpg"></a></li>
+        <li><a class="J_ping" href="http://sale.jd.com/m/act/U1kTS6fDeM72tN.html?resourceType=listActivity&amp;resourceValue=0_0_7_60893&amp;resourceType=index_activity&amp;resourceValue=&amp;client=m&amp;sid=623f8bb70b57129270ec08ec13fffbe9"><img alt="浓情中秋送健康" style="z-index:1;height:auto; max-width:640px; min-width:320px; width: 100%" src="http://m.360buyimg.com/mobilecms/s480x180_jfs/t2116/236/308665308/82531/dad8f92b/55ffb99fN8825d3fc.jpg"></a></li>
+        <li><a class="J_ping" href="http://sale.jd.com/m/act/LGp8us4ZeoPc5kV.html?resourceType=listActivity&amp;resourceValue=0_0_8_60886&amp;resourceType=index_activity&amp;resourceValue=&amp;client=m&amp;sid=623f8bb70b57129270ec08ec13fffbe9"><img alt="海量好书特惠购" style="z-index:1;height:auto; max-width:640px; min-width:320px; width: 100%" src="http://m.360buyimg.com/mobilecms/s480x180_jfs/t2062/324/327258275/85358/94ad9095/55ff9cffNc95f322f.jpg"></a></li>
+        </ul>
+        <div id="serial-number" class="serial-number">
+            <span class="point"></span>
+            <span class="point"></span>
+            <span class="point"></span>
+            <span class="point"></span>
+            <span class="point selected"></span>
+            <span class="point"></span>
+            <span class="point"></span>
+            <span class="point"></span>
+		</div>
+</div>
+
+</body>
+</html>
