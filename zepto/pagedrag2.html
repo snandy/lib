@@ -204,6 +204,25 @@ $.fn.pagedrag = function(option, callback) {
 };
 
 $('#wrap2').pagedrag({direction: 'x'});
+
+
+// 动态插入css的写法
+
+function createStyleSheet() {
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    head.appendChild(style);
+    return style.sheet;
+}
+
+var styleSheet = createStyleSheet();
+
+function addCss(name, val) {
+    if (styleSheet.insertRule) {
+        alert(3)
+    }
+}
 </script>
 </body>
 </html>
