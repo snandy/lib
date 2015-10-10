@@ -13,27 +13,27 @@
 <body> 
 <div class="wrapper" id="wrap">
     <!-- PAGE 1 -->
-    <section class="page page_1">
+    <section class="page page_1 red">
         <p>page1</p>
     </section>
     <!-- PAGE 2 -->
-    <section class="page page_1">
+    <section class="page page_2">
         <p>page2</p>
     </section>
     <!-- PAGE 3 -->
-    <section class="page page_1">
+    <section class="page page_3">
         <p>page3</p>
     </section>
     <!-- PAGE 4 -->
-    <section class="page page_1">
+    <section class="page page_4">
         <p>page4</p>
     </section>
     <!-- PAGE 5 -->
-    <section class="page page_1">
+    <section class="page page_5">
         <p>page5</p>
     </section>
     <!-- PAGE 6 -->
-    <section class="page page_1">
+    <section class="page page_6">
         <p>page6</p>
     </section>
 </div>
@@ -42,13 +42,17 @@
 <script>
 $.fn.pagedrag = function(option, callback) {
     var setting = $.extend({
-        direction: 'Y'
+        direction: 'Y',
+        minOffset: 50
     }, option);
 
     var prefix = mo.prefix;
     var transform = prefix + 'transform';
     var docElem = document.documentElement;
 
+    mo.addStyle('.PAGE_DRAG_KEEP{'+prefix+'transition:'+prefix+'transform .3s linear;}');//竖屏
+    mo.addStyle('.PAGE_DRAG_H_KEEP{'+prefix+'transition:'+prefix+'transform .2s linear;}');//横屏
+    mo.addStyle('.PAGE_DRAG_RESTORE{'+prefix+'transition:'+prefix+'transform .1s linear;}');//弹性
 
     function getTranslate3D(elem) {
         var result = {x: 0, y: 0, z: 0};
@@ -80,7 +84,7 @@ $.fn.pagedrag = function(option, callback) {
             cw = docElem.clientWidth;
         }, false);
 
-        var total = 'X' == direction ? (Math.ceil(sw/cw)) : (Math.ceil(sh/ch));
+        var total = Math.ceil(sh/ch);
         var cur = 0;
         var previous = -1;
         var next = 1; 
@@ -91,12 +95,13 @@ $.fn.pagedrag = function(option, callback) {
         var offset = 0;
         var motion = 'none'
         var lock = false;
+        var keep = 'PAGE_DRAG_KEEP';
 
         function fixPage(num) {
             if (!total) return num;
             //使页码正确
             if(num >= 0) {
-                return num%total;
+                return num % total;
             } else {
                 return (total + num % total);
             }
@@ -106,31 +111,66 @@ $.fn.pagedrag = function(option, callback) {
             var toucher = ev.targetTouches || ev.changedTouches;
             var touchObj = toucher[0];
             var trans3d = getTranslate3D(elem);
-            startX = touchObj.pageX;
             startY = touchObj.pageY;
-            console.log(startY)
-            x = trans3d.x;
+            console.log(touchObj, startX, startY);
             y = trans3d.y;
-            console.log(y)
-            // // 需要重新取值
-            // if (!sw && !sh) {
-            //     sh = elem.scrollHeight;
-            //     sw = elem.scrollWidth;
-            //     total = 'X' == direction ? (Math.ceil(sw/cw)) : (Math.ceil(sh/ch));
-            //     next = fixPage(cur + 1);
-            //     previous = fixPage(cur - 1);
-            // }
-            // motion = 'none';         
+            
+            // 需要重新取值
+            if (!sw && !sh) {
+                sh = elem.scrollHeight;
+                sw = elem.scrollWidth;
+                total = Math.ceil(sh/ch);
+                next = fixPage(cur + 1);
+                previous = fixPage(cur - 1);
+            } 
         });
         $elem.on('touchmove', function(ev) {
             var toucher = ev.targetTouches || ev.changedTouches;
             var touchObj = toucher[0];
-            var pageX = touchObj.pageX;
             var pageY = touchObj.pageY;
-            var offset = pageY - startY;
-            // console.log(offset)
+            offset = pageY - startY;
             $elem.css(transform, 'translate3d(0,' + (y+offset) + 'px,0)')
         });
+        $elem.on('touchend', function(ev) {
+            lock = true; //上锁
+            // if (just_motion) {
+            //     ev.stopPropagation(); //阻止冒泡
+            // }
+            var toucher = ev.targetTouches || ev.changedTouches;
+            if ( Math.abs(offset) < setting.minOffset || (offset < 0 && cur == total-1) || (offset > 0 && cur == 0) ) {
+                turnback();
+            } else {
+                if (offset < 0) {
+                    move(next);
+                } else {
+                    move(previous);
+                }
+            }
+        });
+
+        // 回退到原来位置
+        function turnback(){
+            elem.style[transform] = 'translate3d(0,-'+cur*ch+'px,0)';
+            // 解锁
+            setTimeout(function() {
+                lock = false;
+            }, 100);
+        }
+
+        function move(index) {
+            elem.style[transform] = 'translate3d(0,-' + (index*ch) + 'px,0)';
+            elem.classList.add(keep);
+            setTimeout(function() {
+                elem.classList.remove(keep);
+                cur = index;
+                next = cur + 1;
+                previous = cur - 1;
+                cur = fixPage(cur);
+                next = fixPage(next);
+                previous = fixPage(previous);
+                lock = false; //解锁
+            }, 300);
+        }
 
     }
 
