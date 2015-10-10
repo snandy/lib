@@ -125,6 +125,8 @@ $.fn.pagedrag = function(option, callback) {
             } 
         });
         $elem.on('touchmove', function(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
             var toucher = ev.targetTouches || ev.changedTouches;
             var touchObj = toucher[0];
             var pageY = touchObj.pageY;

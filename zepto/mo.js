@@ -18,7 +18,7 @@
 	var addStyle = function() {
 		var styleSheet = function() {
 			var head = document.head;
-			var style = document.createElement('style'); 
+			var style = document.createElement('style');
 			style.type = 'text/css';
 			head.appendChild(style);
 			var styleSheets = document.styleSheets;
@@ -27,9 +27,9 @@
 		return function(cssText) {
 			var cssRules = cssText.split('\r\n');
 			var len = !!styleSheet.cssRules ? styleSheet.cssRules.length : 0;
-			for (var i=0; i < cssRules.length; ++i) {
-				styleSheet.insertRule(cssRules[i],len++);
-			};
+			for (var i = 0; i < cssRules.length; ++i) {
+				styleSheet.insertRule(cssRules[i], len++);
+			}
 			return len;
 		};
 	}();
