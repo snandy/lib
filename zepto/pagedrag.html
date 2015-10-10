@@ -9,30 +9,55 @@
     <meta content="email=no" name="format-detection">
     <title>pagedrag</title>
     <link rel="stylesheet" href="skin/pagedrag.css"/>
+    <style type="text/css">
+        #wrap2 {
+            white-space: nowrap;
+            width: 100%;
+        }
+        #wrap2 section {
+            float: left;
+        }
+    </style>
 </head> 
 <body> 
+<!--
 <div class="wrapper" id="wrap">
-    <!-- PAGE 1 -->
     <section class="page page_1 red">
         <p>page1</p>
     </section>
-    <!-- PAGE 2 -->
     <section class="page page_2">
         <p>page2</p>
     </section>
-    <!-- PAGE 3 -->
     <section class="page page_3">
         <p>page3</p>
     </section>
-    <!-- PAGE 4 -->
     <section class="page page_4">
         <p>page4</p>
     </section>
-    <!-- PAGE 5 -->
     <section class="page page_5">
         <p>page5</p>
     </section>
-    <!-- PAGE 6 -->
+    <section class="page page_6">
+        <p>page6</p>
+    </section>
+</div>
+-->
+<div class="wrapper" id="wrap2">
+    <section class="page page_1 red">
+        <p>page1</p>
+    </section>
+    <section class="page page_2">
+        <p>page2</p>
+    </section>
+    <section class="page page_3">
+        <p>page3</p>
+    </section>
+    <section class="page page_4">
+        <p>page4</p>
+    </section>
+    <section class="page page_5">
+        <p>page5</p>
+    </section>
     <section class="page page_6">
         <p>page6</p>
     </section>
@@ -42,7 +67,7 @@
 <script>
 $.fn.pagedrag = function(option, callback) {
     var setting = $.extend({
-        direction: 'Y',
+        direction: 'Y', // 默认垂直翻页
         minOffset: 50
     }, option);
 
@@ -50,9 +75,8 @@ $.fn.pagedrag = function(option, callback) {
     var transform = prefix + 'transform';
     var docElem = document.documentElement;
 
-    mo.addStyle('.PAGE_DRAG_KEEP{'+prefix+'transition:'+prefix+'transform .3s linear;}');//竖屏
-    mo.addStyle('.PAGE_DRAG_H_KEEP{'+prefix+'transition:'+prefix+'transform .2s linear;}');//横屏
-    mo.addStyle('.PAGE_DRAG_RESTORE{'+prefix+'transition:'+prefix+'transform .1s linear;}');//弹性
+    mo.addStyle('.PAGE_DRAG_KEEP{'+prefix+'transition:'+prefix+'transform .3s linear;}'); //竖屏
+    mo.addStyle('.PAGE_DRAG_H_KEEP{'+prefix+'transition:'+prefix+'transform .2s linear;}'); //横屏
 
     function getTranslate3D(elem) {
         var result = {x: 0, y: 0, z: 0};
@@ -73,7 +97,7 @@ $.fn.pagedrag = function(option, callback) {
         return result;
     }
     function bootstrap($elem) {
-        var direction = setting.direction;
+        var direction = setting.direction.toUpperCase();
         var elem = $elem[0];
         var sw = elem.scrollWidth;
         var sh = elem.scrollHeight;
@@ -95,7 +119,7 @@ $.fn.pagedrag = function(option, callback) {
         var offset = 0;
         var motion = 'none'
         var lock = false;
-        var keep = 'PAGE_DRAG_KEEP';
+        var keep = 'X' == direction ? 'PAGE_DRAG_H_KEEP' : 'PAGE_DRAG_KEEP';
 
         function fixPage(num) {
             if (!total) return num;
@@ -111,8 +135,9 @@ $.fn.pagedrag = function(option, callback) {
             var toucher = ev.targetTouches || ev.changedTouches;
             var touchObj = toucher[0];
             var trans3d = getTranslate3D(elem);
+            startX = touchObj.pageX;
             startY = touchObj.pageY;
-            console.log(touchObj, startX, startY);
+            x = trans3d.x;
             y = trans3d.y;
             
             // 需要重新取值
@@ -122,22 +147,29 @@ $.fn.pagedrag = function(option, callback) {
                 total = Math.ceil(sh/ch);
                 next = fixPage(cur + 1);
                 previous = fixPage(cur - 1);
-            } 
+            }
+            // console.log(ev);
         });
         $elem.on('touchmove', function(ev) {
             ev.preventDefault();
             ev.stopPropagation();
             var toucher = ev.targetTouches || ev.changedTouches;
             var touchObj = toucher[0];
+            var pageX = touchObj.pageX;
             var pageY = touchObj.pageY;
-            offset = pageY - startY;
-            $elem.css(transform, 'translate3d(0,' + (y+offset) + 'px,0)')
+            
+            if (direction === 'Y') {
+                offset = pageY - startY;
+                $elem.css(transform, 'translate3d(0,' + (y+offset) + 'px, 0)');
+            } else {
+                offset = pageX - startX;
+                console.log(offset)
+                $elem.css(transform, 'translate3d(' + (x+offset) + 'px,0,0)');
+            }
+            
         });
         $elem.on('touchend', function(ev) {
             lock = true; //上锁
-            // if (just_motion) {
-            //     ev.stopPropagation(); //阻止冒泡
-            // }
             var toucher = ev.targetTouches || ev.changedTouches;
             if ( Math.abs(offset) < setting.minOffset || (offset < 0 && cur == total-1) || (offset > 0 && cur == 0) ) {
                 turnback();
@@ -151,8 +183,12 @@ $.fn.pagedrag = function(option, callback) {
         });
 
         // 回退到原来位置
-        function turnback(){
-            elem.style[transform] = 'translate3d(0,-'+cur*ch+'px,0)';
+        function turnback() {
+            if (direction === 'Y') {
+                elem.style[transform] = 'translate3d(0,-' + cur*ch + 'px,0)';    
+            } else {
+                elem.style[transform] = 'translate3d(-' + cur*cw + 'px,0,0)';
+            }
             // 解锁
             setTimeout(function() {
                 lock = false;
@@ -160,8 +196,12 @@ $.fn.pagedrag = function(option, callback) {
         }
 
         function move(index) {
-            elem.style[transform] = 'translate3d(0,-' + (index*ch) + 'px,0)';
             elem.classList.add(keep);
+            if (direction === 'Y') {
+                elem.style[transform] = 'translate3d(0,-' + (index*ch) + 'px,0)';    
+            } else {
+                elem.style[transform] = 'translate3d(-' + index*cw + 'px,0,0)';
+            }
             setTimeout(function() {
                 elem.classList.remove(keep);
                 cur = index;
@@ -184,7 +224,8 @@ $.fn.pagedrag = function(option, callback) {
     })
 };
 
-$('#wrap').pagedrag();
+// $('#wrap').pagedrag();
+$('#wrap2').pagedrag({direction: 'x'});
 </script>
 </body>
 </html>
