@@ -16,12 +16,12 @@
         }
         #wrap2 section {
             width: 667px;
-            float: left;
         }
     </style>
 </head> 
 <body> 
-<div class="wrapper" id="wrap">
+
+<div class="wrapper" id="wrap2">
     <section class="page page_1 red">
         <p>page1</p>
     </section>
@@ -41,7 +41,6 @@
         <p>page6</p>
     </section>
 </div>
-
 <script src="mo.js"></script>
 <script src="zepto.js"></script>
 <script>
@@ -204,7 +203,7 @@ $.fn.pagedrag = function(option, callback) {
     })
 };
 
-$('#wrap').pagedrag();
+$('#wrap2').pagedrag({direction: 'x'});
 </script>
 </body>
 </html>
