@@ -22,7 +22,7 @@
 			style.type = 'text/css';
 			head.appendChild(style);
 			var styleSheets = document.styleSheets;
-			return styleSheets[styleSheets.length-1];
+			return style.sheet;
 		}();
 		return function(cssText) {
 			var cssRules = cssText.split('\r\n');
