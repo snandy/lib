@@ -7,7 +7,7 @@
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="telephone=no" name="format-detection">
     <meta content="email=no" name="format-detection">
-    <title>pagedrag</title>
+    <title>pagedrag 水平翻页</title>
     <link rel="stylesheet" href="skin/pagedrag.css"/>
     <style type="text/css">
         #wrap2 {
@@ -19,8 +19,7 @@
         }
     </style>
 </head> 
-<body> 
-
+<body>
 <div class="wrapper" id="wrap2">
     <section class="page page_1 red">
         <p>page1</p>
@@ -41,192 +40,11 @@
         <p>page6</p>
     </section>
 </div>
-<script src="mo.js"></script>
 <script src="zepto.js"></script>
+<script src="mo.js"></script>
+<script src="pagedrag.js"></script>
 <script>
-$.fn.pagedrag = function(option, callback) {
-    var setting = $.extend({
-        direction: 'Y', // 默认垂直翻页
-        minOffset: 50
-    }, option);
-
-    var prefix = mo.prefix;
-    var transform = prefix + 'transform';
-    var docElem = document.documentElement;
-
-    mo.addStyle('.PAGE_DRAG_KEEP{'+prefix+'transition:'+prefix+'transform .3s linear;}'); //竖屏
-    mo.addStyle('.PAGE_DRAG_H_KEEP{'+prefix+'transition:'+prefix+'transform .2s linear;}'); //横屏
-
-    function getTranslate3D(elem) {
-        var result = {x: 0, y: 0, z: 0};
-        var trans  = elem.style[transform];
-
-        //没有值，直接中断
-        if (!trans || trans == 'none') return result;
-
-        var reg = RegExp('translate3d\\(([^\\)]+)\\)','ig');
-        var res = trans.match(reg);
-        if (res && res.length) {
-            var arr = res[0].replace(reg, '$1').split(',');
-            result.x = parseInt(arr[0], 10);
-            result.y = parseInt(arr[1], 10);
-            result.z = parseInt(arr[2], 10);
-        }
-
-        return result;
-    }
-    function bootstrap($elem) {
-        var direction = setting.direction.toUpperCase();
-        var elem = $elem[0];
-        var sw = elem.scrollWidth;
-        var sh = elem.scrollHeight;
-        var cw = docElem.clientWidth;
-        var ch = docElem.clientHeight;
-        window.addEventListener('resize', function() {
-            ch = docElem.clientHeight;
-            cw = docElem.clientWidth;
-        }, false);
-
-        var total = Math.ceil(sh/ch);
-        var cur = 0;
-        var previous = -1;
-        var next = 1; 
-        var startX = 0
-        var startY = 0;
-        var x = 0;
-        var y = 0;
-        var offset = 0;
-        var motion = 'none'
-        var lock = false;
-        var keep = 'X' == direction ? 'PAGE_DRAG_H_KEEP' : 'PAGE_DRAG_KEEP';
-
-        if (direction === 'X') {
-            $elem.find('section').width(cw + 'px');
-        }
-
-        function fixPage(num) {
-            if (!total) return num;
-            //使页码正确
-            if(num >= 0) {
-                return num % total;
-            } else {
-                return (total + num % total);
-            }
-        }
-
-        $elem.on('touchstart', function(ev) {
-            var toucher = ev.targetTouches || ev.changedTouches;
-            var touchObj = toucher[0];
-            var trans3d = getTranslate3D(elem);
-            startX = touchObj.pageX;
-            startY = touchObj.pageY;
-            x = trans3d.x;
-            y = trans3d.y;
-            
-            // 需要重新取值
-            if (!sw && !sh) {
-                sh = elem.scrollHeight;
-                sw = elem.scrollWidth;
-                total = Math.ceil(sh/ch);
-                next = fixPage(cur + 1);
-                previous = fixPage(cur - 1);
-            }
-            // console.log(ev);
-        });
-        $elem.on('touchmove', function(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            var toucher = ev.targetTouches || ev.changedTouches;
-            var touchObj = toucher[0];
-            var pageX = touchObj.pageX;
-            var pageY = touchObj.pageY;
-            
-            if (direction === 'Y') {
-                offset = pageY - startY;
-                $elem.css(transform, 'translate3d(0,' + (y+offset) + 'px, 0)');
-            } else {
-                offset = pageX - startX;
-                console.log(offset)
-                $elem.css(transform, 'translate3d(' + (x+offset) + 'px,0,0)');
-            }
-            
-        });
-        $elem.on('touchend', function(ev) {
-            lock = true; //上锁
-            var toucher = ev.targetTouches || ev.changedTouches;
-            if ( Math.abs(offset) < setting.minOffset || (offset < 0 && cur == total-1) || (offset > 0 && cur == 0) ) {
-                turnback();
-            } else {
-                if (offset < 0) {
-                    move(next);
-                } else {
-                    move(previous);
-                }
-            }
-        });
-
-        // 回退到原来位置
-        function turnback() {
-            if (direction === 'Y') {
-                elem.style[transform] = 'translate3d(0,-' + cur*ch + 'px,0)';    
-            } else {
-                elem.style[transform] = 'translate3d(-' + cur*cw + 'px,0,0)';
-            }
-            // 解锁
-            setTimeout(function() {
-                lock = false;
-            }, 100);
-        }
-
-        function move(index) {
-            elem.classList.add(keep);
-            if (direction === 'Y') {
-                elem.style[transform] = 'translate3d(0,-' + (index*ch) + 'px,0)';    
-            } else {
-                elem.style[transform] = 'translate3d(-' + index*cw + 'px,0,0)';
-            }
-            setTimeout(function() {
-                elem.classList.remove(keep);
-                cur = index;
-                next = cur + 1;
-                previous = cur - 1;
-                cur = fixPage(cur);
-                next = fixPage(next);
-                previous = fixPage(previous);
-                lock = false; //解锁
-            }, 300);
-        }
-
-    }
-
-    // 实例化每个对象
-    return this.each(function() {
-        var $elem = $(this)
-        bootstrap($elem)
-        if ($.isFunction(callback)) callback($elem)
-    })
-};
-
 $('#wrap2').pagedrag({direction: 'x'});
-
-
-// 动态插入css的写法
-
-function createStyleSheet() {
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var style = document.createElement('style');
-    style.type = 'text/css';
-    head.appendChild(style);
-    return style.sheet;
-}
-
-var styleSheet = createStyleSheet();
-
-function addCss(name, val) {
-    if (styleSheet.insertRule) {
-        alert(3)
-    }
-}
 </script>
 </body>
 </html>
