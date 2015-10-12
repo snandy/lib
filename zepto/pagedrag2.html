@@ -15,7 +15,7 @@
             white-space: nowrap;
         }
         #wrap2 section {
-            width: 667px;
+            float: left;
         }
     </style>
 </head> 
@@ -99,6 +99,10 @@ $.fn.pagedrag = function(option, callback) {
         var motion = 'none'
         var lock = false;
         var keep = 'X' == direction ? 'PAGE_DRAG_H_KEEP' : 'PAGE_DRAG_KEEP';
+
+        if (direction === 'X') {
+            $elem.find('section').width(cw + 'px');
+        }
 
         function fixPage(num) {
             if (!total) return num;
