@@ -61,8 +61,13 @@ $.fn.pagedrag = function(option, callback) {
         var lock = false;
         var keep = 'X' == direction ? 'PAGE_DRAG_H' : 'PAGE_DRAG_V';
 
+        // 水平方向需要把内层元素横着摆放，容器的宽度也要放大到足以容纳子元素以实现动画效果
         if (direction === 'X') {
-            $elem.find(setting.content).width(cw + 'px');
+            $elem.width('2000%');
+            $elem.find(setting.content).css({
+                width: cw + 'px',
+                'float': 'left'
+            });
         }
 
         function fixPage(num) {
@@ -109,7 +114,6 @@ $.fn.pagedrag = function(option, callback) {
                 $elem.css(transform, 'translate3d(0,' + (y+offset) + 'px, 0)');
             } else {
                 offset = pageX - startX;
-                console.log(offset)
                 $elem.css(transform, 'translate3d(' + (x+offset) + 'px,0,0)');
             }
         });
