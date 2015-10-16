@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>addEventListener</title>
+</head>
+<body>
+<script type="text/javascript">
+function toFixed(number, precision) {
+    var multiplier  = Math.pow(10, precision + 1)
+    var wholeNumber = Math.round(number * multiplier ).toString()
+    var length      = wholeNumber.length - 1
+    wholeNumber = wholeNumber.substr(0, length)
+    return [
+        wholeNumber.substr(0, length - precision),
+        wholeNumber.substr(-precision)
+    ].join('.');
+}
+
+function toPrecision(number, x) {
+    var str = number + ''
+    return str.substr(0,1) + str.substr(2, x)
+}
+
+/*
+ * 修复 firefox/chrome 中 toFixed 兼容性问题
+ * firefox/chrome 中，对于小数最后一位为 5 时进位不正确，修复方式即判断最后一位为 5 的，改成 6， 再调用 toFixed
+ */
+function toFixed(number, precision) {
+    var str = number + ''
+    var len = str.length
+    var last = str.substr(len-1, len)
+    if (last == '5') {
+        last = '6'
+        str = str.substr(0, len-1) + last
+        return (str - 0).toFixed(precision)        
+    } else {
+        return number.toFixed(precision)
+    }
+}
+
+</script>
+</script>
+</body>
+</html>

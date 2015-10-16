@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>JSONP是同步还是异步</title>
+	<script>
+		function myInit() {
+			console.log(2)	
+		}
+	</script>
+</head>
+<body>
+	<script>
+	console.log(1)
+	</script>
+	<script>
+	var script = document.createElement('script');
+	script.src = 'http://misc.360buyimg.com/jdf/lib/jquery-1.6.4.js';
+	script.onload = myInit;
+	document.head.appendChild(script);
+	</script>
+	<!--
+	<script src="http://misc.360buyimg.com/jdf/lib/jquery-1.6.4.js" onload="myInit()"></script>
+	-->
+	<script>
+	console.log(3)
+	</script>	
+	<!--
+	<script async src="http://misc.360buyimg.com/virtuals/ui/popui-1.0.js" onload="myInit()"></script>
+	-->
+</body>
+</html>

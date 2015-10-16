@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="email=no" name="format-detection">
+    <title>CSS3 动画事件</title>
+    <style type="text/css">
+		h1 {
+		  animation-duration: 3s;
+		  animation-name: slidein;
+/*		  animation-iteration-count: infinite;
+          animation-direction: alternate;		*/  
+		}
+		@keyframes slidein {
+		  from {
+		    margin-left: 100%;
+		    width: 100%; 
+		  }
+		  to {
+		    margin-left: 0%;
+		    width: 100%;
+		  }
+		}
+
+    </style>
+</head> 
+<body> 
+	<h1 id="ani">Test CSS3 SlideIn</h1>
+	<script>
+		ani.addEventListener('animationstart', function() {
+			console.log('animate start')
+		}, false);
+		ani.addEventListener('animationend', function() {
+			console.log('animate end')
+		}, false);	
+	</script>
+</body>
+</html>
