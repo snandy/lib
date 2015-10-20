@@ -21,13 +21,14 @@
 
 	function getData(url, callback) {
 		var ifr = document.createElement('iframe')
-		ifr.onload = function() {
-			var win = ifr.contentWindow
-			callback(win.name)
-		}
 		ifr.src = url
 		document.body.appendChild(ifr)
 		setTimeout(function() {
+			ifr.src = 'about:blank'
+			ifr.onload = function() {
+				var win = ifr.contentWindow
+				callback(win.name)
+			}			
 			document.body.removeChild(ifr)
 		}, 2000)		
 	}
