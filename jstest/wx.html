@@ -10,6 +10,9 @@
 <meta name="msapplication-TileColor" content="#ffffff" />
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 <title>测试微信 - 选择图片 api</title>
+<script type="text/javascript">
+
+</script>
 </head>
 <body>
 <div id="bmzt">
@@ -17,6 +20,30 @@
 </div>
 <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script type="text/javascript">
+	// AppID(应用ID) wx780eb0bbc39aa98b
+	// AppSecret(应用密钥) 7a9e6ef543b262e782f04b03a061059e
+	// token: 0qdYH6Nf49fDK-Mfvp-1hPz29ShiFzsL6mDi_g5JjMLaTR6wUP3qhBy7kwU0SVraL-QnX5xEwXxYpF8mfAmvdwhhqMuVekAagU3mvnpGtso
+	// jsapi_ticket: sM4AOVdWfPE4DxkXGEs8VE2CxsPGwOywlTQbZo-W_si89PNyMf6tvFwjoAEjquH3Er0t2g3C2SLhuMJwqGS0gA
+	function getAccessToken() {
+		var url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential'
+		var data = {appid: 'wx780eb0bbc39aa98b', secret: '7a9e6ef543b262e782f04b03a061059e'}
+		IO.jsonp(url, data, function() {
+
+		})
+	}
+
+	var sign = 'jsapi_ticket=sM4AOVdWfPE4DxkXGEs8VE2CxsPGwOywlTQbZo-W_si89PNyMf6tvFwjoAEjquH3Er0t2g3C2SLhuMJwqGS0gA' +
+		'&noncestr=Wm3WZYTPz0wzccnW' + 
+		'&timestamp=1414587457' + 
+		'&url=http://1.snandy.sinaapp.com/wx.html' 
+	wx.config({
+	    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+	    appId: 'wx780eb0bbc39aa98b', // 必填，公众号的唯一标识
+	    timestamp: 1414587457, // 必填，生成签名的时间戳
+	    nonceStr: 'test1', // 必填，生成签名的随机串
+	    signature: 'Wm3WZYTPz0wzccnWjsapi_ticket=sM4AOVdWfPE4DxkXGEs8VMCPGGVi4C3VM0P37wVUCFvkVAy_90u5h9nbSlYy3-Sl-HhTdfl2fzFy1AOcHKP7qg',// 必填，签名，见附录1
+	    jsApiList: ['chooseImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+	});	
 	choose.onclick = function() {
 		alert(wx.chooseImage)
 		try {
