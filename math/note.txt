@@ -1,0 +1,8 @@
+JavaScript浮点数精度问题汇总
+
+http://en.wikipedia.org/wiki/IEEE_754-2008
+http://zh.wikipedia.org/wiki/IEEE_754
+http://mathjs.org/
+http://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html
+
+

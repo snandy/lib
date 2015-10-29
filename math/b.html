@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>JavaScript浮点数精度问题</title>
+<script src="BigDecimal-all-last.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+/*
+ * 浮点数转成整数
+ */
+function floatToString() {
+
+}
+
+Math.formatFloat = function(f, digit) { 
+    var m = Math.pow(10, digit); 
+    return parseInt(f * m, 10) / m; 
+} 
+var numA = 0.1; 
+var numB = 0.2;
+Math.formatFloat(numA + numB, 1);
+
+
+// toFixed 修复
+function toFixed(num, s) {
+	var times = Math.pow(10, s)
+	var des = num * times + 0.5
+	des = parseInt(des, 10) / times
+	return des + ''
+}
+
+
+</script>
+</body>
+</html>
