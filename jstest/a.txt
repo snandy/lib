@@ -1,0 +1,69 @@
+JavaScript数字精度丢失问题
+
+问题
+
+1 两个简单的浮点数相加
+0.1 + 0.2 = ? 
+
+JS
+0.30000000000000004
+谢天谢地没有说是firebug的问题
+
+Java
+System.out.println(0.1 + 0.2);
+0.30000000000000004
+
+Python
+截图
+
+这些高配置的计算机还不如街边买十几块钱的简陋计算器。
+
+
+2 toFixed 真的会四舍五入？
+
+Firefox/Chrome 的控制台输入以下
+1.335.toFixed(2) // 1.33
+1.3335.toFixed(3) // 1.333
+1.333335.toFixed(5)  // 1.33333
+
+
+
+浮点数的表示
+JavaScript 采用 IEEE 754-2008 规范
+
+0.1 => 0.0001 1001 1001 1001…（无限循环）
+0.2 => 0.0011 0011 0011 0011…（无限循环）
+
+
+能精确表示的浮点数范围
+	十进制小数的二进制表示的有限数字不超过 52 位时，在 JavaScript 里是可以精确存储的
+
+大整数
+	当小于等于 2^53 时，可以确保数字精度不会丢失。当大于 2^53 时，x 的精度有可能会丢失。2^53 也即 9007199254740992。
+
+例子
+0.05 + 0.005 == 0.055 // true
+0.05 + 0.2 == 0.25 // true
+
+
+解决方案
+
+思路：给出明确的精度要求，转成整数（浮点数乘以倍数）运算再除以倍数。
+
+
+
+最后
+
+二进制表示的固有缺陷
+有限的机器空间
+
+
+扩展阅读
+http://mathjs.org/
+http://www.ituring.com.cn/article/73940
+http://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html
+https://en.wikipedia.org/wiki/IEEE_floating_point
+http://modernweb.com/2014/02/17/what-every-javascript-developer-should-know-about-floating-points/
+http://tool.oschina.net/hexconvert/
+
+
