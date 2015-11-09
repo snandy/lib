@@ -6,34 +6,15 @@
 <script type="text/javascript" src="artTemplate.js"></script>
 </head>
 <body>
+
+<input id="btn" type="button" value="test"/>
 <script type="text/javascript">
-var support = (function() {
-    var div = document.createElement('div'),
-        vendors = 'Khtml Ms O Moz Webkit'.split(' '),
-        len = vendors.length;
-
-    return function(prop) {
-        if ( prop in div.style ) 
-            return true;
-
-        prop = prop.replace(/^[a-z]/, function(val) {
-            return val.toUpperCase();
-        });
-        while (len--) {
-            if ( vendors[len] + prop in div.style ) {
-                // browser supports box-shadow. Do what you need.
-                // Or use a bang (!) to test if the browser doesn't.
-                return true;
-            } 
-            console.log(len);
-        }
-        return false;
-    };
-})();
-
-// 是否支持css3动画
-supportAnim = support('animation');
-supportAnim = support('transition');
+btn.onclick = function() {
+    var xhr = new XMLHttpRequest()
+    xhr.open('GET', location.href, false)
+    xhr.send('')
+    return xhr.responseText
+}
 </script>
 </script>
 </body>
