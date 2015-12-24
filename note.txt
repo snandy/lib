@@ -1,56 +1,106 @@
-Perl 记录
+Ajax 将死，Fetch 诞生
 
-第二章 标量数据
+Ajax，2005年诞生的技术，至今已持续了 10 年。它是一种在客户端创建一个异步请求的技术，本质上它不算创新，是一组技术的组合。它的核心对象是 XMLHttpRequest。
 
-数字
-1，允许在整数直接量中插入下划线，如33_222_111，等价于33222111，只是看起来清楚一些。
-2，非十进制表示法除了有0，0x，开头的，还有0b开头表示二进制数。
-3，数字操作符有双星号表示乘幂，如 2**3 == 8。
+简单回顾下历史
 
-字符串
-1，字符串用单引号，双引号表示。双引号里斜杠可转义。
-
-Objective-c 记录
-
-数据类型
+1996年，IE 中首先添加了 iframe 用来实现异步请求获取服务器内容
+1998年，微软 Outlook 在客户端 script 中实现了 XMLHttp 对象
+1999年，微软在 IE5 中添加了 XMLHTTP ActiveX 对象用来异步获取服务器内容，该对象直到 Edge 浏览器才废弃。其它浏览器陆续实现了类似的对象称为 XMLHttpReques。
+2004年，Google Gmail 中大量使用 XMLHttpRequest
+2005年，Google Map 中大量使用 XMLHttpRequest
+2005年，Jesse James Garrett 发表了文章 "Ajax: A New Approach to Web Applications"，Ajax 诞生。http://www.adaptivepath.com/ideas/ajax-new-approach-web-applications/
+2006年，XMLHttpRequest 被 W3C 采纳，最后更新时间是 2014年1月
 
 
-JS
-	1 有几种数据类型？ 基本类型、复合类型
-	2 闭包
-	3 继承的实现方式
-	4 ajax
-	5 JSONP
+使用步骤大概如下
 
-CSS
-	1 什么盒模型？
-	2 display哪些个取值？
-	3 经常使用的几个css hack？
+var xhr = new XMLHttpRequest();
+xhr.open('GET', url);
 
-jQuery
-	1 选择器的大概实现
-	2 事件API
-	3 链式调用的实现
-	4 Deferred模块
+xhr.onload = function() {
+	// To do with xhr.response
+};
 
-	
-了解前端模块化开发吗？ 有哪些规范？相关的库有哪些？
-RequireJS/Curl/SeaJS/do.js/in.js/ 
+xhr.onerror = function() {
+	// Handling errors
+};
 
-MVC: Backbone / Underscore
+xhr.send();
 
-Node.js
 
-说说几条前端性能优化的建议？
+以上可以看出，XHR 使用 onXXX 处理，典型的 "事件模式"。
 
-平时使用的开发工具？
 
-经常访问的技术网站或关注的相关微博账号？
+Fetch 目前还不是 W3C 规范，由 whatag（https://fetch.spec.whatwg.org）负责出品。与 Ajax 不同的是，它的 API 不是事件机制，而采用了目前流行的 Promise 方式处理。
+我们知道 Promise 是已经正式发布的 ES6 的内容之一。
 
-编码
-	1 写一个函数去掉数组中重复的元素
-	2 写一个兼容性较好的添加事件函数
+fetch('doAct.action').then(function(res) {
+    if (res.ok) {
+        res.text().then(function(obj) {
+            // Get the plain text
+        })
+    }
+}, function(ex) {
+    console.log(ex)
+})
 
+以上 fetch 函数是全局的，目前最新的Firefox，Chrome，Opera 都已支持，详见
+
+
+图
+
+
+
+以上是一个最简单的请求，只要传一个参数 url 过去，默认为 get 请求，获取纯文本。
+
+
+
+fetch 第二个参数可以进行很多配置，比如 POST 请求
+
+fetch("doAct.action", {
+	method: "POST",
+	headers: {
+		"Content-Type": "application/x-www-form-urlencoded"
+	},
+	body: "keyword=荣耀7i&enc=utf-8&pvid=0v3w1kii.bf1ela"
+}).then(function(res) {
+	if (res.ok) {
+		// To do with res
+	} else if (res.status == 401) {
+		// To do with res
+	}
+}, function(e) {
+	// Handling errors
+});
+
+
+如果返回的是 JSON， 如下
+
+fetch('doAct.action').then(function(res) {
+    if (res.ok) {
+        res.json().then(function(obj) {
+            // Get the JSON
+        })
+    }
+}, function(ex) {
+    console.log(ex)
+})
+
+res 实际上该规范定义的 Response 对象，它有如下方法
+
+arrayBuffer()
+blob()
+json()
+text()
+formData()
+
+
+
+
+https://fetch.spec.whatwg.org
+https://developer.mozilla.org/zh-CN/docs/Web/API/GlobalFetch/fetch
+https://hacks.mozilla.org/2015/03/this-api-is-so-fetching
 
 
 
