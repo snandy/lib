@@ -1,4 +1,4 @@
-Ajax 将死，Fetch 诞生
+Fetch：下一代 Ajax 技术
 
 Ajax，2005年诞生的技术，至今已持续了 10 年。它是一种在客户端创建一个异步请求的技术，本质上它不算创新，是一组技术的组合。它的核心对象是 XMLHttpRequest。
 
@@ -55,7 +55,6 @@ fetch('doAct.action').then(function(res) {
 以上是一个最简单的请求，只要传一个参数 url 过去，默认为 get 请求，获取纯文本。
 
 
-
 fetch 第二个参数可以进行很多配置，比如 POST 请求
 
 fetch("doAct.action", {
@@ -98,8 +97,8 @@ formData()
 
 
 
-https://fetch.spec.whatwg.org
 https://developer.mozilla.org/zh-CN/docs/Web/API/GlobalFetch/fetch
+https://fetch.spec.whatwg.org
 https://hacks.mozilla.org/2015/03/this-api-is-so-fetching
 
 
