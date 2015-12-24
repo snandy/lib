@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Rjax test1</title>
+    <script src="rjax.js"></script>
+</head> 
+<body>
+
+<p>http://mpaimai.jd.com/album/2502</p>
+	<input type="button" value="加1" onclick="ajax()"/>
+	<div id="info" style="border:red 1px solid;width:100px;padding:10px;">0</div>
+
+<script>
+
+var ajax = function() {
+	var i = 1;
+    return function() {
+        info.innerHTML = i;
+        // Rjax.storage(i, 'render')
+        i++;
+        var href = location.href.replace(/i=\d+/g, 'i=' + i);
+        history.pushState('', document.title, href);
+    }
+}();
+
+function render(i) {
+	info.innerHTML = i;
+}
+
+// Rjax.init({
+// 	renders: [{name: 'render', func: render}]
+// })
+
+
+</script>
+</body>
+</html>
