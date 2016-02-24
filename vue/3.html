@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>v-else 使用</title>
+		<script src="vue.js"></script>
+	</head>
+	<body>
+		<div id="app1">
+			<div v-if="Math.random() > 0.5">
+			  Sorry
+			</div>
+			<div v-else>
+			  Not sorry
+			</div>
+		</div>
+
+		<script>
+			// v-else 必须跟在 v-if 或 v-show 后面
+			var vm1 = new Vue({
+				el: '#app1'
+			})
+
+function def(obj, key, val, enumerable) {
+    Object.defineProperty(obj, key, {
+      	value: val,
+      	enumerable: !!enumerable,
+      	writable: true,
+      	configurable: true
+    });
+}
+
+var person = {};
+// def(person, 'name', 'snandy', true);
+
+// for (var a in person) {
+// 	console.log(a)
+// }
+
+var obj1 = {}
+Object.defineProperty(obj1, 'a', {
+	get: function() {
+		return 'a1'
+	}, 
+	set: function(o) {
+		this.p = o
+	}
+})
+
+		</script>
+	</body>
+</html>

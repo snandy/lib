@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>基本使用</title>
+		<script src="vue.js"></script>
+	</head>
+	<body>
+		<h3>示例1</h3>
+		<div id="example1">
+			<p>{{{greeting}}}</p>
+		</div>
+		
+		<h3>示例2：双向绑定</h3>
+		<div id="example2">
+		 	<p>{{ message }}</p>
+			<input v-model="message">
+		</div>
+
+		<h3>示例3：列表</h3>
+		<div id="example3">
+		  	<ul>
+		    	<li v-for="todo in todos">
+		      	{{ todo.text }}
+		    	</li>
+		  	</ul>
+		</div>
+
+		<h3>示例4：指令</h3>
+		<div id="example4">
+			<a href="http://www.sohu.com" v-bind:href="url">搜狐</a>
+		</div>
+
+
+		<script>
+			// example1
+			var data = {greeting: '<span>Hello, Vue.js!</span>'}
+			new Vue({
+				el: '#example1',
+				data: data
+			})
+
+			// example2
+			// new Vue({
+			// 	el: '#example2',
+			//   	data: {
+			//     	message: 'Hello Vue.js!'
+			//   	}
+			// })
+
+			// // example3
+			// new Vue({
+			//   	el: '#example3',
+			//   	data: {
+			//     	todos: [
+			//       		{ text: 'Learn JavaScript' },
+			//       		{ text: 'Learn Vue.js' },
+			//       		{ text: 'Build Something Awesome' }
+			//     	]
+			//   	}
+			// })	
+
+			// var vm = new Vue({
+			//   data: {
+			//     a: 1
+			//   },
+			//   created: function () {
+			//     // `this` 指向 vm 实例
+			//     console.log('a is: ' + this.a)
+			//   }
+			// })
+		</script>
+	</body>
+</html>

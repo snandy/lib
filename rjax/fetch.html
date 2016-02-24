@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Rjax test1</title>
+    <script src="rjax.js"></script>
+</head> 
+<body>
+	<input type="button" value="fetch" onclick="req1()"/>
+    <input type="button" value="fetch" onclick="req2()"/>
+	<div id="info" style="border:red 1px solid;width:100px;padding:10px;">0</div>
+
+<script>
+
+function req1() {
+    fetch('test1.html').then(function(res) {
+        if (res.ok) {
+            res.text().then(function(obj) {
+                console.log(obj)
+                console.log(typeof obj)
+            })
+        }
+    }, function(ex) {
+        console.log(ex)
+    });    
+}
+
+function req2() {
+    fetch('a.json').then(function(res) {
+        if (res.ok) {
+            res.json().then(function(obj) {
+                console.log(obj)
+            })
+        }
+    })
+}
+
+
+
+
+</script>
+</body>
+</html>

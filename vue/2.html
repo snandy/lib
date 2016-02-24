@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>计算属性 computed 和 v-if 使用</title>
+		<script src="vue.js"></script>
+	</head>
+	<body>
+		<div id="app1">
+			<button v-on:click="switchEl">切换</button>
+			<template v-if="ok">
+			  <h1>Title</h1>
+			  <p>Paragraph 1</p>
+			  <p>Paragraph 2</p>
+			</template>
+		</div>
+
+		<script>
+			// 改变 firstName, lastName 都会同步更新到 fullName
+			var vm = new Vue({
+			  data: {
+			    firstName: 'Foo',
+			    lastName: 'Bar'
+			  },
+			  computed: {
+			    fullName: function () {
+			      return this.firstName + ' ' + this.lastName
+			    }
+			  }
+			})
+
+			// app1 v-if 使用
+			var vm1 = new Vue({
+				el: '#app1',
+				data: {
+					ok: true
+				},
+				methods: {
+					switchEl: function() {
+						if (this.ok) {
+							this.ok = false	
+						} else {
+							this.ok = true
+						}
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
