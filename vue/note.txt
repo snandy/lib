@@ -1,4 +1,18 @@
+
 Vue
+
 _init 
-$mount
-_compile
+	_initState
+	_initData
+	observe(data, this)
+	ob = new Observer(value);
+	this.walk(value);
+	this.convert
+	defineReactive
+	
+_init 
+	$mount
+	_compile
+
+
+

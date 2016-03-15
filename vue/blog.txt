@@ -1,0 +1,153 @@
+ES5 对象的扩展、密封和冻结
+
+
+前面提到 ES5 对象属性描述符，这篇看看对象的扩展、密封和冻结。
+
+1. Object.preventExtensions
+
+阻止对象扩展，让一个对象变的不可扩展，也就是永远不能再添加新的属性。
+
+ES3 是没有办法阻止对象扩展的，定义对象后可以给对象添加任意属性，如
+
+var obj = {name: 'John'}
+
+// 又添加一个属性 age
+obj.age = 30
+
+// 又添加一个方法
+obj.setAge = function(a) {
+	this.age = a
+}
+
+ES5 的 Object.preventExtensions
+
+var obj = {name: 'John'}
+
+// 阻止对象扩展
+Object.preventExtensions(obj)
+
+// 添加新属性
+obj.age = 30 
+
+// 测试新属性，是 undefined，表明未添加成功
+console.log(obj.age)
+
+如果严格模式，则会报错
+
+'use strict'
+var obj = {name: 'John'}
+Object.preventExtensions(obj)
+obj.age = 30
+
+如图
+
+
+2. Object.isExtensible 判断一个对象是否可扩展，即是否可以给它添加新属性
+
+var obj = {}
+
+// true，表示可扩展
+Object.isExtensible(obj)
+
+，但调用 Object.preventExtensions 后就返回 false 了
+
+var obj = {}
+Object.preventExtensions(obj)
+
+// false，表示不可添加新属性
+Object.isExtensible(obj)
+
+
+
+3. Object.seal 
+让一个对象密封，并返回被密封后的对象。密封对象是指那些不能添加新的属性，不能删除已有属性，以及不能修改已有属性的可枚举性、可配置性、可写性，但可以修改已有属性的值的对象。
+
+var obj = {name: 'John'}
+
+// 密封
+Object.seal(obj)
+
+// 不能添加新属性
+obj.age = 30
+console.log(obj.age) // undefined
+
+
+4. Object.isSealed
+判断一个对象是否是密封的（sealed）
+
+// 普通对象是非密封的，和 ES3 保持一致
+var obj = {}
+Object.isSealed(obj) // false
+
+
+// 调用 Object.seal 的对象是密封的
+var obj = {}
+Object.seal(obj)
+Object.isSealed(obj) // true
+
+
+5. Object.freeze 
+冻结对象是指那些不能添加新的属性，不能修改已有属性的值，不能删除已有属性，以及不能修改已有属性的可枚举性、可配置性、可写性的对象。也就是说，这个对象永远是不可变的。
+
+测试：添加新属性
+
+var obj = {name: 'John'}
+Object.freeze(obj)
+obj.age = 30
+console.log(obj.age) // undefined
+
+不能添加 age 属性，表明被冻结的对象不能添加新属性。如果是严格模式则报错，如图
+
+图3
+
+
+测试：修改已有属性
+
+var obj = {name: 'John'}
+Object.freeze(obj)
+obj.name = 'Backus'
+console.log(obj.name) // 'John'
+
+想修改为 "Backus"，输出依然是 "John"，表明不能修改已有属性。如果是严格模式则报错，如图
+
+图6
+
+测试：删除已有属性
+
+var obj = {name: 'John'}
+Object.freeze(obj)
+delete obj.name
+console.log(obj.name) // 'John'
+
+想删除 "name" 属性，输出依然是 "John"，表明不能删除已有属性。如果是严格模式则报错，如图
+
+图7
+
+
+测试：修改已有属性的可枚举性、可配置性、可写性
+
+var obj = {name: 'John'}
+Object.freeze(obj)
+Object.defineProperty(obj, 'name', {
+	configurable: true,
+	writable: true,
+	enumerable: true
+})
+
+这个在非严格模式中就报错了，表明 configurable/writable/enmuerable 不能修改，如图
+
+图8
+
+
+6. Object.isFrozen
+判断一个对象是否被冻结（frozen）
+
+普通对象是非冻结的，和 ES3 保持一致
+var obj = {name: 'John'}
+Object.isFrozen(obj) // false
+
+
+调用 Object.freeze 的对象是冻结的
+var obj = {name: 'John'}
+Object.freeze(obj)
+Object.isFrozen(obj) // true

@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head></head>
+  <body>
+
+<script type="text/javascript">
+ // 'use strict'
+var obj = {name: 'John'}
+Object.freeze(obj)
+console.log(Object.getOwnPropertyDescriptor(obj, 'name'))
+
+
+// Object.preventExtensions(obj)
+// obj.age = 30
+// console.log(obj.age)
+
+
+// var p1 = Object.create({}, {
+// 	name: {
+// 		configurable: false,
+// 		writable: false,
+// 		enumerable: false
+// 	}
+// })
+
+
+
+// Object.seal(obj)
+
+
+// Object.defineProperty(obj, 'name', {
+// 	value: 'Backus',
+// 	writable: true,
+// 	enumerable: true
+// })
+// Object.defineProperty(obj, 'age', {
+// 	value: 30,
+// 	emumerable: false
+// })
+
+// Object.keys(obj) // ['name']
+
+
+// Object.defineProperty(obj, 'name', {
+// 	value: 'John'
+// })
+
+
+
+
+
+
+
+
+var person = {}
+// Object.observe(person, function(arr) {
+//     var change = arr[0]
+//     console.log(change.type, change.name, change.oldValue)
+// })
+
+
+
+
+</script>
+  </body>
+</html>
