@@ -6,10 +6,28 @@
     <script type="text/javascript" src="jquery-1.6.4.js"></script>
 </head>  
 <body>  
-    <input id="txt" type="text" value="snandy" data-name="John"/>
+    <div class="div1">
+        <p class="p1">0000000</p>
+        <p>22</p>
+        <h1>4t3t43t43t43t</h1>
+        <p class="p1">111111111 </p>
+    </div>
+    <div class="div1">
+        <p class="p1">00000000000000000</p>
+        <p>22</p>
+        <h1>4t3t43t43t43t</h1>
+        <p class="p1">11111111111 </p>
+    </div>
+
     <script>
 
-
+    $('.div1').each(function() {
+        var $div = $(this)
+        $div.find('.p1').click(function() {
+            var $p = $div.find('.p1')
+            console.log($p.index(this))
+        })
+    })
 
     </script>
 </body>  

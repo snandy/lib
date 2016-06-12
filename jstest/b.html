@@ -1,21 +1,11 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
 <head>
-<meta charset="utf-8">
-<title>html5 图片上传预览</title>
-<script type="text/javascript" src="artTemplate.js"></script>
+    <meta charset="utf-8">
+    <title>Chartx</title>
+    <!-- Chartx图表库文件引入，这里已1.9.21的cdn版本为例 -->
+    <script src="http://g.tbcdn.cn/thx/charts/1.9.51/chartx/index-min.js"></script>
 </head>
 <body>
-
-<input id="btn" type="button" value="test"/>
-<script type="text/javascript">
-btn.onclick = function() {
-    var xhr = new XMLHttpRequest()
-    xhr.open('GET', location.href, false)
-    xhr.send('')
-    return xhr.responseText
-}
-</script>
-</script>
+    <!-- 为Chartx准备一个具备大小（宽高）的Dom -->
+    <div id="chartTest" style="width:600px;height:300px;"></div>
 </body>
-</html>

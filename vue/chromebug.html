@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+
+    <p id='p1'>
+        <span>1</span>
+    </p>
+        <script type="text/javascript">
+
+
+
+function stringToFragment(templateStr, raw) {
+
+    var frag = document.createDocumentFragment();
+    var tagMatch = templateStr.match(tagRE$1);
+    var entityMatch = entityRE.test(templateStr);
+
+    if (!tagMatch && !entityMatch) {
+        // text only, return a single text node.
+        frag.appendChild(document.createTextNode(templateStr));
+    } else {
+        var tag = tagMatch && tagMatch[1];
+        var wrap = map[tag] || map.efault;
+        var depth = wrap[0];
+        var prefix = wrap[1];
+        var suffix = wrap[2];
+        var node = document.createElement('div');
+
+        node.innerHTML = prefix + templateStr + suffix;
+        while (depth--) {
+            node = node.lastChild;
+        }
+
+        var child;
+        while ( child = node.firstChild) {
+            frag.appendChild(child);
+        }
+    }
+    if (!raw) {
+        // trimNode(frag);
+    }
+    document.body.appendChild(frag)
+    return frag;
+}
+
+//
+// stringToFragment('<p><span>test</span></p>')
+// stringToFragment('<td><span>dd</span></td>')
+function isTrimmable(node) {
+    return node && (node.nodeType === 3 && !node.data.trim() || node.nodeType === 8);
+}
+
+while(child = p1.firstChild) {
+    if (isTrimmable(child)) {
+        console.log(child)    
+    }
+    p1.removeChild(child)
+}
+
+        </script>
+    </body>
+</html>

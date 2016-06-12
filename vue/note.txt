@@ -9,10 +9,55 @@ _init
 	this.walk(value);
 	this.convert
 	defineReactive
-	
+
+// 初始化 el 
 _init 
 	$mount
 	_compile
+	transclude
+	_initElement
+	unsafeDelimiters
 
 
+_init	
+	$mount
+	_compile
+	compile
+		compileNodeList 递归
+			compileNode
+			compileTextNode
+			parseText
+		compileNodeList
+			compileNode
+			compileElement
+
+
+parseDirective 解析自定义字符语法的核心方法，调用它的有
+	inlineFilters
+	compileProps
+	compileDirectives
+	processTextToken
+	makeTerminalNodeLinkFn
+	pushDir
+	Vue.prototype.$watch
+	Vue.prototype.$eval
+
+
+节点上的属性都是通过这个方法来解析的，比如 v-on:click, {{{aaa}}}
+compileDirectives
+
+
+1. Vue 玷污了 Array.prototype ($set, $remove)
+2. Vue 给DOM元素添加了 __vm__ 属性，把 Vue 实例挂上了
+3. 生命周期（init、created）是在 new 的时候通过 options 传入的，事件则是 new 后通过 $on 绑定添加的，然后通过 $emit 触发
+4. Vue - Cache: 当超过最大数（内部有个limit）后，再添加会把第一个删掉
+5. 
+
+
+
+步骤1
+扫描过程
+
+步骤2
+HTML属性泛指，需要举具体事例
 

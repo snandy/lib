@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title>基本使用</title>
-		<script src="vue.js"></script>
+		<script src="vue-1.0.18.js"></script>
 	</head>
 	<body>
 		<h3>示例1</h3>
@@ -35,18 +35,21 @@
 		<script>
 			// example1
 			var data = {greeting: '<span>Hello, Vue.js!</span>'}
-			var v1 = new Vue({
-				el: '#example1',
-				data: data
-			})
+			// var v1 = new Vue({
+			// 	el: '#example1',
+			// 	data: data
+			// })
 
 			// example2
-			// new Vue({
-			// 	el: '#example2',
-			//   	data: {
-			//     	message: 'Hello Vue.js!'
-			//   	}
-			// })
+			var v2 = new Vue({
+				el: '#example2',
+			  	data: {
+			    	message: 'Hello Vue.js!'
+			  	},
+			  	init: function() {
+			  		console.log(this)
+			  	}
+			})
 
 			// // example3
 			// new Vue({

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="echarts.min.js"></script>
+</head>
+<body>
+    <div id="main" style="width: 600px;height:400px;"></div>
+    <script type="text/javascript">
+            // 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init(document.getElementById('main'));
+
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    text: '未来一周气温变化',
+                    subtext: '纯属虚构'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:['最高气温','最低气温']
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        dataZoom: {},
+                        dataView: {readOnly: false},
+                        magicType: {type: ['line', 'bar']},
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                xAxis:  {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['0','3','6','9','12','15','18', '21', '24']
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        formatter: '{value} °C'
+                    }
+                },
+                series: [
+                    {
+                        name:'最高气温',
+                        type:'line',
+                        data:[0, 3, 5, 6, 7, 8, 9,10,11],
+                        markPoint: {
+                            data: [
+                                {type: 'max', name: '最大值'},
+                                {type: 'min', name: '最小值'}
+                            ]
+                        }
+                    }
+                ]
+            };
+
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+    </script>    
+</body>
+</html>

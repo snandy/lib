@@ -1,4 +1,11 @@
-{
-	"access_token":"atDP3PrjbC_oSOIz3a6ejczG8DvU6pdO8CjWergY7oeAdLArctsANdbGH5p27W2tSt4ZXOS8Hj14aGaU6pRQKkcgUmw4bz4jd98MUuTmaUAROFeAEAURI",
-	"expires_in":7200
-}
+~function(win, doc, undefined) {
+
+    var $win = $(win);
+    var $doc = $(doc);
+
+    $.fn.plugin = function() {
+
+    };
+
+}(window, document);
+

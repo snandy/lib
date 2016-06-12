@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>cache</title>
+	</head>
+	<body>
+		<script>
+/**
+ * Defer a task to execute it asynchronously. Ideally this
+ * should be executed as a microtask, so we leverage
+ * MutationObserver if it's available, and fallback to
+ * setTimeout(0).
+ *
+ * @param {Function} cb
+ * @param {Object} ctx
+ */
+var nextTick = (function() {
+	var callbacks = [];
+	var pending = false;
+	var timerFunc;
+	function nextTickHandler() {
+		pending = false;
+		var copies = callbacks.slice(0);
+		callbacks = [];
+		for (var i = 0; i < copies.length; i++) {
+			copies[i]();
+		}
+	}
+
+	/* istanbul ignore if */
+	if ( typeof MutationObserver !== 'undefined') {
+		var counter = 1;
+		var observer = new MutationObserver(nextTickHandler);
+		var textNode = document.createTextNode(counter);
+		observer.observe(textNode, {
+			characterData : true
+		});
+		timerFunc = function() {
+			counter = (counter + 1) % 2;
+			textNode.data = counter;
+		};
+	} else {
+		// webpack attempts to inject a shim for setImmediate
+		// if it is used as a global, so we have to work around that to
+		// avoid bundling unnecessary code.
+		var context = window;
+		timerFunc = context.setImmediate || setTimeout;
+	}
+	return function(cb, ctx) {
+		var func = ctx ? function() {
+			cb.call(ctx);
+		} : cb;
+		callbacks.push(func);
+		if (pending) return;
+		pending = true;
+		timerFunc(nextTickHandler, 0);
+	};
+})();
+
+function f1() {
+	console.log('f1')
+}
+function f2() {
+	console.log('f2')
+}
+nextTick(f1)
+nextTick(f2)
+
+
+		</script>
+	</body>
+</html>

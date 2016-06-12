@@ -1,126 +1,38 @@
 <!doctype html>
 <html>
-  <head></head>
+  <head>
+    <meta charset="utf-8">
+    <title>$watch</title>
+    <script src="vue-1.0.18.js"></script>
+  </head>
   <body>
-<script type="text/javascript">
-  function Cache(limit) {
-    this.size = 0;
-    this.limit = limit;
-    this.head = this.tail = undefined;
-    this._keymap = Object.create(null);
-  }
-
-  var p = Cache.prototype;
-
-  /**
-   * Put <value> into the cache associated with <key>.
-   * Returns the entry which was removed to make room for
-   * the new entry. Otherwise undefined is returned.
-   * (i.e. if there was enough room already).
-   *
-   * @param {String} key
-   * @param {*} value
-   * @return {Entry|undefined}
-   */
-
-  p.put = function (key, value) {
-    var removed;
-    if (this.size === this.limit) {
-      removed = this.shift();
-    }
-
-    var entry = this.get(key, true);
-    if (!entry) {
-      entry = {
-        key: key
-      };
-      this._keymap[key] = entry;
-      if (this.tail) {
-        this.tail.newer = entry;
-        entry.older = this.tail;
-      } else {
-        this.head = entry;
+    <h3>示例1</h3>
+    <div id="app1">
+      <p>{{{greeting}}}</p>
+    </div>
+    <script type="text/javascript">
+      var data = {
+        greeting: '<span>Hello, Vue.js!</span>',
+        a: 1,
+        b: 2
       }
-      this.tail = entry;
-      this.size++;
-    }
-    entry.value = value;
+      var v1 = new Vue({
+        el: '#app1',
+        data: data
+      })
+      v1.$watch('greeting', function(newer, older) {
+        console.log(newer, older)
+      })
 
-    return removed;
-  };
+      v1.$watch('a * b', function(newer, older) {
+        console.log(newer, older)
+      }) 
 
-  /**
-   * Purge the least recently used (oldest) entry from the
-   * cache. Returns the removed entry or undefined if the
-   * cache was empty.
-   */
-
-  p.shift = function () {
-    var entry = this.head;
-    if (entry) {
-      this.head = this.head.newer;
-      this.head.older = undefined;
-      entry.newer = entry.older = undefined;
-      this._keymap[entry.key] = undefined;
-      this.size--;
-    }
-    return entry;
-  };
-
-  /**
-   * Get and register recent use of <key>. Returns the value
-   * associated with <key> or undefined if not in cache.
-   *
-   * @param {String} key
-   * @param {Boolean} returnEntry
-   * @return {Entry|*}
-   */
-
-  p.get = function (key, returnEntry) {
-    var entry = this._keymap[key];
-    if (entry === undefined) return;
-    if (entry === this.tail) {
-      return returnEntry ? entry : entry.value;
-    }
-    // HEAD--------------TAIL
-    //   <.older   .newer>
-    //  <--- add direction --
-    //   A  B  C  <D>  E
-    if (entry.newer) {
-      if (entry === this.head) {
-        this.head = entry.newer;
-      }
-      entry.newer.older = entry.older; // C <-- E.
-    }
-    if (entry.older) {
-      entry.older.newer = entry.newer; // C. --> E
-    }
-    entry.newer = undefined; // D --x
-    entry.older = this.tail; // D. --> E
-    if (this.tail) {
-      this.tail.newer = entry; // E. <-- D
-    }
-    this.tail = entry;
-    return returnEntry ? entry : entry.value;
-  };
-
-</script>
-
-<script type="text/javascript">
-  var c1 = new Cache(200);
-  // c1.put('url', [1,3]);
-  // c1.put('money', [5,9]);
-  // c1.put('house', [11,14]);
-
-parent = {firstName: 'zhou', lastName: 'tao'}
-child = Object.create(parent)
-child.lastName = 'yan'
-
-
-
-
-
-
-</script>    
+      v1.$watch(function() {
+        return this.a + this.b
+      }, function(newer, older) {
+        console.log(newer, older)
+      })      
+    </script>
   </body>
 </html>
