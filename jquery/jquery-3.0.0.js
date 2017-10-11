@@ -71,16 +71,12 @@ var ObjectFunctionString = fnToString.call( Object );
 
 var support = {};
 
-
-
-	function DOMEval( code, doc ) {
-		doc = doc || document;
-
-		var script = doc.createElement( "script" );
-
-		script.text = code;
-		doc.head.appendChild( script ).parentNode.removeChild( script );
-	}
+function DOMEval( code, doc ) {
+	doc = doc || document;
+	var script = doc.createElement( "script" );
+	script.text = code;
+	doc.head.appendChild( script ).parentNode.removeChild( script );
+}
 
 
 var
@@ -2739,7 +2735,6 @@ return Sizzle;
 })( window );
 
 
-
 jQuery.find = Sizzle;
 jQuery.expr = Sizzle.selectors;
 
@@ -2750,7 +2745,6 @@ jQuery.text = Sizzle.getText;
 jQuery.isXMLDoc = Sizzle.isXML;
 jQuery.contains = Sizzle.contains;
 jQuery.escapeSelector = Sizzle.escape;
-
 
 
 var dir = function( elem, dir, until ) {
@@ -2783,10 +2777,7 @@ var siblings = function( n, elem ) {
 
 
 var rneedsContext = jQuery.expr.match.needsContext;
-
 var rsingleTag = ( /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i );
-
-
 
 var risSimple = /^.[^:#\[\.,]*$/;
 
@@ -3774,15 +3765,12 @@ jQuery.extend( {
 var rerrorNames = /^(Eval|Internal|Range|Reference|Syntax|Type|URI)Error$/;
 
 jQuery.Deferred.exceptionHook = function( error, stack ) {
-
 	// Support: IE 8 - 9 only
 	// Console exists when dev tools are open, which can happen at any time
 	if ( window.console && window.console.warn && error && rerrorNames.test( error.name ) ) {
 		window.console.warn( "jQuery.Deferred exception: " + error.message, error.stack, stack );
 	}
 };
-
-
 
 
 // The deferred used on DOM ready
@@ -3862,9 +3850,6 @@ if ( document.readyState === "complete" ||
 	window.addEventListener( "load", completed );
 }
 
-
-
-
 // Multifunctional method to get and set values of a collection
 // The value/s can optionally be executed if it's a function
 var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
@@ -3888,12 +3873,10 @@ var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 		}
 
 		if ( bulk ) {
-
 			// Bulk operations run against the entire set
 			if ( raw ) {
 				fn.call( elems, value );
 				fn = null;
-
 			// ...except when executing function values
 			} else {
 				bulk = fn;
@@ -3916,7 +3899,6 @@ var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 
 	return chainable ?
 		elems :
-
 		// Gets
 		bulk ?
 			fn.call( elems ) :
@@ -4229,7 +4211,6 @@ jQuery.fn.extend( {
 
 			// Set the data...
 			this.each( function() {
-
 				// We always store the camelCased key
 				dataUser.set( this, key, value );
 			} );
@@ -4282,7 +4263,6 @@ jQuery.extend( {
 		}
 
 		if ( fn ) {
-
 			// Add a progress sentinel to prevent the fx queue from being
 			// automatically dequeued
 			if ( type === "fx" ) {
@@ -4380,8 +4360,6 @@ jQuery.fn.extend( {
 var pnum = ( /[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/ ).source;
 
 var rcssNum = new RegExp( "^(?:([+-])=|)(" + pnum + ")([a-z%]*)$", "i" );
-
-
 var cssExpand = [ "Top", "Right", "Bottom", "Left" ];
 
 var isHiddenWithinTree = function( elem, el ) {
@@ -4422,8 +4400,6 @@ var swap = function( elem, options, callback, args ) {
 
 	return ret;
 };
-
-
 
 
 function adjustCSS( elem, prop, valueParts, tween ) {
@@ -4580,12 +4556,8 @@ jQuery.fn.extend( {
 	}
 } );
 var rcheckableType = ( /^(?:checkbox|radio)$/i );
-
 var rtagName = ( /<([a-z][^\/\0>\x20\t\r\n\f]+)/i );
-
 var rscriptType = ( /^$|\/(?:java|ecma)script/i );
-
-
 
 // We have to close these tags to support XHTML (#13200)
 var wrapMap = {
@@ -4606,13 +4578,11 @@ var wrapMap = {
 
 // Support: IE <=9 only
 wrapMap.optgroup = wrapMap.option;
-
 wrapMap.tbody = wrapMap.tfoot = wrapMap.colgroup = wrapMap.caption = wrapMap.thead;
 wrapMap.th = wrapMap.td;
 
 
 function getAll( context, tag ) {
-
 	// Support: IE <=9 - 11 only
 	// Use typeof to avoid zero-argument method invocation on host objects (#15151)
 	var ret = typeof context.getElementsByTagName !== "undefined" ?
@@ -4709,6 +4679,7 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 			continue;
 		}
 
+		// 不在页面上的元素不会去执行 setGlobalEval
 		contains = jQuery.contains( elem.ownerDocument, elem );
 
 		// Append to fragment
@@ -4761,7 +4732,6 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 var documentElement = document.documentElement;
 
 
-
 var
 	rkeyEvent = /^key/,
 	rmouseEvent = /^(?:mouse|pointer|contextmenu|drag|drop)|click/,
@@ -4809,7 +4779,7 @@ function on( elem, types, selector, data, fn, one ) {
 		data = selector = undefined;
 	} else if ( fn == null ) {
 		if ( typeof selector === "string" ) {
-
+			
 			// ( types, selector, fn )
 			fn = data;
 			data = undefined;
@@ -4821,6 +4791,7 @@ function on( elem, types, selector, data, fn, one ) {
 			selector = undefined;
 		}
 	}
+
 	if ( fn === false ) {
 		fn = returnFalse;
 	} else if ( !fn ) {
@@ -4830,7 +4801,6 @@ function on( elem, types, selector, data, fn, one ) {
 	if ( one === 1 ) {
 		origFn = fn;
 		fn = function( event ) {
-
 			// Can use an empty set, since event contains the info
 			jQuery().off( event );
 			return origFn.apply( this, arguments );
@@ -5492,7 +5462,6 @@ function manipulationTarget( elem, content ) {
 
 		return elem.getElementsByTagName( "tbody" )[ 0 ] || elem;
 	}
-
 	return elem;
 }
 
@@ -5561,6 +5530,18 @@ function fixInput( src, dest ) {
 	}
 }
 
+/*
+ * DOM maniplation
+ *
+ *	collection:		调用时传的都是 jQuery 对象，是一个集合
+ *
+ *	args:			arguments, 即父层函数的所传实参，父层函数有 append、prepend、before、after 等
+ *
+ *	callback:		在这个回调函数里去实现各自的 DOM 操作，在什么位置添加，插入等
+ *
+ *	ignored:		只在 replaceWith 内调用时传了该参数
+ *
+ */
 function domManip( collection, args, callback, ignored ) {
 
 	// Flatten any nested arrays
@@ -5610,7 +5591,6 @@ function domManip( collection, args, callback, ignored ) {
 
 					// Keep references to cloned scripts for later restoration
 					if ( hasScripts ) {
-
 						// Support: Android <=4.0 only, PhantomJS 1 only
 						// push.apply(_, arraylike) throws on ancient WebKit
 						jQuery.merge( scripts, getAll( node, "script" ) );
@@ -5634,7 +5614,6 @@ function domManip( collection, args, callback, ignored ) {
 						jQuery.contains( doc, node ) ) {
 
 						if ( node.src ) {
-
 							// Optional AJAX dependency, but won't run scripts if not present
 							if ( jQuery._evalUrl ) {
 								jQuery._evalUrl( node.src );
@@ -5925,18 +5904,17 @@ var rmargin = ( /^margin/ );
 var rnumnonpx = new RegExp( "^(" + pnum + ")(?!px)[a-z%]+$", "i" );
 
 var getStyles = function( elem ) {
+	// Support: IE <=11 only, Firefox <=30 (#15098, #14150)
+	// IE throws on elements created in popups
+	// FF meanwhile throws on frame elements through "defaultView.getComputedStyle"
+	var view = elem.ownerDocument.defaultView;
 
-		// Support: IE <=11 only, Firefox <=30 (#15098, #14150)
-		// IE throws on elements created in popups
-		// FF meanwhile throws on frame elements through "defaultView.getComputedStyle"
-		var view = elem.ownerDocument.defaultView;
+	if ( !view || !view.opener ) {
+		view = window;
+	}
 
-		if ( !view || !view.opener ) {
-			view = window;
-		}
-
-		return view.getComputedStyle( elem );
-	};
+	return view.getComputedStyle( elem );
+};
 
 
 
@@ -6066,7 +6044,6 @@ function curCSS( elem, name, computed ) {
 
 
 function addGetHookIf( conditionFn, hookFn ) {
-
 	// Define the hook, we'll check on the first run if it's really needed.
 	return {
 		get: function() {
@@ -6102,7 +6079,6 @@ var
 
 // Return a css property mapped to a potentially vendor prefixed property
 function vendorPropName( name ) {
-
 	// Shortcut for names that are not vendor prefixed
 	if ( name in emptyStyle ) {
 		return name;
@@ -6598,8 +6574,6 @@ jQuery.fx = Tween.prototype.init;
 
 // Back compat <1.8 extension point
 jQuery.fx.step = {};
-
-
 
 
 var
@@ -7549,9 +7523,6 @@ jQuery.each( [
 	jQuery.propFix[ this.toLowerCase() ] = this;
 } );
 
-
-
-
 var rclass = /[\t\r\n\f]/g;
 
 function getClass( elem ) {
@@ -7720,9 +7691,6 @@ jQuery.fn.extend( {
 		return false;
 	}
 } );
-
-
-
 
 var rreturn = /\r/g,
 	rspaces = /[\x20\t\r\n\f]+/g;
@@ -7895,10 +7863,7 @@ jQuery.each( [ "radio", "checkbox" ], function() {
 } );
 
 
-
-
 // Return jQuery for attributes-only inclusion
-
 
 var rfocusMorph = /^(?:focusinfocus|focusoutblur)$/;
 
@@ -8057,7 +8022,6 @@ jQuery.extend( jQuery.event, {
 } );
 
 jQuery.fn.extend( {
-
 	trigger: function( type, data ) {
 		return this.each( function() {
 			jQuery.event.trigger( type, data, this );
@@ -8092,10 +8056,7 @@ jQuery.fn.extend( {
 } );
 
 
-
-
 support.focusin = "onfocusin" in window;
-
 
 // Support: Firefox <=44
 // Firefox doesn't have focus(in | out) events
@@ -8144,8 +8105,6 @@ var nonce = jQuery.now();
 
 var rquery = ( /\?/ );
 
-
-
 // Cross-browser xml parsing
 jQuery.parseXML = function( data ) {
 	var xml;
@@ -8182,12 +8141,10 @@ function buildParams( prefix, obj, traditional, add ) {
 		// Serialize array item.
 		jQuery.each( obj, function( i, v ) {
 			if ( traditional || rbracket.test( prefix ) ) {
-
 				// Treat each array item as a scalar.
 				add( prefix, v );
 
 			} else {
-
 				// Item is non-scalar (array or object), encode its numeric index.
 				buildParams(
 					prefix + "[" + ( typeof v === "object" && v != null ? i : "" ) + "]",
@@ -8199,14 +8156,12 @@ function buildParams( prefix, obj, traditional, add ) {
 		} );
 
 	} else if ( !traditional && jQuery.type( obj ) === "object" ) {
-
 		// Serialize object item.
 		for ( name in obj ) {
 			buildParams( prefix + "[" + name + "]", obj[ name ], traditional, add );
 		}
 
 	} else {
-
 		// Serialize scalar item.
 		add( prefix, obj );
 	}
@@ -9209,8 +9164,6 @@ jQuery.expr.pseudos.visible = function( elem ) {
 };
 
 
-
-
 jQuery.ajaxSettings.xhr = function() {
 	try {
 		return new window.XMLHttpRequest();
@@ -9372,8 +9325,6 @@ jQuery.ajaxTransport( function( options ) {
 } );
 
 
-
-
 // Prevent auto-execution of scripts when no explicit dataType was provided (See gh-2432)
 jQuery.ajaxPrefilter( function( s ) {
 	if ( s.crossDomain ) {
@@ -9441,8 +9392,6 @@ jQuery.ajaxTransport( "script", function( s ) {
 		};
 	}
 } );
-
-
 
 
 var oldCallbacks = [],
@@ -9536,8 +9485,6 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 		return "script";
 	}
 } );
-
-
 
 
 // Support: Safari 8 only
@@ -9667,8 +9614,6 @@ jQuery.fn.load = function( url, params, callback ) {
 };
 
 
-
-
 // Attach a bunch of functions for handling common AJAX events
 jQuery.each( [
 	"ajaxStart",
@@ -9684,15 +9629,11 @@ jQuery.each( [
 } );
 
 
-
-
 jQuery.expr.pseudos.animated = function( elem ) {
 	return jQuery.grep( jQuery.timers, function( fn ) {
 		return elem === fn.elem;
 	} ).length;
 };
-
-
 
 
 /**
@@ -10002,11 +9943,7 @@ if ( typeof define === "function" && define.amd ) {
 }
 
 
-
-
-
 var
-
 	// Map over jQuery in case of overwrite
 	_jQuery = window.jQuery,
 

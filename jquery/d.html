@@ -7,32 +7,44 @@
 		input {
 			display: none;
 		}
-        li {
-            display: none;
-        }
     </style>
-    <script src="jquery-1.6.4.js"></script>
+    <script src="jquery-3.0.0.js"></script>
+    <script type="text/javascript" id="s1">var isa = 90;</script>
 </head>  
 <body>  
+</div>
     <input id="txt" type="text" value="snandy" data-name="John" data-foo-44="aa"/>
-    <ul>
-        <li>sss</li>
+    <ul id="uu">
+        <li>
+            <ul><li>aa</li></ul>
+            <span>ab</span>
+        </li>
+        <li><span>bb</span></li>
     </ul>
+    <p id="p1">ss</p>
+
+    <p><select id="sel"></select></p>
+    
 <script>
-var parent = jQuery.Deferred();
-var child = parent.then( null, function() {
-  return "bar";
-});
-var callback = function( state ) {
-  return function( value ) {
-    console.log( state, value );
-    throw new Error( "baz" );
-  };
-};
-child.then( callback( "fulfilled" ), callback( "rejected" ) )
-child.then( callback( "fulfilled" ), callback( "rejected" ) )
-parent.reject( "foo" );
-console.log( "parent resolved" );
+
+// $('#txt').data('a', {a:1})
+// $('#txt').data({a:1,b:2})
+
+// $('#p1').html()
+// $('p').html('a')
+$('#p1').click(function() {
+    alert(3)
+})
+
+$('#uu').on('click', 'li', function(ev) {
+    console.log(this, ev.target)
+    if (this == ev.target) {
+
+    }
+
+})
+
+
 </script>
 </body>  
 </html> 

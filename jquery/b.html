@@ -12,22 +12,28 @@
         <h1>4t3t43t43t43t</h1>
         <p class="p1">111111111 </p>
     </div>
-    <div class="div1">
+    <div class="div1" onclick="log()">
         <p class="p1">00000000000000000</p>
         <p>22</p>
         <h1>4t3t43t43t43t</h1>
+        <input placeholder="sss" >
         <p class="p1">11111111111 </p>
     </div>
 
     <script>
+    function log() {
+        console.log('log++')
+    }
 
-    $('.div1').each(function() {
-        var $div = $(this)
-        $div.find('.p1').click(function() {
-            var $p = $div.find('.p1')
-            console.log($p.index(this))
-        })
+    $('.p1').click(function(ev) {
+        // ev.stopPropagation()
+        console.log('xx')
     })
+
+
+var value = 'smtg';
+var temp = 'Value is ' + (value==='smtg')
+var a = temp ? 'Something' : 'Nothing'
 
     </script>
 </body>  

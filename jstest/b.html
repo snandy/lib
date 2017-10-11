@@ -3,9 +3,26 @@
     <meta charset="utf-8">
     <title>Chartx</title>
     <!-- Chartx图表库文件引入，这里已1.9.21的cdn版本为例 -->
-    <script src="http://g.tbcdn.cn/thx/charts/1.9.51/chartx/index-min.js"></script>
 </head>
 <body>
     <!-- 为Chartx准备一个具备大小（宽高）的Dom -->
     <div id="chartTest" style="width:600px;height:300px;"></div>
+<script type="text/javascript">
+function processSentence(str) {
+    var res = []
+    var reg = /[\u4e00-\u9fa5]/
+    var arr1 = str.split(' ')
+    arr1.forEach(function(it) {
+        if (reg.test(it)) {
+            var arr2 = it.split('')
+            res = res.concat(arr2)
+        } else {
+            res.push(it)
+        }
+    })
+    return res
+}
+var str = processSentence('I love 中国')    
+console.log(str)
+</script>    
 </body>

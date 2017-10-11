@@ -8,25 +8,12 @@
 			display: none;
 		}
     </style>
-    <script src="jquery-3.0.0-alpha1.js"></script>
+    <script src="jquery.js"></script>
 </head>  
 <body>  
 <input id="txt" type="text" value="" data-name-11="aa"/>
 <script>
-var parent = jQuery.Deferred();
-var child = parent.then( null, function() {
-  return "bar";
-});
-var callback = function( state ) {
-  return function( value ) {
-    console.log( state, value );
-    throw new Error( "baz" );
-  };
-};
-child.then( callback( "fulfilled" ), callback( "rejected" ) )
-child.then( callback( "fulfilled" ), callback( "rejected" ) )
-parent.reject( "foo" );
-console.log( "parent resolved" );
+
 </script>
 </body>  
 </html> 
