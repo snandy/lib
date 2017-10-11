@@ -1,0 +1,237 @@
+﻿body{
+	margin:0;
+	padding:0;
+	overflow-x: hidden;
+	/*#969696*/
+	background:#000 repeat-x center bottom url("http://www.kandersart.com/static/images/g/bgf.jpg");
+	font-family:"微软雅黑","黑体","楷体_GB2312";
+	color:#fff;
+}
+#main {
+	/*width:1270px;*/
+	width:100%;
+	margin: auto auto;
+	overflow: hidden;	
+	background-attachment:scroll;
+	text-align: center;
+}
+#header {
+	width: 100%;
+	/*background: center center url(../images/g/bg.jpg) repeat;*/
+	text-align:center;
+	overflow: hidden;
+	height: 158px;
+}
+.logo{
+	border: 0;
+}
+#middle{
+	width: 100%;
+	/*background: center center url(../images/g/bg.jpg) repeat;*/
+}
+#content{
+	margin: 0 auto;
+}
+img.hdimg{
+	border:0;
+	margin-top:40px;
+}
+#footer {
+	width: 100%;
+	height:174px;
+	text-align: center;
+}
+#demo {
+	overflow: hidden;
+	width: 100%;
+	color: #ffffff;
+	margin: 0 auto;
+	font-size:14px;
+	font-family: "宋体"
+}
+#demo1,demo2 {
+	width: 998px;
+}
+#demo1 a,#demo2 a{
+	letter-spacing:0px;
+	color:#ffffff;
+	padding:0;
+	margin:0;
+	border:0;
+	font-size: 13px;
+	text-decoration: none;
+}
+#demo1 a:hover,#demo2 a:hover{
+	color:red;
+	font-size: 13px;
+}
+#demo1 a:visited,#demo2 a:visited{
+font-size: 13px;
+color:#ffffff;
+}
+.page{
+font-size:20px;
+color: #FFFF00;
+font-family:黑体;
+letter-spacing: 2px;
+font-weight: bold;
+}
+.page .textb{
+	height:15px;
+	width:20px;
+	border:1px solid red;
+	background: #fff;
+	font-weight: bold;
+}
+.page .subb{
+	border:0;
+	height:28px;
+	width:26px;
+	background:url(../images/g/go.gif) no-repeat center center;
+	cursor:pointer;
+}
+.page a.apre{
+text-decoration:none;
+width: 64px;
+height: 25px;
+float:left;
+background:url("../images/p/pre1.gif") no-repeat center center;
+}
+.page a.apre:HOVER{
+background:url("../images/p/pre2.gif");
+}
+.page a.anext{
+text-decoration:none;
+width: 58px;
+height: 25px;
+float:left;
+background:url("../images/p/next1.gif") no-repeat center center;
+}
+.page a.anext:HOVER{
+background:url("../images/p/next2.gif");
+}
+
+
+.page a.ar{
+text-decoration:none;
+width: 41px;
+height:25px;
+float:left;
+background:url("../images/p/r1.gif") no-repeat center center;
+}
+.page a.ar:HOVER{
+background:url("../images/p/r2.gif");
+}
+
+.page a.abacki{
+text-decoration:none;
+width: 60px;
+height: 25px;
+float:left;
+background:url("../images/p/bi1.gif") no-repeat center center;
+}
+.page a.abacki:HOVER{
+background:url("../images/p/bi2.gif");
+}
+.page a.aksdl{
+text-decoration:none;
+width: 78px;
+height: 25px;
+float:left;
+background:url("../images/p/ksdl1.gif") no-repeat center center;
+}
+.page a.aksdl:HOVER{
+background:url("../images/p/ksdl2.gif");
+}
+
+
+
+
+.page a.apre2{
+text-decoration:none;
+width: 21px;
+height: 23px;
+float:left;
+background:url("../images/p/2pre2.gif") no-repeat center center;
+}
+.page a.apre2:HOVER{
+background:url("../images/p/2pre1.gif");
+}
+.page a.anext2{
+text-decoration:none;
+width: 22px;
+height: 23px;
+float:left;
+background:url("../images/p/2next2.gif") no-repeat center center;
+}
+.page a.anext2:HOVER{
+background:url("../images/p/2next1.gif");
+}
+
+
+.page a.ar2{
+text-decoration:none;
+width: 44px;
+height:23px;
+float:left;
+background:url("../images/p/2r1.gif") no-repeat center center;
+}
+.page a.ar2:HOVER{
+background:url("../images/p/2r2.gif");
+}
+
+.page a.ajm{
+text-decoration:none;
+width: 83px;
+height:23px;
+float:left;
+background:url("../images/p/jm1.gif") no-repeat center center;
+}
+.page a.ajm:HOVER{
+background:url("../images/p/jm2.gif") no-repeat center center;
+}
+
+.page a.abacki2{
+text-decoration:none;
+width: 58px;
+height: 23px;
+float:left;
+background:url("../images/p/2bi1.gif") no-repeat center center;
+}
+.page a.abacki2:HOVER{
+background:url("../images/p/2bi2.gif");
+}
+form{
+	padding: 0;
+	margin: 0;
+}
+#note{
+	color:#fff;
+	font-size:14px;
+	font-family:宋体;
+	line-height:25px;
+}
+#note h2{
+	text-align: left;
+	width: 100%;
+}
+#note p{
+	text-align: left;
+	width: 100%;
+}
+.buya{
+	text-decoration: none;
+	padding:0;
+	margin:0;
+	border:0;
+	color:#fff;
+}
+.buya:hover{
+color:red;
+}
+.buya:visited{
+color:#ffffff;
+}
+.smallimg{
+	width:1000px;
+}
